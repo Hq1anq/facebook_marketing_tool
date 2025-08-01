@@ -1,0 +1,31 @@
+<RCC>
+  <qresource prefix="icons">
+    <file>icons/addGroup.svg</file>
+    <file>icons/arrowDown.svg</file>
+    <file>icons/change.svg</file>
+    <file>icons/check.svg</file>
+    <file>icons/close.svg</file>
+    <file>icons/comment.svg</file>
+    <file>icons/copy.svg</file>
+    <file>icons/get.svg</file>
+    <file>icons/home.svg</file>
+    <file>icons/Logo.svg</file>
+    <file>icons/maximize.svg</file>
+    <file>icons/menu.svg</file>
+    <file>icons/minimize.svg</file>
+    <file>icons/openedFile.svg</file>
+    <file>icons/post.svg</file>
+    <file>icons/proxy.svg</file>
+    <file>icons/proxyCheckBox.svg</file>
+    <file>icons/proxyNoneCheckBox.svg</file>
+    <file>icons/proxyUnCheckBox.svg</file>
+    <file>icons/recive.svg</file>
+    <file>icons/restore.svg</file>
+    <file>icons/save.svg</file>
+    <file>icons/table.svg</file>
+    <file>icons/table2text.svg</file>
+    <file>icons/tele.svg</file>
+    <file>icons/text2table.svg</file>
+    <file>icons/update.svg</file>
+  </qresource>
+</RCC>
