@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'tableWidgetsbibmw.ui'
+## Form generated from reading UI file 'tableWidgetkGVXva.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.8.2
 ##
@@ -64,25 +64,11 @@ class Ui_tableWidget(object):
 "    background: 3px solid rgb(52, 59, 72);\n"
 "	border: 3px solid rgb(52, 59, 72);\n"
 "	background-image: url(:/icons/icons/check.svg) }\n"
-"QTableCornerButton::section { background-color: rgb(33, 37, 43) }\n"
-"QTableWidget {	\n"
-"	padding: 5px;\n"
-"	gridline-color: rgb(44, 49, 58);\n"
-"	border-bottom: 1px solid rgb(44, 49, 60);\n"
-"	font-size: 10px }\n"
-"QTableWidget::item{ border-color: rgb(44, 49, 60) }\n"
-"QTableWidget::item:selected{ background-color: rgb(189, 147, 249) }\n"
-"QHeaderView { qproperty-defaultAlignment: AlignCenter }\n"
-"QHeaderView::section{\n"
-"	background-color: rgb(33, 37, 43);\n"
-"	border: 1px solid rgb(44, 49, 60);\n"
-"	font-size: 15px }\n"
 "QScrollBar:horizontal {\n"
 "	border: none;\n"
 "	background: rgb(52, 59, 72);\n"
 "	height: 8px;\n"
-"	ma"
-                        "rgin: 0px 21px 0 21px;\n"
+"	margin: 0px 21px 0 21px;\n"
 "	border-radius: 0px }\n"
 "QScrollBar::handle:horizontal {\n"
 "	background: rgb(189, 147, 249);\n"
@@ -96,7 +82,8 @@ class Ui_tableWidget(object):
 "	border: none;\n"
 "	background: rgb(55, 63, 77);\n"
 "	width: 20px;\n"
-"	border-top-right-radius: 4px;\n"
+"	border-top-right"
+                        "-radius: 4px;\n"
 "	border-bottom-right-radius: 4px;\n"
 "	subcontrol-position: right;\n"
 "	subcontrol-origin: margin }\n"
@@ -109,8 +96,7 @@ class Ui_tableWidget(object):
 "	subcontrol-position: left;\n"
 "	subcontrol-origin: margin }\n"
 "QScrollBar::up-arrow:horizontal, QScrollBar::down-arrow:horizontal,\n"
-"QScrollBar::add-page:horizontal, QScrollBar::sub-pag"
-                        "e:horizontal,\n"
+"QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal,\n"
 "QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical,\n"
 "QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {\n"
 "	background: none }\n"
@@ -126,7 +112,8 @@ class Ui_tableWidget(object):
 "	border-radius: 4px }\n"
 "QScrollBar::add-line:vertical {\n"
 "	border: none;\n"
-"	background: rgb(55, 63, 77);\n"
+"	background: rgb(55, "
+                        "63, 77);\n"
 "	height: 20px;\n"
 "	border-bottom-left-radius: 4px;\n"
 "	border-bottom-right-radius: 4px;\n"
@@ -140,8 +127,7 @@ class Ui_tableWidget(object):
 "	border-top-right-radius: 4px;\n"
 "	subcontrol-position: top;\n"
 "	subcontrol-origin: margin }\n"
-"QScrollBar::add-line:horizontal:hover, QScrollBar::sub-line:horizontal:hover"
-                        ",\n"
+"QScrollBar::add-line:horizontal:hover, QScrollBar::sub-line:horizontal:hover,\n"
 "QScrollBar::add-line:vertical:hover, QScrollBar::sub-line:vertical:hover {\n"
 "	background: rgb(64, 69, 77) }\n"
 "QScrollBar::add-line:horizontal:pressed, QScrollBar::sub-line:horizontal:pressed,\n"
@@ -400,6 +386,26 @@ class Ui_tableWidget(object):
         sizePolicy5.setVerticalStretch(0)
         sizePolicy5.setHeightForWidth(self.table.sizePolicy().hasHeightForWidth())
         self.table.setSizePolicy(sizePolicy5)
+        self.table.setStyleSheet(u"QTableCornerButton::section { background-color: rgb(33, 37, 43) }\n"
+"QTableWidget {	\n"
+"	padding: 5px;\n"
+"	gridline-color: rgb(44, 49, 58);\n"
+"	border-bottom: 1px solid rgb(44, 49, 60); }\n"
+"QTableWidget::item{ border-color: rgb(44, 49, 60) }\n"
+"QTableWidget::item:selected{\n"
+"	background-color: rgb(189, 147, 249);\n"
+"	color: rgb(40, 44, 52);\n"
+"}\n"
+"QHeaderView { qproperty-defaultAlignment: AlignCenter }\n"
+"QHeaderView::section{\n"
+"	background-color: rgb(33, 37, 43);\n"
+"	border: 1px solid rgb(44, 49, 60);\n"
+"	font-size: 15px }\n"
+"QLineEdit {\n"
+"    background-color: rgb(50, 54, 62); /* slightly lighter/darker variant for edit mode */\n"
+"	selection-background-color: rgb(189, 147, 249); /* background when highlight */\n"
+"    selection-color: rgb(40, 44, 52); /* text color when selected */\n"
+"}")
         self.table.setWordWrap(False)
         self.table.horizontalHeader().setMinimumSectionSize(110)
         self.table.horizontalHeader().setDefaultSectionSize(200)

@@ -170,14 +170,6 @@ class MainWindow(QMainWindow):
         
         self.get_ui.save_data()
         
-        if not self.driver_manager.setup_driver():
-            self.table_widget.statusTable.setText("Xung đột! Vui lòng đóng tất cả các trình duyệt Chrome")
-            return
-        self.driver_manager.jump_to_facebook()
-        if not self.driver_manager.is_login:
-            self.table_widget.statusTable.setText("Get Group: Chưa đăng nhập")
-            return
-        
         self.table_widget.table.setRowCount(1) # Clear table
         QThreadPool.globalInstance().start(self.get_group)
     

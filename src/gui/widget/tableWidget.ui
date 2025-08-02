@@ -51,19 +51,6 @@ QCheckBox::indicator:checked {
     background: 3px solid rgb(52, 59, 72);
 	border: 3px solid rgb(52, 59, 72);
 	background-image: url(:/icons/icons/check.svg) }
-QTableCornerButton::section { background-color: rgb(33, 37, 43) }
-QTableWidget {	
-	padding: 5px;
-	gridline-color: rgb(44, 49, 58);
-	border-bottom: 1px solid rgb(44, 49, 60);
-	font-size: 10px }
-QTableWidget::item{ border-color: rgb(44, 49, 60) }
-QTableWidget::item:selected{ background-color: rgb(189, 147, 249) }
-QHeaderView { qproperty-defaultAlignment: AlignCenter }
-QHeaderView::section{
-	background-color: rgb(33, 37, 43);
-	border: 1px solid rgb(44, 49, 60);
-	font-size: 15px }
 QScrollBar:horizontal {
 	border: none;
 	background: rgb(52, 59, 72);
@@ -590,6 +577,28 @@ QPushButton:pressed { background-color: rgb(23, 26, 30); border: 4px solid rgb(2
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QTableCornerButton::section { background-color: rgb(33, 37, 43) }
+QTableWidget {	
+	padding: 5px;
+	gridline-color: rgb(44, 49, 58);
+	border-bottom: 1px solid rgb(44, 49, 60); }
+QTableWidget::item{ border-color: rgb(44, 49, 60) }
+QTableWidget::item:selected{
+	background-color: rgb(189, 147, 249);
+	color: rgb(40, 44, 52);
+}
+QHeaderView { qproperty-defaultAlignment: AlignCenter }
+QHeaderView::section{
+	background-color: rgb(33, 37, 43);
+	border: 1px solid rgb(44, 49, 60);
+	font-size: 15px }
+QLineEdit {
+    background-color: rgb(50, 54, 62); /* slightly lighter/darker variant for edit mode */
+	selection-background-color: rgb(189, 147, 249); /* background when highlight */
+    selection-color: rgb(40, 44, 52); /* text color when selected */
+}</string>
      </property>
      <property name="wordWrap">
       <bool>false</bool>

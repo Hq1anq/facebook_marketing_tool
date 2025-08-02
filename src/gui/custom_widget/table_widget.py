@@ -134,7 +134,9 @@ class TableWidget(QFrame, Ui_tableWidget):
         row_position = self.table.rowCount()
         self.table.insertRow(row_position)
         self.table.setItem(row_position, 0, self.table_item(link, "left"))
+        self.table.setItem(row_position, 1, self.table_item(""))
         self.table.setItem(row_position, 2, self.table_item(name, "left"))
+        self.table.setItem(row_position, 3, self.table_item(""))
     
     def setup(self, func: str):
         match func:
