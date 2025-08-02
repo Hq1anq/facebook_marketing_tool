@@ -1,3 +1,13 @@
+# -*- coding: utf-8 -*-
+
+################################################################################
+## Form generated from reading UI file 'tableWidgetsbibmw.ui'
+##
+## Created by: Qt User Interface Compiler version 6.8.2
+##
+## WARNING! All changes made in this file will be lost when recompiling UI file!
+################################################################################
+
 from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
     QMetaObject, QObject, QPoint, QRect,
     QSize, QTime, QUrl, Qt)
@@ -9,7 +19,6 @@ from PySide6.QtWidgets import (QApplication, QCheckBox, QFrame, QHBoxLayout,
     QHeaderView, QLabel, QLineEdit, QPushButton,
     QSizePolicy, QSpacerItem, QTableWidget, QTableWidgetItem,
     QVBoxLayout, QWidget)
-
 import resources.resources_rc
 
 class Ui_tableWidget(object):
@@ -352,12 +361,27 @@ class Ui_tableWidget(object):
 
         self.verticalLayout.addWidget(self.fromToFrame, 0, Qt.AlignmentFlag.AlignTop)
 
+        self.horizontalLayout_6 = QHBoxLayout()
+        self.horizontalLayout_6.setObjectName(u"horizontalLayout_6")
         self.statusTable = QLabel(tableWidget)
         self.statusTable.setObjectName(u"statusTable")
+        sizePolicy4 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
+        sizePolicy4.setHorizontalStretch(0)
+        sizePolicy4.setVerticalStretch(0)
+        sizePolicy4.setHeightForWidth(self.statusTable.sizePolicy().hasHeightForWidth())
+        self.statusTable.setSizePolicy(sizePolicy4)
         self.statusTable.setStyleSheet(u"color: yellow")
         self.statusTable.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        self.verticalLayout.addWidget(self.statusTable)
+        self.horizontalLayout_6.addWidget(self.statusTable)
+
+        self.countRows = QLabel(tableWidget)
+        self.countRows.setObjectName(u"countRows")
+
+        self.horizontalLayout_6.addWidget(self.countRows)
+
+
+        self.verticalLayout.addLayout(self.horizontalLayout_6)
 
         self.table = QTableWidget(tableWidget)
         if (self.table.columnCount() < 4):
@@ -371,11 +395,12 @@ class Ui_tableWidget(object):
         __qtablewidgetitem3 = QTableWidgetItem()
         self.table.setHorizontalHeaderItem(3, __qtablewidgetitem3)
         self.table.setObjectName(u"table")
-        sizePolicy4 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
-        sizePolicy4.setHorizontalStretch(0)
-        sizePolicy4.setVerticalStretch(0)
-        sizePolicy4.setHeightForWidth(self.table.sizePolicy().hasHeightForWidth())
-        self.table.setSizePolicy(sizePolicy4)
+        sizePolicy5 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        sizePolicy5.setHorizontalStretch(0)
+        sizePolicy5.setVerticalStretch(0)
+        sizePolicy5.setHeightForWidth(self.table.sizePolicy().hasHeightForWidth())
+        self.table.setSizePolicy(sizePolicy5)
+        self.table.setWordWrap(False)
         self.table.horizontalHeader().setMinimumSectionSize(110)
         self.table.horizontalHeader().setDefaultSectionSize(200)
 
@@ -406,6 +431,7 @@ class Ui_tableWidget(object):
         self.toLabel.setText(QCoreApplication.translate("tableWidget", u"\u0111\u1ebfn post", None))
         self.btn_fromTo.setText("")
         self.statusTable.setText("")
+        self.countRows.setText(QCoreApplication.translate("tableWidget", u"Total rows:", None))
         ___qtablewidgetitem = self.table.horizontalHeaderItem(0)
         ___qtablewidgetitem.setText(QCoreApplication.translate("tableWidget", u"LINK GROUP", None));
         ___qtablewidgetitem1 = self.table.horizontalHeaderItem(1)

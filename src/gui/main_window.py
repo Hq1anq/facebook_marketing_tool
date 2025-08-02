@@ -65,6 +65,7 @@ class MainWindow(QMainWindow):
         
         self.get_group.signals.log.connect(lambda msg: self.table_widget.statusTable.setText(msg))
         self.get_group.signals.add_row.connect(lambda link, name: self.table_widget.add_row(link, name))
+        self.get_group.signals.finished.connect(self.table_widget.adjust_column_width)
         
         self.spam.signals.log.connect(lambda msg: self.ui.statusHome.setText(msg))
         self.spam.signals.finished.connect(lambda: self.ui.btn_spam.setText("SPAM!"))
@@ -107,8 +108,6 @@ class MainWindow(QMainWindow):
         self.ui.btn_getCookie.clicked.connect(self.login.get_cookies)
         # self.ui.methodComboBox.activated.connect(self.chooseLoginMethod)
         self.ui.copyButton.clicked.connect(self.copy_cookies)
-        
-        # self.ui.btn_getGroup.clicked.connect(lambda: toolFunction.OpenTable(self, TableWindow(), "GET GROUP"))
         
         self.ui.btn_post.clicked.connect(self.open_table)
         self.ui.btn_comment.clicked.connect(self.open_table)
@@ -162,10 +161,10 @@ class MainWindow(QMainWindow):
             self.post.set_stop(True)
     
     def run_comment(self):
-        return
+        self.move(self.screen().size().width() - self.size().width(), self.screen().size().height() - self.size().height() - 50)
     
     def run_getGroup(self):
-        self.table_widget.table.setRowCount(0)
+        self.move(self.screen().size().width() - self.size().width(), self.screen().size().height() - self.size().height() - 50)
         filter_keys = [keyword.strip() for keyword in self.table_widget.filterGroupInput.text().split(",") if keyword.strip()]
         self.get_group.setup(self.table_widget.filterGroupCheckBox.isChecked(), filter_keys)
         
@@ -179,6 +178,7 @@ class MainWindow(QMainWindow):
             self.table_widget.statusTable.setText("Get Group: Chưa đăng nhập")
             return
         
+        self.table_widget.table.setRowCount(1) # Clear table
         QThreadPool.globalInstance().start(self.get_group)
     
     def run_getPost(self):
@@ -322,6 +322,7 @@ class MainWindow(QMainWindow):
             self.table_widget.setup("GET GROUP")
         elif sender == self.ui.btn_getPost:
             self.table_widget.setup("GET POST")
+        self.table_widget.adjust_column_width()
         
     def center_table(self):
         self.table_frame_width = self.width() - self.ui.leftMenu.width() // 2

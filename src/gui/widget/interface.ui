@@ -279,7 +279,7 @@ QScrollBar::add-line:vertical:pressed, QScrollBar::sub-line:vertical:pressed {
                 <string>   Hide</string>
                </property>
                <property name="icon">
-                <iconset resource="resources/resources.qrc">
+                <iconset resource="../../../resources/resources.qrc">
                  <normaloff>:/icons/icons/menu.svg</normaloff>:/icons/icons/menu.svg</iconset>
                </property>
                <property name="iconSize">
@@ -302,7 +302,7 @@ QScrollBar::add-line:vertical:pressed, QScrollBar::sub-line:vertical:pressed {
                 <string>   Home</string>
                </property>
                <property name="icon">
-                <iconset resource="resources/resources.qrc">
+                <iconset resource="../../../resources/resources.qrc">
                  <normaloff>:/icons/icons/home.svg</normaloff>:/icons/icons/home.svg</iconset>
                </property>
                <property name="iconSize">
@@ -325,7 +325,7 @@ QScrollBar::add-line:vertical:pressed, QScrollBar::sub-line:vertical:pressed {
                 <string>   Get</string>
                </property>
                <property name="icon">
-                <iconset resource="resources/resources.qrc">
+                <iconset resource="../../../resources/resources.qrc">
                  <normaloff>:/icons/icons/recive.svg</normaloff>:/icons/icons/recive.svg</iconset>
                </property>
                <property name="iconSize">
@@ -348,7 +348,7 @@ QScrollBar::add-line:vertical:pressed, QScrollBar::sub-line:vertical:pressed {
                 <string>   Proxy</string>
                </property>
                <property name="icon">
-                <iconset resource="resources/resources.qrc">
+                <iconset resource="../../../resources/resources.qrc">
                  <normaloff>:/icons/icons/proxyUnCheckBox.svg</normaloff>
                  <normalon>:/icons/icons/proxyCheckBox.svg</normalon>:/icons/icons/proxyUnCheckBox.svg</iconset>
                </property>
@@ -375,7 +375,7 @@ QScrollBar::add-line:vertical:pressed, QScrollBar::sub-line:vertical:pressed {
                 <string>   Save</string>
                </property>
                <property name="icon">
-                <iconset resource="resources/resources.qrc">
+                <iconset resource="../../../resources/resources.qrc">
                  <normaloff>:/icons/icons/save.svg</normaloff>:/icons/icons/save.svg</iconset>
                </property>
                <property name="iconSize">
@@ -398,7 +398,7 @@ QScrollBar::add-line:vertical:pressed, QScrollBar::sub-line:vertical:pressed {
                 <string>   Table</string>
                </property>
                <property name="icon">
-                <iconset resource="resources/resources.qrc">
+                <iconset resource="../../../resources/resources.qrc">
                  <normaloff>:/icons/icons/table.svg</normaloff>:/icons/icons/table.svg</iconset>
                </property>
                <property name="iconSize">
@@ -537,7 +537,7 @@ QComboBox { background-color: rgb(33, 37, 43) }
                  </size>
                 </property>
                 <property name="icon">
-                 <iconset resource="resources/resources.qrc">
+                 <iconset resource="../../../resources/resources.qrc">
                   <normaloff>:/icons/icons/update.svg</normaloff>:/icons/icons/update.svg</iconset>
                 </property>
                 <property name="iconSize">
@@ -605,7 +605,7 @@ QComboBox { background-color: rgb(33, 37, 43) }
                      <string/>
                     </property>
                     <property name="icon">
-                     <iconset resource="resources/resources.qrc">
+                     <iconset resource="../../../resources/resources.qrc">
                       <normaloff>:/icons/icons/post.svg</normaloff>:/icons/icons/post.svg</iconset>
                     </property>
                     <property name="iconSize">
@@ -641,8 +641,8 @@ QComboBox { background-color: rgb(33, 37, 43) }
                          <rect>
                           <x>0</x>
                           <y>0</y>
-                          <width>410</width>
-                          <height>358</height>
+                          <width>100</width>
+                          <height>30</height>
                          </rect>
                         </property>
                        </widget>
@@ -710,7 +710,7 @@ QComboBox { background-color: rgb(33, 37, 43) }
                            </size>
                           </property>
                           <property name="icon">
-                           <iconset resource="resources/resources.qrc">
+                           <iconset resource="../../../resources/resources.qrc">
                             <normaloff>:/icons/icons/openedFile.svg</normaloff>:/icons/icons/openedFile.svg</iconset>
                           </property>
                           <property name="iconSize">
@@ -870,7 +870,7 @@ QComboBox { background-color: rgb(33, 37, 43) }
                            </size>
                           </property>
                           <property name="icon">
-                           <iconset resource="resources/resources.qrc">
+                           <iconset resource="../../../resources/resources.qrc">
                             <normaloff>:/icons/icons/openedFile.svg</normaloff>:/icons/icons/openedFile.svg</iconset>
                           </property>
                           <property name="iconSize">
@@ -912,7 +912,7 @@ QComboBox { background-color: rgb(33, 37, 43) }
                      <string/>
                     </property>
                     <property name="icon">
-                     <iconset resource="resources/resources.qrc">
+                     <iconset resource="../../../resources/resources.qrc">
                       <normaloff>:/icons/icons/comment.svg</normaloff>:/icons/icons/comment.svg</iconset>
                     </property>
                     <property name="iconSize">
@@ -1024,7 +1024,7 @@ QComboBox { background-color: rgb(33, 37, 43) }
                            </size>
                           </property>
                           <property name="icon">
-                           <iconset resource="resources/resources.qrc">
+                           <iconset resource="../../../resources/resources.qrc">
                             <normaloff>:/icons/icons/openedFile.svg</normaloff>:/icons/icons/openedFile.svg</iconset>
                           </property>
                           <property name="iconSize">
@@ -1313,7 +1313,7 @@ QComboBox { background-color: rgb(33, 37, 43) }
                  </size>
                 </property>
                 <property name="icon">
-                 <iconset resource="resources/resources.qrc">
+                 <iconset resource="../../../resources/resources.qrc">
                   <normaloff>:/icons/icons/update.svg</normaloff>:/icons/icons/update.svg</iconset>
                 </property>
                 <property name="iconSize">
@@ -1408,7 +1408,7 @@ QComboBox { background-color: rgb(33, 37, 43) }
                            <string/>
                           </property>
                           <property name="icon">
-                           <iconset resource="resources/resources.qrc">
+                           <iconset resource="../../../resources/resources.qrc">
                             <normaloff>:/icons/icons/post.svg</normaloff>:/icons/icons/post.svg</iconset>
                           </property>
                           <property name="iconSize">
@@ -1583,7 +1583,7 @@ QComboBox { background-color: rgb(33, 37, 43) }
                      <item>
                       <widget class="QPushButton" name="copyButton">
                        <property name="icon">
-                        <iconset resource="resources/resources.qrc">
+                        <iconset resource="../../../resources/resources.qrc">
                          <normaloff>:/icons/icons/copy.svg</normaloff>:/icons/icons/copy.svg</iconset>
                        </property>
                        <property name="iconSize">
@@ -1774,7 +1774,7 @@ QComboBox { background-color: rgb(33, 37, 43) }
                         </size>
                        </property>
                        <property name="icon">
-                        <iconset resource="resources/resources.qrc">
+                        <iconset resource="../../../resources/resources.qrc">
                          <normaloff>:/icons/icons/update.svg</normaloff>:/icons/icons/update.svg</iconset>
                        </property>
                        <property name="iconSize">
@@ -1919,7 +1919,7 @@ QComboBox { background-color: rgb(33, 37, 43) }
                 <string>contact: @Giang_vps</string>
                </property>
                <property name="icon">
-                <iconset resource="resources/resources.qrc">
+                <iconset resource="../../../resources/resources.qrc">
                  <normaloff>:/icons/icons/tele.svg</normaloff>:/icons/icons/tele.svg</iconset>
                </property>
               </widget>
@@ -1976,7 +1976,7 @@ QComboBox { background-color: rgb(33, 37, 43) }
              </size>
             </property>
             <property name="pixmap">
-             <pixmap resource="resources/resources.qrc">:/icons/icons/Logo.svg</pixmap>
+             <pixmap resource="../../../resources/resources.qrc">:/icons/icons/Logo.svg</pixmap>
             </property>
             <property name="alignment">
              <set>Qt::AlignmentFlag::AlignCenter</set>
@@ -2033,7 +2033,7 @@ QComboBox { background-color: rgb(33, 37, 43) }
                 </font>
                </property>
                <property name="icon">
-                <iconset resource="resources/resources.qrc">
+                <iconset resource="../../../resources/resources.qrc">
                  <normaloff>:/icons/icons/minimize.svg</normaloff>:/icons/icons/minimize.svg</iconset>
                </property>
                <property name="iconSize">
@@ -2047,7 +2047,7 @@ QComboBox { background-color: rgb(33, 37, 43) }
              <item>
               <widget class="QPushButton" name="changeWindowBtn">
                <property name="icon">
-                <iconset resource="resources/resources.qrc">
+                <iconset resource="../../../resources/resources.qrc">
                  <normaloff>:/icons/icons/maximize.svg</normaloff>
                  <normalon>:/icons/icons/restore.svg</normalon>:/icons/icons/maximize.svg</iconset>
                </property>
@@ -2065,7 +2065,7 @@ QComboBox { background-color: rgb(33, 37, 43) }
              <item>
               <widget class="QPushButton" name="closeBtn">
                <property name="icon">
-                <iconset resource="resources/resources.qrc">
+                <iconset resource="../../../resources/resources.qrc">
                  <normaloff>:/icons/icons/close.svg</normaloff>:/icons/icons/close.svg</iconset>
                </property>
                <property name="iconSize">
@@ -2092,7 +2092,8 @@ QComboBox { background-color: rgb(33, 37, 43) }
   </widget>
  </widget>
  <resources>
-  <include location="resources/resources.qrc"/>
+  <include location="../../../resources/resources.qrc"/>
+  <include location="../../../resources/resources.qrc"/>
   <include location="resources/resources.qrc"/>
  </resources>
  <connections/>

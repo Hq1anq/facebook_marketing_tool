@@ -7,6 +7,7 @@ class GetGroup(QRunnable):
     class Signals(QObject):
         log = Signal(str)
         add_row = Signal(str, str)
+        finished = Signal()
         
     def __init__(self, driver_manager: DriverManager, data_manager: DataManager):
         super().__init__()
@@ -46,6 +47,7 @@ class GetGroup(QRunnable):
                 name = group.text
                 self.signals.add_row.emit(link, name)
         self.signals.log.emit("Đã lấy thông tin các group")
+        self.signals.finished.emit()
     
     def setup(self, use_filter: bool, filter_keys: list):
         self.use_filter = use_filter
