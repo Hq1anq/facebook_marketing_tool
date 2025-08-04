@@ -48,8 +48,15 @@ class TableWidget(QFrame, Ui_tableWidget):
         
         self._highlighted_rows = set()
         self.visible_index = None
+        self.deleted_rows = []
         
         self.closeBtn.clicked.connect(self.animated_close)
+        self.btn_add.clicked.connect(self.add_empty_row)
+        self.btn_delete.clicked.connect(self.delete_row)
+        
+        undo_shortcut = QShortcut(QKeySequence("Ctrl+Z"), self)
+        undo_shortcut.activated.connect(self.undoDelete)
+        
         self.table.itemSelectionChanged.connect(self.highlight_selected_row)
         
         self.adjust_column_width()
@@ -73,8 +80,9 @@ class TableWidget(QFrame, Ui_tableWidget):
     
     def setup_filter_row(self):
         self.table.setRowCount(1)  # Ensure at least one row for filters
+        self.table.setVerticalHeaderItem(0, QTableWidgetItem("")) # Filter row not have header label
         self.filter_edits = []
-        for col in range(1, self.table.columnCount()):
+        for col in range(self.table.columnCount()):
             edit = QLineEdit()
             edit.setPlaceholderText("Filter")
             edit.setAlignment(Qt.AlignmentFlag.AlignCenter if col != 9 else Qt.AlignmentFlag.AlignLeft)
@@ -103,10 +111,10 @@ class TableWidget(QFrame, Ui_tableWidget):
             else:
                 self.table.setRowHidden(row, True)
                 header_labels.append("")
-                
+
         self.table.setVerticalHeaderLabels(header_labels)
         self.adjust_column_width()
-        self.countRows.setText(f"Selected: {len(set(idx.row() for idx in self.table.selectedIndexes() if idx.row() > 0))}     Total rows: {self.visible_index if self.visible_index else self.table.rowCount()}")
+        self.countRows.setText(f"Selected: {len(set(idx.row() for idx in self.table.selectedIndexes() if idx.row() > 0))}    Total rows: {self.visible_index if self.visible_index else self.table.rowCount()}")
                 
     def highlight_selected_row(self):
         selected_rows = set(idx.row() for idx in self.table.selectedIndexes() if idx.row() > 0)
@@ -133,10 +141,11 @@ class TableWidget(QFrame, Ui_tableWidget):
     def add_row(self, link: str, name: str):
         row_position = self.table.rowCount()
         self.table.insertRow(row_position)
-        self.table.setItem(row_position, 0, self.table_item(link, "left"))
+        self.table.setItem(row_position, 0, self.table_item(link))
         self.table.setItem(row_position, 1, self.table_item(""))
-        self.table.setItem(row_position, 2, self.table_item(name, "left"))
+        self.table.setItem(row_position, 2, self.table_item(name))
         self.table.setItem(row_position, 3, self.table_item(""))
+        self.table.setVerticalHeaderItem(row_position, QTableWidgetItem(str(row_position)))
     
     def setup(self, func: str):
         match func:
@@ -170,9 +179,12 @@ class TableWidget(QFrame, Ui_tableWidget):
                 self.toLabel.setText("đến group")
                 self.listLabel.setText("List group")
                 
-    def table_item(self, text: str, align: str = "center"):
+    def table_item(self, text: str, align: str = "left"):
         item = QTableWidgetItem(text)
-        item.setTextAlignment(Qt.AlignmentFlag.AlignCenter if align == "center" else Qt.AlignmentFlag.AlignLeft)
+        if align == "left":
+            item.setTextAlignment(Qt.AlignmentFlag.AlignLeft)
+        if align == "center":
+            item.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
         return item
 
     def get_selected(self):
@@ -192,6 +204,35 @@ class TableWidget(QFrame, Ui_tableWidget):
                 "name group": self.table.item(row, 2).text().lower()
             })
         return selected_items
+    
+    def add_empty_row(self):
+        new_row_idx = self.table.rowCount()
+        self.table.insertRow(new_row_idx)
+        for i in range(4):
+            self.table.setItem(new_row_idx, i, self.table_item(""))
+
+    def delete_row(self):
+        if self.table.rowCount() > 1:
+            selectedRows = sorted(set(index.row() for index in self.table.selectedIndexes()), reverse=True)
+            for currentRow in selectedRows:
+                if currentRow != 0:
+                    row_data = [self.table.item(currentRow, col).text() if self.table.item(currentRow, col)
+                                else '' for col in range(self.table.columnCount())]
+                    self.deleted_rows.append((currentRow, row_data))
+                    self.table.removeRow(currentRow)
+            if len(selectedRows) == 0:
+                self.table.setCurrentCell(0, 0)
+            else:
+                self.table.setCurrentCell(currentRow, 0)
+
+    def undoDelete(self):
+        if self.deleted_rows:
+            row_index, row_data = self.deleted_rows.pop()
+            self.table.insertRow(row_index)
+            for col, data in enumerate(row_data):
+                item = QTableWidgetItem(data)
+                self.table.setItem(row_index, col, item)
+            self.table.setCurrentCell(row_index, 0)
 
     def animated_close(self):
         """Animate widget shrinking and then close"""
