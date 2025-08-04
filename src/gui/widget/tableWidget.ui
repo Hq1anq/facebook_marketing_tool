@@ -550,9 +550,6 @@ QPushButton:pressed { background-color: rgb(23, 26, 30); border: 4px solid rgb(2
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
-       <property name="styleSheet">
-        <string notr="true">color: yellow</string>
-       </property>
        <property name="text">
         <string/>
        </property>

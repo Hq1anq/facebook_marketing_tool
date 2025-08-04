@@ -91,6 +91,17 @@ class TableWidget(QFrame, Ui_tableWidget):
             self.table.setCellWidget(0, col, edit)
             self.filter_edits.append(edit)
     
+    def load_group_table(self, data: dict):
+        """Load group data from data_manager and render to table"""
+        self.table.setRowCount(1)  # Clear current content
+        for group in data.get("GET", {}).get("GROUP", []):
+            row_position = self.table.rowCount()
+            self.table.insertRow(row_position)
+            self.table.setItem(row_position, 0, self.table_item(group.get("link group", "")))
+            self.table.setItem(row_position, 1, self.table_item(group.get("link post", "")))
+            self.table.setItem(row_position, 2, self.table_item(group.get("name group", "")))
+            self.table.setItem(row_position, 3, self.table_item(group.get("status", ""), "center"))
+    
     def filter_table(self):
         self.visible_index = 1
         header_labels = [""]  # For filter row

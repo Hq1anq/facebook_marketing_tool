@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'tableWidgetkGVXva.ui'
+## Form generated from reading UI file 'tableWidgethkINYZ.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.8.2
 ##
@@ -19,6 +19,8 @@ from PySide6.QtWidgets import (QApplication, QCheckBox, QFrame, QHBoxLayout,
     QHeaderView, QLabel, QLineEdit, QPushButton,
     QSizePolicy, QSpacerItem, QTableWidget, QTableWidgetItem,
     QVBoxLayout, QWidget)
+
+from src.gui.custom_widget.highlighted_widget import HighlightLabel
 import resources.resources_rc
 
 class Ui_tableWidget(object):
@@ -349,14 +351,13 @@ class Ui_tableWidget(object):
 
         self.horizontalLayout_6 = QHBoxLayout()
         self.horizontalLayout_6.setObjectName(u"horizontalLayout_6")
-        self.statusTable = QLabel(tableWidget)
+        self.statusTable = HighlightLabel(tableWidget)
         self.statusTable.setObjectName(u"statusTable")
         sizePolicy4 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
         sizePolicy4.setHorizontalStretch(0)
         sizePolicy4.setVerticalStretch(0)
         sizePolicy4.setHeightForWidth(self.statusTable.sizePolicy().hasHeightForWidth())
         self.statusTable.setSizePolicy(sizePolicy4)
-        self.statusTable.setStyleSheet(u"color: yellow")
         self.statusTable.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.horizontalLayout_6.addWidget(self.statusTable)
@@ -386,26 +387,6 @@ class Ui_tableWidget(object):
         sizePolicy5.setVerticalStretch(0)
         sizePolicy5.setHeightForWidth(self.table.sizePolicy().hasHeightForWidth())
         self.table.setSizePolicy(sizePolicy5)
-        self.table.setStyleSheet(u"QTableCornerButton::section { background-color: rgb(33, 37, 43) }\n"
-"QTableWidget {	\n"
-"	padding: 5px;\n"
-"	gridline-color: rgb(44, 49, 58);\n"
-"	border-bottom: 1px solid rgb(44, 49, 60); }\n"
-"QTableWidget::item{ border-color: rgb(44, 49, 60) }\n"
-"QTableWidget::item:selected{\n"
-"	background-color: rgb(189, 147, 249);\n"
-"	color: rgb(40, 44, 52);\n"
-"}\n"
-"QHeaderView { qproperty-defaultAlignment: AlignCenter }\n"
-"QHeaderView::section{\n"
-"	background-color: rgb(33, 37, 43);\n"
-"	border: 1px solid rgb(44, 49, 60);\n"
-"	font-size: 15px }\n"
-"QLineEdit {\n"
-"    background-color: rgb(50, 54, 62); /* slightly lighter/darker variant for edit mode */\n"
-"	selection-background-color: rgb(189, 147, 249); /* background when highlight */\n"
-"    selection-color: rgb(40, 44, 52); /* text color when selected */\n"
-"}")
         self.table.setWordWrap(False)
         self.table.horizontalHeader().setMinimumSectionSize(110)
         self.table.horizontalHeader().setDefaultSectionSize(200)

@@ -1,10 +1,6 @@
 import json
 import os
 
-DATA_FOLDER = "data"
-CHROME_DATA_PATH = DATA_FOLDER + "/ChromeData"
-DATA_PATH = DATA_FOLDER + "/Data.json"
-
 class DataManager:
     
     DEFAULT_DATA = {
@@ -158,16 +154,18 @@ Hạ tầng hiện đại, nguồn cung mới, hiệu suất tối ưu.
         
         if not os.path.exists(self.data_path): # Nếu chưa có file data -> Tạo (kèm luôn sheet Login)
             self.save_data()
+        
+        self.load_data()
     
     def load_data(self) -> None:
         """Load data from JSON file or create with defaults if not exists"""
-        if os.path.exists(DATA_PATH):
+        if os.path.exists(self.data_path):
             try:
-                with open(DATA_PATH, 'r', encoding='utf-8') as f:
+                with open(self.data_path, 'r', encoding='utf-8') as f:
                     self.data = json.load(f)
             except json.JSONDecodeError:
                 self.data = self.DEFAULT_DATA
-        self.data = self.DEFAULT_DATA
+        else: self.data = self.DEFAULT_DATA
     
     def save_data(self) -> bool:
         """Save configuration to JSON file"""

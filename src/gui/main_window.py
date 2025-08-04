@@ -96,6 +96,7 @@ class MainWindow(QMainWindow):
         save_shortcut.activated.connect(self.save)
         
         self.table_widget.btn_run.clicked.connect(self.run_in_table)
+        self.table_widget.tableExport.clicked.connect(self.save_in_table)
         self.ui.btn_spam.clicked.connect(self.run_spam)
 
         # GET
@@ -138,6 +139,10 @@ class MainWindow(QMainWindow):
             self.run_getGroup()
         if self.table_widget.btn_run.text() == "GET POST":
             self.run_getPost()
+    
+    def save_in_table(self):
+        if self.table_widget.btn_run.text() == "GET GROUP":
+            self.save_group_table()
         
     def run_post(self):
         if self.table_widget.btn_run.text() != "STOP POST!":
@@ -208,6 +213,32 @@ class MainWindow(QMainWindow):
             self.ui.statusHome.setText("SPAM: Đã tạm dừng")
             self.ui.btn_spam.setText("CONTINUE")
             self.spam.set_stop(True)  # Tell Spam to pause
+            
+    def save_group_table(self):
+        """Save current table content to data_manager.data['GET']['GROUP']"""
+        group_list = []
+        for row in range(self.table_widget.table.rowCount()):
+            link_group = self.table_widget.table.item(row, 0).text() if self.table_widget.table.item(row, 0) else ""
+            link_post = self.table_widget.table.item(row, 1).text() if self.table_widget.table.item(row, 1) else ""
+            name_group = self.table_widget.table.item(row, 2).text() if self.table_widget.table.item(row, 2) else ""
+            status = self.table_widget.table.item(row, 3).text() if self.table_widget.table.item(row, 3) else ""
+
+            group_data = {
+                "link group": link_group,
+                "link post": link_post,
+                "name group": name_group,
+                "status": status
+            }
+            group_list.append(group_data)
+
+        # Save to data manager
+        self.data_manager.data["GET"]["GROUP"] = group_list
+        success = self.data_manager.save_data()
+        
+        if success:
+            self.table_widget.statusTable.setText("Group data saved successfully.")
+        else:
+            self.table_widget.statusTable.setText("Failed to save group data.")
         
     def mousePressEvent(self, event):
         self.window_controller.handle_mouse_press(event)
@@ -311,6 +342,7 @@ class MainWindow(QMainWindow):
         elif sender == self.ui.btn_comment:
             self.table_widget.setup("COMMENT")
         elif sender == self.ui.btn_getGroup:
+            self.table_widget.load_group_table(self.data_manager.data)
             self.table_widget.setup("GET GROUP")
         elif sender == self.ui.btn_getPost:
             self.table_widget.setup("GET POST")
