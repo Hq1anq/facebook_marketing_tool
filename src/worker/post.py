@@ -10,7 +10,7 @@ class Post(QRunnable):
     class Signals(QObject):
         log = Signal(str)
         table_status = Signal(int, str)
-        finished = Signal(str)
+        finished = Signal()
         
     def __init__(self, driver_manager: DriverManager, data_manager: DataManager):
         super().__init__()
@@ -86,10 +86,10 @@ class Post(QRunnable):
                 # Nhấn thêm ảnh
                 if self.use_image:
                     image = random.choice(self.list_image)
-                    add_image_btn = self.driver_manager.wait10.until(
-                        EC.element_to_be_clickable((By.XPATH, f"//div[@aria-label='{self.driver_manager.add_image}']"))
-                    )
-                    self.driver_manager.click_element(add_image_btn)
+                    # add_image_btn = self.driver_manager.wait10.until(
+                    #     EC.element_to_be_clickable((By.XPATH, f"//div[@aria-label='{self.driver_manager.add_image}']"))
+                    # )
+                    # self.driver_manager.click_element(add_image_btn)
                     self.driver.find_element(By.XPATH,"//input[@accept='image/*,image/heif,image/heic,video/*,video/mp4,video/x-m4v,video/x-matroska,.mkv']").send_keys(image)
                 time.sleep(1)
                 self.driver.find_element(By.XPATH, f"//div[@aria-label='{self.driver_manager.post}']").click()
@@ -99,9 +99,9 @@ class Post(QRunnable):
                     self.signals.finished.emit()
                     self.set_stop(True)
                     return
-                self.signals.table_status.emit(data["row", "Đã post"])
+                self.signals.table_status.emit(data["row"], "Đã post")
             except:
-                self.signals.table_status.emit(data["row", "Chưa post"])
+                self.signals.table_status.emit(data["row"], "Chưa post")
                 self.driver_manager.handle_chat_close()
             countPost += 1
         self.signals.log.emit("POST : Đã đăng xong!")

@@ -55,7 +55,7 @@ class MainWindow(QMainWindow):
     
         # Connect signal update ui
         self.post.signals.log.connect(lambda msg: self.table_widget.statusTable.setText(msg))
-        self.post.signals.table_status.connect(lambda row, msg: self.table_widget.table.setItem(row, 3, QTableWidgetItem(msg)))
+        self.post.signals.table_status.connect(lambda row, msg: self.table_widget.table.setItem(row, 3, self.table_widget.table_item(msg, "center")))
         self.post.signals.finished.connect(lambda: self.table_widget.btn_run.setText("POST"))
         
         self.login.signals.log.connect(lambda msg: self.ui.statusGet.setText(msg))
@@ -145,6 +145,7 @@ class MainWindow(QMainWindow):
             self.save_group_table()
         
     def run_post(self):
+        self.move(self.screen().size().width()- self.size().width(), self.screen().size().height() - self.size().height() - 50)
         if self.table_widget.btn_run.text() != "STOP POST!":
             self.table_widget.btn_run.setText("STOP POST!")
             if not self.driver_manager.setup_driver():
@@ -154,7 +155,6 @@ class MainWindow(QMainWindow):
             if not self.driver_manager.is_login:
                 self.table_widget.statusTable.setText("POST: Chưa đăng nhập")
                 return
-            self.move(self.screen().size().width()- self.size().width(), self.screen().size().height() - self.size().height() - 50)
             self.post_ui.save_data()
             
             self.post.setup(self.table_widget.get_selected(), self.ui.postContentCheckBox.isChecked(), self.ui.postImageCheckBox.isChecked())
@@ -336,13 +336,13 @@ class MainWindow(QMainWindow):
             self.shadow.setYOffset(0)
             self.shadow.setColor(QColor(0, 0, 0, 150))
             self.table_animation.finished.connect(lambda: self.table_widget.setGraphicsEffect(self.shadow))
+        self.table_widget.load_group_table(self.data_manager.data)
         sender = self.sender()
         if sender == self.ui.btn_post:
             self.table_widget.setup("POST")
         elif sender == self.ui.btn_comment:
             self.table_widget.setup("COMMENT")
         elif sender == self.ui.btn_getGroup:
-            self.table_widget.load_group_table(self.data_manager.data)
             self.table_widget.setup("GET GROUP")
         elif sender == self.ui.btn_getPost:
             self.table_widget.setup("GET POST")
