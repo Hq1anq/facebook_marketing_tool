@@ -55,7 +55,7 @@ class TableWidget(QFrame, Ui_tableWidget):
         self.btn_delete.clicked.connect(self.delete_row)
         
         undo_shortcut = QShortcut(QKeySequence("Ctrl+Z"), self)
-        undo_shortcut.activated.connect(self.undoDelete)
+        undo_shortcut.activated.connect(self.undo_delete)
         
         self.table.itemSelectionChanged.connect(self.highlight_selected_row)
         
@@ -266,25 +266,31 @@ class TableWidget(QFrame, Ui_tableWidget):
     def delete_row(self):
         if self.table.rowCount() > 1:
             selectedRows = sorted(set(index.row() for index in self.table.selectedIndexes()), reverse=True)
-            for currentRow in selectedRows:
-                if currentRow != 0:
-                    row_data = [self.table.item(currentRow, col).text() if self.table.item(currentRow, col)
-                                else '' for col in range(self.table.columnCount())]
-                    self.deleted_rows.append((currentRow, row_data))
-                    self.table.removeRow(currentRow)
-            if len(selectedRows) == 0:
-                self.table.setCurrentCell(0, 0)
-            else:
-                self.table.setCurrentCell(currentRow, 0)
+            for current_row in selectedRows:
+                if current_row != 0:
+                    row_data = []
+                    for col in range(self.table.columnCount()):
+                        widget = self.table.cellWidget(current_row, col)
+                        if widget:
+                            label = widget.findChild(QLabel)
+                            status_text = label.text() if label else ""
+                            row_data.append(("widget", self.status_chip(status_text)))
+                        else:
+                            item = self.table.item(current_row, col)
+                            row_data.append(("item", item.clone() if item else None))  # clone item for safety
+                    self.deleted_rows.append((current_row, row_data))
+                    self.table.removeRow(current_row)
 
-    def undoDelete(self):
+    def undo_delete(self):
         if self.deleted_rows:
             row_index, row_data = self.deleted_rows.pop()
             self.table.insertRow(row_index)
-            for col, data in enumerate(row_data):
-                item = QTableWidgetItem(data)
-                self.table.setItem(row_index, col, item)
-            self.table.setCurrentCell(row_index, 0)
+            for col, (cell_type, value) in enumerate(row_data):
+                if cell_type == "widget" and value:
+                    self.table.setCellWidget(row_index, col, value)
+                elif cell_type == "item" and value:
+                    self.table.setItem(row_index, col, value)
+            self.table.setVerticalHeaderItem(row_index, QTableWidgetItem(str(row_index)))
 
     def animated_close(self):
         """Animate widget shrinking and then close"""
