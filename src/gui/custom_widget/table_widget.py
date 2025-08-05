@@ -1,5 +1,5 @@
-from PySide6.QtWidgets import QHeaderView, QTableWidgetItem, QFrame, QGraphicsDropShadowEffect, QLineEdit
-from PySide6.QtCore import QEvent, QPoint, Qt, QPropertyAnimation, QEasingCurve, QTimer, QRect
+from PySide6.QtWidgets import QHeaderView, QTableWidgetItem, QFrame, QGraphicsDropShadowEffect, QLineEdit, QLabel, QWidget, QHBoxLayout
+from PySide6.QtCore import Qt, QPropertyAnimation, QRect
 from PySide6.QtGui import QShortcut, QKeySequence, QColor
 
 from src.gui.widget.ui_tableWidget import Ui_tableWidget
@@ -104,10 +104,10 @@ class TableWidget(QFrame, Ui_tableWidget):
     
     def filter_table(self):
         self.visible_index = 1
-        header_labels = [""]  # For filter row
+        header_labels = []
         for row in range(1, self.table.rowCount()):  # Skip filter row
             show_row = True
-            for col, edit in enumerate(self.filter_edits, start=1):
+            for col, edit in enumerate(self.filter_edits):
                 filter_text = edit.text().lower()
                 item = self.table.item(row, col)
                 if filter_text and (not item or filter_text not in item.text().lower()):
@@ -197,6 +197,39 @@ class TableWidget(QFrame, Ui_tableWidget):
         if align == "center":
             item.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
         return item
+
+    def status_chip(self, status: str) -> QWidget:
+        label = QLabel()
+        status_lower = status.lower()
+
+        status_styles = {
+            "đã post": "background-color: #16a34a; color: white;",      # green-600
+            "đã comment": "background-color: #eab308; color: black;",   # yellow-500
+            "chưa post": "background-color: #dc2626; color: white;",    # red-600
+            "chưa comment": "background-color: #dc2626; color: white;", # red-600
+            "unknow": "background-color: #6b7280; color: white;"        # gray-500
+        }
+
+        chip_style = f"""
+            border-radius: 8px;
+            padding: 2px 8px;
+            font-size: 11px;
+            font-weight: 600;
+            {status_styles.get(status_lower, status_styles['unknow'])}
+        """
+
+        label.setText(status)
+        label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        label.setStyleSheet(chip_style)
+
+        container = QWidget()
+        layout = QHBoxLayout()
+        layout.addWidget(label)
+        layout.setContentsMargins(0, 0, 0, 0)
+        layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        container.setLayout(layout)
+
+        return container
 
     def get_selected(self):
         selected_rows = set(item.row() for item in self.table.selectedItems())

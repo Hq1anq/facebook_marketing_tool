@@ -55,7 +55,7 @@ class MainWindow(QMainWindow):
     
         # Connect signal update ui
         self.post.signals.log.connect(lambda msg: self.table_widget.statusTable.setText(msg))
-        self.post.signals.table_status.connect(lambda row, msg: self.table_widget.table.setItem(row, 3, self.table_widget.table_item(msg, "center")))
+        self.post.signals.table_status.connect(lambda row, status: self.table_widget.table.setCellWidget(row, 3, self.table_widget.status_chip(status)))
         self.post.signals.finished.connect(lambda: self.table_widget.btn_run.setText("POST"))
         
         self.login.signals.log.connect(lambda msg: self.ui.statusGet.setText(msg))

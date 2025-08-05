@@ -38,7 +38,7 @@ class GetGroup(QRunnable):
         if self.use_filter and self.filter_keys:
             for group in list_group:
                 name = group.text
-                if any(keyword in name for keyword in self.filter_keys):
+                if any(keyword in name.lower() for keyword in self.filter_keys):
                     link = group.get_attribute("href")
                     self.signals.add_row.emit(link, name)
         else:
