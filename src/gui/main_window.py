@@ -259,6 +259,7 @@ class MainWindow(QMainWindow):
         
     def resizeEvent(self, event):
         # Update Size Grips
+        print(self.width())
         self.window_controller.update_grips_geometry()
         self.center_table()
         
@@ -339,17 +340,18 @@ class MainWindow(QMainWindow):
         if not self.table_widget.isVisible():
             self.center_table()  # Position it first
             self.table_widget.show()
-            self.table_widget.setGeometry(QRect(self.table_widget.x() + self.table_frame_width // 2, self.table_widget.y() + self.table_frame_height // 2, 0, 0))
+            # self.table_widget.setGeometry(QRect(self.table_widget.x() + self.table_frame_width // 2, self.table_widget.y() + self.table_frame_height // 2, 0, 0))
 
-            self.table_animation.setStartValue(self.table_widget.geometry())  # Start from tiny size
-            self.table_animation.setEndValue(QRect(self.ui.leftMenu.width() // 4, self.ui.contentTop.height() - 10, self.table_frame_width, self.table_frame_height))  # Expand fully
-            self.table_animation.start()
-            self.shadow = QGraphicsDropShadowEffect(self)
-            self.shadow.setBlurRadius(100)
-            self.shadow.setXOffset(0)
-            self.shadow.setYOffset(0)
-            self.shadow.setColor(QColor(0, 0, 0, 150))
-            self.table_animation.finished.connect(lambda: self.table_widget.setGraphicsEffect(self.shadow))
+            # self.table_animation.setStartValue(self.table_widget.geometry())  # Start from tiny size
+            # self.table_animation.setEndValue(QRect(self.ui.leftMenu.width() // 4, self.ui.contentTop.height() - 10, self.table_frame_width, self.table_frame_height))  # Expand fully
+            # self.table_animation.start()
+            # self.shadow = QGraphicsDropShadowEffect(self)
+            # self.shadow.setBlurRadius(100)
+            # self.shadow.setXOffset(0)
+            # self.shadow.setYOffset(0)
+            # self.shadow.setColor(QColor(0, 0, 0, 150))
+            # self.table_widget.setGraphicsEffect(self.shadow)
+            # self.table_animation.finished.connect(lambda: self.table_widget.setGraphicsEffect(self.shadow))
         self.table_widget.load_group_table(self.data_manager.data)
         sender = self.sender()
         if sender == self.ui.btn_post:

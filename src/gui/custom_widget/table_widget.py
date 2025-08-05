@@ -140,16 +140,24 @@ class TableWidget(QFrame, Ui_tableWidget):
         rows_to_clear = self._highlighted_rows - selected_rows
         for row in rows_to_clear:
             for col in range(self.table.columnCount()):
-                item = self.table.item(row, col)
-                if item:
-                    item.setBackground(QColor(40, 44, 52))  # Default bg
+                widget = self.table.cellWidget(row, col)
+                if widget:
+                    widget.setStyleSheet("")  # Clear highlight
+                else:
+                    item = self.table.item(row, col)
+                    if item:
+                        item.setBackground(QColor(40, 44, 52))  # Default bg
         
         # Rows to highlight: currently selected but not previously highlighted
         for row in selected_rows:
             for col in range(self.table.columnCount()):
-                item = self.table.item(row, col)
-                if item:
-                    item.setBackground(QColor("#313640"))  # Subtle highlight
+                widget = self.table.cellWidget(row, col)
+                if widget:
+                    widget.setStyleSheet("background-color: #313640")  # Match highlight
+                else:
+                    item = self.table.item(row, col)
+                    if item:
+                        item.setBackground(QColor("#313640"))  # Subtle highlight
 
         # Update the cache
         self._highlighted_rows = selected_rows
@@ -294,6 +302,8 @@ class TableWidget(QFrame, Ui_tableWidget):
 
     def animated_close(self):
         """Animate widget shrinking and then close"""
+        self.hide()
+        return
         self.animation.setStartValue(self.geometry())  # Start at current size
 
         # Shrink towards the center
