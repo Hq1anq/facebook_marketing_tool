@@ -22,7 +22,7 @@ class CommentUI:
         self.ui.btn_commentImageFromFile.clicked.connect(self.image_viewer.show_images)
     
     def load_data(self):
-        content_string = "\n\n".join(self.data_manager.data["COMMENT"]["content"])
+        content_string = "\n$\n".join(self.data_manager.data["COMMENT"]["content"])
         self.ui.commentContentInput.setPlainText(content_string)
         self.ui.commentDelayInput.setText(
             str(self.data_manager.data["COMMENT"]["delay"]) if len(self.data_manager.data["COMMENT"]["delay"]) == 0
@@ -34,7 +34,7 @@ class CommentUI:
     
     def save_data(self):
         self.data_manager.data["COMMENT"]["image"] = self.image_viewer.list_image
-        self.data_manager.data["COMMENT"]["content"] = list(map(str.strip, self.ui.commentContentInput.toPlainText().split("\n\n")))
+        self.data_manager.data["COMMENT"]["content"] = list(map(str.strip, self.ui.commentContentInput.toPlainText().split("\n$\n")))
         self.data_manager.data["COMMENT"]["delay"] = [int(x) for x in self.ui.commentDelayInput.text().split('-')]
 
     def toggle_image_input(self, state):

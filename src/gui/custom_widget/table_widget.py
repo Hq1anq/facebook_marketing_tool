@@ -100,7 +100,13 @@ class TableWidget(QFrame, Ui_tableWidget):
             self.table.setItem(row_position, 0, self.table_item(group.get("link group", "")))
             self.table.setItem(row_position, 1, self.table_item(group.get("link post", "")))
             self.table.setItem(row_position, 2, self.table_item(group.get("name group", "")))
-            self.table.setItem(row_position, 3, self.table_item(group.get("status", ""), "center"))
+            status = group.get("status", "")
+            if status:
+                self.table.setCellWidget(row_position, 3, self.status_chip(status))
+            else:
+                self.table.setItem(row_position, 3, self.table_item(""))
+                
+            self.table.setVerticalHeaderItem(row_position, QTableWidgetItem(str(row_position)))
     
     def filter_table(self):
         self.visible_index = 1
@@ -203,11 +209,13 @@ class TableWidget(QFrame, Ui_tableWidget):
         status_lower = status.lower()
 
         status_styles = {
-            "đã post": "background-color: #16a34a; color: white;",      # green-600
-            "đã comment": "background-color: #eab308; color: black;",   # yellow-500
-            "chưa post": "background-color: #dc2626; color: white;",    # red-600
-            "chưa comment": "background-color: #dc2626; color: white;", # red-600
-            "unknow": "background-color: #6b7280; color: white;"        # gray-500
+            "đã post": "background-color: #16a34a; color: white;",                      # green-600
+            "đã comment": "background-color: #eab308; color: black;",                   # yellow-500
+            "chưa post": "background-color: #dc2626; color: white;",                    # red-600
+            "chưa comment": "background-color: #dc2626; color: white;",                 # red-600
+            "không phải nhóm vps/proxy": "background-color: #eab308; color: black;",    # yellow-500
+            "bị chặn": "background-color: #dc2626; color: white;",                      # red-600
+            "unknow": "background-color: #6b7280; color: white;"                        # gray-500
         }
 
         chip_style = f"""

@@ -19,7 +19,7 @@ class PostUI:
         self.ui.btn_postImageFromFile.clicked.connect(self.image_viewer.show_images)
 
     def load_data(self):
-        content_string = "\n\n".join(self.data_manager.data["POST"]["content"])
+        content_string = "\n$\n".join(self.data_manager.data["POST"]["content"])
         self.ui.postContentInput.setPlainText(content_string)
         self.ui.postDelayInput.setText(
             str(self.data_manager.data["POST"]["delay"]) if len(self.data_manager.data["POST"]["delay"]) == 0
@@ -31,7 +31,7 @@ class PostUI:
     
     def save_data(self):
         self.data_manager.data["POST"]["image"] = self.image_viewer.list_image
-        self.data_manager.data["POST"]["content"] = list(map(str.strip, self.ui.postContentInput.toPlainText().split("\n\n")))
+        self.data_manager.data["POST"]["content"] = list(map(str.strip, self.ui.postContentInput.toPlainText().split("\n$\n")))
         self.data_manager.data["POST"]["delay"] = [int(x) for x in self.ui.postDelayInput.text().split('-')]
         
     def toggle_image_input(self, state):

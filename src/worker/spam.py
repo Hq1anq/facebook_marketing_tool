@@ -16,6 +16,10 @@ class Spam(QRunnable):
         self.driver_manager = driver_manager
         self.data_manager = data_manager
         self.signals = self.Signals()
+        self._stop = False
+
+    @Slot()
+    def run(self):
         self.scroll_number = self.data_manager.data["SPAM"]["scroll number"] or self.data_manager.DEFAULT_DATA["SPAM"]["scroll number"]
         self.post_number = self.data_manager.data["SPAM"]["post number"] or self.data_manager.DEFAULT_DATA["SPAM"]["post number"]
         self.spam_delay = self.data_manager.data["SPAM"]["spam delay"] or self.data_manager.DEFAULT_DATA["SPAM"]["spam delay"]
@@ -23,10 +27,6 @@ class Spam(QRunnable):
         self.key_filter = self.data_manager.data["SPAM"]["key filter"] or self.data_manager.DEFAULT_DATA["SPAM"]["key filter"]
         self.list_image = self.data_manager.data["SPAM"]["image"]
         self.list_content = self.data_manager.data["SPAM"]["content"]
-        self._stop = False
-
-    @Slot()
-    def run(self):
         self.driver = self.driver_manager.driver
         self.spam()
             

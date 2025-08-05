@@ -1,5 +1,5 @@
-from PySide6.QtWidgets import QMainWindow, QPushButton, QFileDialog, QFrame, QGraphicsDropShadowEffect, QTableWidgetItem
-from PySide6.QtCore import QEvent, QPoint, Qt, QPropertyAnimation, QEasingCurve, QTimer, QRect, QThreadPool
+from PySide6.QtWidgets import QMainWindow, QPushButton, QLabel, QGraphicsDropShadowEffect, QTableWidgetItem
+from PySide6.QtCore import Qt, QPropertyAnimation, QEasingCurve, QRect, QThreadPool
 from PySide6.QtGui import QShortcut, QKeySequence, QColor
 
 from src.gui.window_control import WindowController
@@ -52,11 +52,14 @@ class MainWindow(QMainWindow):
         self.get_group = GetGroup(self.driver_manager, self.data_manager)
         self.get_post = GetPost(self.driver_manager, self.data_manager)
         self.spam = Spam(self.driver_manager, self.data_manager)
+        
+        self.post.setAutoDelete(False)
+        self.spam.setAutoDelete(False)
     
         # Connect signal update ui
         self.post.signals.log.connect(lambda msg: self.table_widget.statusTable.setText(msg))
         self.post.signals.table_status.connect(lambda row, status: self.table_widget.table.setCellWidget(row, 3, self.table_widget.status_chip(status)))
-        self.post.signals.finished.connect(lambda: self.table_widget.btn_run.setText("POST"))
+        self.post.signals.finished.connect(lambda: self._on_finished_use_table("POST"))
         
         self.login.signals.log.connect(lambda msg: self.ui.statusGet.setText(msg))
         self.login.signals.cookie_output.connect(lambda cookie: self.ui.cookieOutputText.setPlainText(cookie))
@@ -84,7 +87,6 @@ class MainWindow(QMainWindow):
         self.ui.btn_homeReload.clicked.connect(self.load)
         
         self.ui.spamSpamListFilter.stateChanged.connect(lambda: self.ui.spamListFilter.hide() if self.ui.spamListFilter.isVisible() else self.ui.spamListFilter.show())
-        # self.ui.btn_postImageFromFile.clicked.connect(lambda: LoadImage("POST"))
         # self.ui.btn_commentImageFromFile.clicked.connect(lambda: LoadImage("COMMENT"))
         # self.ui.btn_spamImageFromFile.clicked.connect(lambda: LoadImage("SPAM"))
         # toolFunction.data[5].imagesShown.connect(lambda: toolFunction.SaveContent(self, "POST"))
@@ -93,6 +95,7 @@ class MainWindow(QMainWindow):
         # self.ui.postDelayInput.returnPressed.connect(lambda: toolFunction.updateUpDelay(self))
         # self.ui.commentDelayInput.returnPressed.connect(lambda: toolFunction.updateUpDelay(self))
         save_shortcut = QShortcut(QKeySequence("Ctrl+S"), self)
+        save_shortcut.setContext(Qt.ShortcutContext.WidgetWithChildrenShortcut)
         save_shortcut.activated.connect(self.save)
         
         self.table_widget.btn_run.clicked.connect(self.run_in_table)
@@ -141,8 +144,13 @@ class MainWindow(QMainWindow):
             self.run_getPost()
     
     def save_in_table(self):
-        if self.table_widget.btn_run.text() == "GET GROUP":
+        if self.table_widget.btn_run.text() == "GET GROUP" or "POST" in self.table_widget.btn_run.text():
             self.save_group_table()
+            
+    def _on_finished_use_table(self, func: str):
+        self.table_widget.btn_run.setText(func)
+        self.table_widget.adjust_column_width()
+        self.save_in_table()
         
     def run_post(self):
         self.move(self.screen().size().width()- self.size().width(), self.screen().size().height() - self.size().height() - 50)
@@ -155,7 +163,6 @@ class MainWindow(QMainWindow):
             if not self.driver_manager.is_login:
                 self.table_widget.statusTable.setText("POST: Chưa đăng nhập")
                 return
-            self.post_ui.save_data()
             
             self.post.setup(self.table_widget.get_selected(), self.ui.postContentCheckBox.isChecked(), self.ui.postImageCheckBox.isChecked())
             self.post.set_stop(False)  # Tell Spam to keep running
@@ -217,11 +224,18 @@ class MainWindow(QMainWindow):
     def save_group_table(self):
         """Save current table content to data_manager.data['GET']['GROUP']"""
         group_list = []
-        for row in range(self.table_widget.table.rowCount()):
+        for row in range(1, self.table_widget.table.rowCount()): # except filter row
             link_group = self.table_widget.table.item(row, 0).text() if self.table_widget.table.item(row, 0) else ""
             link_post = self.table_widget.table.item(row, 1).text() if self.table_widget.table.item(row, 1) else ""
             name_group = self.table_widget.table.item(row, 2).text() if self.table_widget.table.item(row, 2) else ""
-            status = self.table_widget.table.item(row, 3).text() if self.table_widget.table.item(row, 3) else ""
+            
+            # ✅ Get status from custom chip widget
+            status_widget = self.table_widget.table.cellWidget(row, 3)
+            if status_widget:
+                label = status_widget.findChild(QLabel)
+                status = label.text() if label else ""
+            else:
+                status = ""
 
             group_data = {
                 "link group": link_group,
@@ -236,9 +250,9 @@ class MainWindow(QMainWindow):
         success = self.data_manager.save_data()
         
         if success:
-            self.table_widget.statusTable.setText("Group data saved successfully.")
+            self.table_widget.statusTable.setText("Đã lưu dữ liệu bảng vào " + self.data_manager.data_path)
         else:
-            self.table_widget.statusTable.setText("Failed to save group data.")
+            self.table_widget.statusTable.setText("Lỗi: không thể lưu dữ liệu")
         
     def mousePressEvent(self, event):
         self.window_controller.handle_mouse_press(event)
@@ -339,6 +353,7 @@ class MainWindow(QMainWindow):
         self.table_widget.load_group_table(self.data_manager.data)
         sender = self.sender()
         if sender == self.ui.btn_post:
+            self.post_ui.save_data()
             self.table_widget.setup("POST")
         elif sender == self.ui.btn_comment:
             self.table_widget.setup("COMMENT")

@@ -17,13 +17,13 @@ class Post(QRunnable):
         self.driver_manager = driver_manager
         self.data_manager = data_manager
         self.signals = self.Signals()
-        self.post_delay = self.data_manager.data["POST"]["delay"] or self.data_manager.DEFAULT_DATA["POST"]["delay"]
-        self.list_image = self.data_manager.data["POST"]["image"]
-        self.list_content = self.data_manager.data["POST"]["content"]
         self._stop = False
 
     @Slot()
     def run(self):
+        self.post_delay = self.data_manager.data["POST"]["delay"] or self.data_manager.DEFAULT_DATA["POST"]["delay"]
+        self.list_image = self.data_manager.data["POST"]["image"]
+        self.list_content = self.data_manager.data["POST"]["content"]
         self.driver = self.driver_manager.driver
         if not self.table_data:
             self.signals.log.emit("Chọn ít nhất một group để đăng bài")
@@ -38,7 +38,7 @@ class Post(QRunnable):
         self.driver.set_window_size(800, 700)
         self.driver.set_window_position(0, 0)
         self.post()
-            
+    
     def post(self):
         countPost = 1
         for data in self.table_data:
@@ -48,13 +48,6 @@ class Post(QRunnable):
                 self.signals.log.emit("POST: Đã tạm dừng")
                 self.signals.finished.emit()
                 return
-            if countPost % 10 == 0: # Nghỉ mỗi 10 post
-                second = random.randint(120, 180)
-                while second > 0:
-                    self.signals.log.emit("POST: Đã đăng " + str(countPost) + " bài, đợi " + str(second) + " s rồi đăng tiếp")
-                    time.sleep(1)
-                    second -= 1
-                self.signals.log.emit("POST: Đang đăng bài...")
             if ("vps" not in name_group) and ("proxy" not in name_group):
                 self.signals.table_status.emit(data["row"], "Không phải nhóm VPS/Proxy")
                 continue
@@ -83,7 +76,7 @@ class Post(QRunnable):
                     # content_area.send_keys(Keys.CONTROL, "v")
                     self.driver_manager.actions.key_down(Keys.CONTROL).send_keys('v').key_up(Keys.CONTROL).perform()
 
-                # Nhấn thêm ảnh
+                # Thêm ảnh
                 if self.use_image:
                     image = random.choice(self.list_image)
                     # add_image_btn = self.driver_manager.wait10.until(
@@ -93,8 +86,16 @@ class Post(QRunnable):
                     self.driver.find_element(By.XPATH,"//input[@accept='image/*,image/heif,image/heic,video/*,video/mp4,video/x-m4v,video/x-matroska,.mkv']").send_keys(image)
                 time.sleep(1)
                 self.driver.find_element(By.XPATH, f"//div[@aria-label='{self.driver_manager.post}']").click()
-                time.sleep(random.randint(self.post_delay[0], self.post_delay[len(self.post_delay)-1])) # Chờ post bài
+                time_delay = random.randint(self.post_delay[0], self.post_delay[len(self.post_delay)-1])
+                if countPost % 10 == 0: # Nghỉ mỗi 10 post
+                    delay_each_10 = time_delay * random.randint(10, 15)
+                    self.signals.log.emit("POST: Đã đăng " + str(countPost) + " bài, đợi " + str(delay_each_10) + "s rồi đăng tiếp")
+                    time.sleep(delay_each_10)
+                    self.signals.log.emit("POST: Đang đăng bài...")
+                else:
+                    time.sleep(time_delay) # Chờ post bài
                 if "Để bảo vệ cộng đồng khỏi spam" in self.driver.page_source:
+                    self.signals.table_status.emit(data["row"], "Bị chặn")
                     self.signals.log.emit("POST : Đã bị chặn, hãy nghỉ ngơi")
                     self.signals.finished.emit()
                     self.set_stop(True)

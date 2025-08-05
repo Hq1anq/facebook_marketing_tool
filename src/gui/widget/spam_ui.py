@@ -17,7 +17,7 @@ class SpamUI:
         self.ui.btn_spamImageFromFile.clicked.connect(self.image_viewer.show_images)
     
     def load_data(self):
-        content_string = "\n\n".join(self.data_manager.data["SPAM"]["content"])
+        content_string = "\n$\n".join(self.data_manager.data["SPAM"]["content"])
         self.ui.spamContentInput.setPlainText(content_string)
         self.ui.spamScrollNumberInput.setText(str(self.data_manager.data["SPAM"]["scroll number"]))
         self.ui.spamPostNumberInput.setText(str(self.data_manager.data["SPAM"]["post number"]))
@@ -37,7 +37,7 @@ class SpamUI:
     
     def save_data(self):
         self.data_manager.data["SPAM"]["image"] = self.image_viewer.list_image
-        self.data_manager.data["SPAM"]["content"] = list(map(str.strip, self.ui.spamContentInput.toPlainText().split("\n\n")))
+        self.data_manager.data["SPAM"]["content"] = list(map(str.strip, self.ui.spamContentInput.toPlainText().split("\n$\n")))
         self.data_manager.data["SPAM"]["scroll number"] = int(self.ui.spamScrollNumberInput.text())
         self.data_manager.data["SPAM"]["post number"] = int(self.ui.spamPostNumberInput.text())
         self.data_manager.data["SPAM"]["spam delay"] = [int(x) for x in self.ui.spamSpamDelayInput.text().split('-')]
