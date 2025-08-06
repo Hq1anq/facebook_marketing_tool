@@ -259,7 +259,6 @@ class MainWindow(QMainWindow):
         
     def resizeEvent(self, event):
         # Update Size Grips
-        print(self.width())
         self.window_controller.update_grips_geometry()
         self.center_table()
         
@@ -336,7 +335,6 @@ class MainWindow(QMainWindow):
         self.ui.proxyInputDetailFrame.hide()
 
     def open_table(self):
-        """Animate expanding TableWidget from center"""
         if not self.table_widget.isVisible():
             self.center_table()  # Position it first
             self.table_widget.show()
@@ -366,11 +364,11 @@ class MainWindow(QMainWindow):
         self.table_widget.adjust_column_width()
         
     def center_table(self):
-        self.table_frame_width = self.width() - self.ui.leftMenu.width() // 2
-        self.table_frame_height = self.height() - self.ui.contentTop.height() - self.ui.bottomBar.height()
+        self.table_frame_width = self.width()
+        self.table_frame_height = self.height() - self.ui.contentTop.height() - self.ui.bottomBar.height() + 18
         # self.table_widget.resize(self.table_frame_width, self.table_frame_height)
         # self.table_widget.move(self.ui.leftMenu.width() // 4, self.ui.contentTop.height() - 10)
-        self.table_widget.setGeometry(QRect(self.ui.leftMenu.width() // 4, self.ui.contentTop.height() - 10, self.table_frame_width, self.table_frame_height))
+        self.table_widget.setGeometry(QRect(0, self.ui.contentTop.height() - 10 - 9, self.table_frame_width, self.table_frame_height))
 
     def toggleMenu(self):
         if self.ui.leftMenu.width() == settings.SIDE_MENU_WIDTH:

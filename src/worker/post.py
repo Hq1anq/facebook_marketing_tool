@@ -48,7 +48,7 @@ class Post(QRunnable):
                 self.signals.log.emit("POST: Đã tạm dừng")
                 self.signals.finished.emit()
                 return
-            if ("vps" not in name_group) and ("proxy" not in name_group):
+            if all(keyword not in name_group for keyword in ["vps", "proxy", "rdp", "máy chủ", "server"]):
                 self.signals.table_status.emit(data["row"], "Không phải nhóm VPS/Proxy")
                 continue
             self.driver.get(link_group+"buy_sell_discussion")
@@ -88,7 +88,7 @@ class Post(QRunnable):
                 self.driver.find_element(By.XPATH, f"//div[@aria-label='{self.driver_manager.post}']").click()
                 time_delay = random.randint(self.post_delay[0], self.post_delay[len(self.post_delay)-1])
                 if countPost % 10 == 0: # Nghỉ mỗi 10 post
-                    delay_each_10 = time_delay * random.randint(10, 15)
+                    delay_each_10 = time_delay * random.randint(5, 10)
                     self.signals.log.emit("POST: Đã đăng " + str(countPost) + " bài, đợi " + str(delay_each_10) + "s rồi đăng tiếp")
                     time.sleep(delay_each_10)
                     self.signals.log.emit("POST: Đang đăng bài...")

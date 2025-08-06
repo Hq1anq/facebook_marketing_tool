@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'tableWidgethkINYZ.ui'
+## Form generated from reading UI file 'tableWidgetkbZYXl.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.8.2
 ##
@@ -28,8 +28,14 @@ class Ui_tableWidget(object):
         if not tableWidget.objectName():
             tableWidget.setObjectName(u"tableWidget")
         tableWidget.resize(842, 553)
-        tableWidget.setStyleSheet(u"*{ border: none }\n"
-"#tableWidget { border: 9px solid rgb(40, 44, 52); border-radius: 18px }\n"
+        tableWidget.setStyleSheet(u"background-color: transparent")
+        self.verticalLayout = QVBoxLayout(tableWidget)
+        self.verticalLayout.setObjectName(u"verticalLayout")
+        self.verticalLayout.setContentsMargins(15, 0, 15, 15)
+        self.contentFrame = QFrame(tableWidget)
+        self.contentFrame.setObjectName(u"contentFrame")
+        self.contentFrame.setStyleSheet(u"*{ border: none }\n"
+"#contentFrame { border: 9px solid rgb(40, 44, 52); border-radius: 18px }\n"
 "#contentTop .QLabel { background-color: transparent; font-size: 15px }\n"
 "QWidget {\n"
 "	background-color: rgb(40, 44, 52);\n"
@@ -135,9 +141,11 @@ class Ui_tableWidget(object):
 "QScrollBar::add-line:horizontal:pressed, QScrollBar::sub-line:horizontal:pressed,\n"
 "QScrollBar::add-line:vertical:pressed, QScrollBar::sub-line:vertical:pressed {\n"
 "	background: rgb(189, 147, 249) }")
-        self.verticalLayout = QVBoxLayout(tableWidget)
-        self.verticalLayout.setObjectName(u"verticalLayout")
-        self.contentTop = QFrame(tableWidget)
+        self.contentFrame.setFrameShape(QFrame.Shape.StyledPanel)
+        self.contentFrame.setFrameShadow(QFrame.Shadow.Raised)
+        self.verticalLayout_2 = QVBoxLayout(self.contentFrame)
+        self.verticalLayout_2.setObjectName(u"verticalLayout_2")
+        self.contentTop = QFrame(self.contentFrame)
         self.contentTop.setObjectName(u"contentTop")
         self.contentTop.setFrameShape(QFrame.Shape.StyledPanel)
         self.contentTop.setFrameShadow(QFrame.Shadow.Raised)
@@ -212,9 +220,9 @@ class Ui_tableWidget(object):
         self.horizontalLayout.addWidget(self.closeBtn, 0, Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTop)
 
 
-        self.verticalLayout.addWidget(self.contentTop)
+        self.verticalLayout_2.addWidget(self.contentTop)
 
-        self.latestPost = QFrame(tableWidget)
+        self.latestPost = QFrame(self.contentFrame)
         self.latestPost.setObjectName(u"latestPost")
         self.horizontalLayout_2 = QHBoxLayout(self.latestPost)
         self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
@@ -239,9 +247,9 @@ class Ui_tableWidget(object):
         self.horizontalLayout_2.addItem(self.horizontalSpacer_4)
 
 
-        self.verticalLayout.addWidget(self.latestPost, 0, Qt.AlignmentFlag.AlignTop)
+        self.verticalLayout_2.addWidget(self.latestPost)
 
-        self.filterGroup = QFrame(tableWidget)
+        self.filterGroup = QFrame(self.contentFrame)
         self.filterGroup.setObjectName(u"filterGroup")
         self._2 = QHBoxLayout(self.filterGroup)
         self._2.setObjectName(u"_2")
@@ -263,9 +271,9 @@ class Ui_tableWidget(object):
         self._2.addWidget(self.filterGroupInput)
 
 
-        self.verticalLayout.addWidget(self.filterGroup, 0, Qt.AlignmentFlag.AlignHCenter|Qt.AlignmentFlag.AlignTop)
+        self.verticalLayout_2.addWidget(self.filterGroup)
 
-        self.fromToFrame = QFrame(tableWidget)
+        self.fromToFrame = QFrame(self.contentFrame)
         self.fromToFrame.setObjectName(u"fromToFrame")
         self.horizontalLayout_5 = QHBoxLayout(self.fromToFrame)
         self.horizontalLayout_5.setObjectName(u"horizontalLayout_5")
@@ -347,11 +355,11 @@ class Ui_tableWidget(object):
         self.horizontalLayout_5.addItem(self.horizontalSpacer_2)
 
 
-        self.verticalLayout.addWidget(self.fromToFrame, 0, Qt.AlignmentFlag.AlignTop)
+        self.verticalLayout_2.addWidget(self.fromToFrame)
 
         self.horizontalLayout_6 = QHBoxLayout()
         self.horizontalLayout_6.setObjectName(u"horizontalLayout_6")
-        self.statusTable = HighlightLabel(tableWidget)
+        self.statusTable = QLabel(self.contentFrame)
         self.statusTable.setObjectName(u"statusTable")
         sizePolicy4 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
         sizePolicy4.setHorizontalStretch(0)
@@ -362,15 +370,15 @@ class Ui_tableWidget(object):
 
         self.horizontalLayout_6.addWidget(self.statusTable)
 
-        self.countRows = QLabel(tableWidget)
+        self.countRows = QLabel(self.contentFrame)
         self.countRows.setObjectName(u"countRows")
 
         self.horizontalLayout_6.addWidget(self.countRows)
 
 
-        self.verticalLayout.addLayout(self.horizontalLayout_6)
+        self.verticalLayout_2.addLayout(self.horizontalLayout_6)
 
-        self.table = QTableWidget(tableWidget)
+        self.table = QTableWidget(self.contentFrame)
         if (self.table.columnCount() < 4):
             self.table.setColumnCount(4)
         __qtablewidgetitem = QTableWidgetItem()
@@ -387,11 +395,34 @@ class Ui_tableWidget(object):
         sizePolicy5.setVerticalStretch(0)
         sizePolicy5.setHeightForWidth(self.table.sizePolicy().hasHeightForWidth())
         self.table.setSizePolicy(sizePolicy5)
+        self.table.setStyleSheet(u"QTableCornerButton::section { background-color: rgb(33, 37, 43) }\n"
+"QTableWidget {	\n"
+"	padding: 5px;\n"
+"	gridline-color: rgb(44, 49, 58);\n"
+"	border-bottom: 1px solid rgb(44, 49, 60); }\n"
+"QTableWidget::item{ border-color: rgb(44, 49, 60) }\n"
+"QTableWidget::item:selected{\n"
+"	background-color: rgb(189, 147, 249);\n"
+"	color: rgb(40, 44, 52);\n"
+"}\n"
+"QHeaderView { qproperty-defaultAlignment: AlignCenter }\n"
+"QHeaderView::section{\n"
+"	background-color: rgb(33, 37, 43);\n"
+"	border: 1px solid rgb(44, 49, 60);\n"
+"	font-size: 15px }\n"
+"QLineEdit {\n"
+"    background-color: rgb(50, 54, 62); /* slightly lighter/darker variant for edit mode */\n"
+"	selection-background-color: rgb(189, 147, 249); /* background when highlight */\n"
+"    selection-color: rgb(40, 44, 52); /* text color when selected */\n"
+"}")
         self.table.setWordWrap(False)
         self.table.horizontalHeader().setMinimumSectionSize(110)
         self.table.horizontalHeader().setDefaultSectionSize(200)
 
-        self.verticalLayout.addWidget(self.table)
+        self.verticalLayout_2.addWidget(self.table)
+
+
+        self.verticalLayout.addWidget(self.contentFrame)
 
 
         self.retranslateUi(tableWidget)

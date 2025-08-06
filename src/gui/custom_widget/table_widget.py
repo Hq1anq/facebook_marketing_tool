@@ -12,11 +12,11 @@ class TableWidget(QFrame, Ui_tableWidget):
         
         # DROP SHADOW
         self.shadow = QGraphicsDropShadowEffect(self)
-        self.shadow.setBlurRadius(100)
+        self.shadow.setBlurRadius(30)
         self.shadow.setXOffset(0)
         self.shadow.setYOffset(0)
         self.shadow.setColor(QColor(0, 0, 0, 150))
-        self.setGraphicsEffect(self.shadow)
+        self.contentFrame.setGraphicsEffect(self.shadow)
         
         self.animation = QPropertyAnimation(self, b"geometry")
         self.animation.setDuration(TIME_ANIMATION)  # Duration in milliseconds
