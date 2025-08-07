@@ -4,6 +4,7 @@ import src.settings as settings
 from src.gui.custom_widget.image_viewer import ImageViewer
 from src.manager import DataManager
 from src.gui.widget.ui_interface import Ui_MainWindow
+from src.utils import apply_int_range_validator
 
 class PostUI:
     def __init__(self, ui: Ui_MainWindow, data_manager: DataManager):
@@ -11,6 +12,7 @@ class PostUI:
         self.data_manager = data_manager
         self.image_viewer = ImageViewer(self.ui.postImageViewer, self.ui.postImageViewerWidget)
         
+        apply_int_range_validator(self.ui.postDelayInput)
         self.setup_connections()
 
     def setup_connections(self):

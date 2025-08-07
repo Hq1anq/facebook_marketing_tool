@@ -1,4 +1,32 @@
-import pandas as pd
+from PySide6.QtWidgets import QLineEdit
+from PySide6.QtGui import QRegularExpressionValidator
+from PySide6.QtCore import QRegularExpression
+
+def apply_int_range_validator(line_edit: QLineEdit, normalize: bool = True):
+    """
+    Applies a validator to a QLineEdit that only accepts:
+    - A single integer (e.g. "16")
+    - A range of integers with optional spaces (e.g. "5-8", "20 - 45")
+
+    Optionally normalizes input to the format "int" or "int - int" after editing.
+
+    Parameters:
+        line_edit (QLineEdit): The QLineEdit to apply the rule to.
+        normalize (bool): If True, formats the text on editingFinished.
+    """
+    regex = QRegularExpression(r"^\d+\s*(-\s*\d+)?$")
+    validator = QRegularExpressionValidator(regex)
+    line_edit.setValidator(validator)
+
+    if normalize:
+        def normalize_input():
+            text = line_edit.text()
+            parts = [x.strip() for x in text.split('-')]
+            if len(parts) == 1 and parts[0].isdigit():
+                line_edit.setText(f"{parts[0]}")
+            elif len(parts) == 2 and all(p.isdigit() for p in parts):
+                line_edit.setText(f"{parts[0]} - {parts[1]}")
+        line_edit.editingFinished.connect(normalize_input)
 
 def is_file_open(file_path: str):
     try:
@@ -7,19 +35,3 @@ def is_file_open(file_path: str):
         return False
     except:
         return True
-    
-def is_sheet_existed(file_path, sheet_name):
-    try:
-        # Mở file Excel
-        excel_file = pd.ExcelFile(file_path)
-        
-        # Lấy danh sách các sheet
-        sheets = excel_file.sheet_names
-        
-        # Kiểm tra sheet_name có trong danh sách không
-        if sheet_name in sheets:
-            return True
-        else:
-            return False
-    except FileNotFoundError: # file không tồn tại
-        return False

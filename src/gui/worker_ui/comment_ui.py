@@ -2,7 +2,8 @@ from PySide6.QtCore import Qt
 
 import src.settings as settings
 from src.gui.custom_widget.image_viewer import ImageViewer
-from .ui_interface import Ui_MainWindow
+from src.gui.widget.ui_interface import Ui_MainWindow
+from src.utils import apply_int_range_validator
 
 from src.manager import DataManager
 
@@ -12,6 +13,7 @@ class CommentUI:
         self.data_manager = data_manager
         self.image_viewer = ImageViewer(self.ui.commentImageViewer, self.ui.commentImageViewerWidget)
         
+        apply_int_range_validator(self.ui.commentDelayInput)
         self.load_data()
         self.load_image()
         self.setup_connections()

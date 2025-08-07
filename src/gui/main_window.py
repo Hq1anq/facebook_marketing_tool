@@ -1,15 +1,16 @@
-from PySide6.QtWidgets import QMainWindow, QPushButton, QLabel, QGraphicsDropShadowEffect, QTableWidgetItem
+from PySide6.QtWidgets import QMainWindow, QPushButton, QLabel
 from PySide6.QtCore import Qt, QPropertyAnimation, QEasingCurve, QRect, QThreadPool
-from PySide6.QtGui import QShortcut, QKeySequence, QColor
+from PySide6.QtGui import QShortcut, QKeySequence
 
-from src.gui.window_control import WindowController
 from src.gui.styles import MENU_SELECTED_STYLE, MENU_NONE_SECLECTED_STYLE
 
 from src.gui.custom_widget.table_widget import TableWidget
 from src.gui.styles import *
 import src.settings as settings
 
-from src.gui.widget import Ui_MainWindow, GetUI, PostUI, CommentUI, SpamUI
+from .widget.ui_interface import Ui_MainWindow
+from .window_control import WindowController
+from src.gui.worker_ui import GetUI, PostUI, CommentUI, SpamUI
 from src.worker import Post, Login, Spam, GetGroup, GetPost
 
 from src.manager import DriverManager, DataManager
@@ -338,19 +339,9 @@ class MainWindow(QMainWindow):
         if not self.table_widget.isVisible():
             self.center_table()  # Position it first
             self.table_widget.show()
-            # self.table_widget.setGeometry(QRect(self.table_widget.x() + self.table_frame_width // 2, self.table_widget.y() + self.table_frame_height // 2, 0, 0))
-
-            # self.table_animation.setStartValue(self.table_widget.geometry())  # Start from tiny size
-            # self.table_animation.setEndValue(QRect(self.ui.leftMenu.width() // 4, self.ui.contentTop.height() - 10, self.table_frame_width, self.table_frame_height))  # Expand fully
-            # self.table_animation.start()
-            # self.shadow = QGraphicsDropShadowEffect(self)
-            # self.shadow.setBlurRadius(100)
-            # self.shadow.setXOffset(0)
-            # self.shadow.setYOffset(0)
-            # self.shadow.setColor(QColor(0, 0, 0, 150))
-            # self.table_widget.setGraphicsEffect(self.shadow)
-            # self.table_animation.finished.connect(lambda: self.table_widget.setGraphicsEffect(self.shadow))
         self.table_widget.load_group_table(self.data_manager.data)
+        # self.table_widget.table.setSpan(2, 1, 2, 1)  # Start at (0,1), span 2 rows, 1 column
+        # self.table_widget.table.setItem(2, 1, QTableWidgetItem("Merged"))
         sender = self.sender()
         if sender == self.ui.btn_post:
             self.post_ui.save_data()
