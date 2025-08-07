@@ -156,7 +156,11 @@ class MainWindow(QMainWindow):
     def run_post(self):
         self.move(self.screen().size().width()- self.size().width(), self.screen().size().height() - self.size().height() - 50)
         if self.table_widget.btn_run.text() != "STOP POST!":
-            self.table_widget.btn_run.setText("STOP POST!")
+            self.post_ui.save_data()
+            post_data = self.data_manager.data["POST"]
+            if not (post_data["image"] or post_data["content"]):
+                self.ui.statusHome.setText("SPAM: Thiếu thông tin để đi spam")
+                return
             if not self.driver_manager.setup_driver():
                 self.table_widget.statusTable.setText("Xung đột! Vui lòng đóng tất cả các trình duyệt Chrome")
                 return
@@ -165,6 +169,7 @@ class MainWindow(QMainWindow):
                 self.table_widget.statusTable.setText("POST: Chưa đăng nhập")
                 return
             
+            self.table_widget.btn_run.setText("STOP POST!")
             self.post.setup(self.table_widget.get_selected(), self.ui.postContentCheckBox.isChecked(), self.ui.postImageCheckBox.isChecked())
             self.post.set_stop(False)  # Tell Spam to keep running
             QThreadPool.globalInstance().start(self.post)
@@ -197,14 +202,13 @@ class MainWindow(QMainWindow):
         QThreadPool.globalInstance().start(self.login)
     
     def run_spam(self):
+        self.move(self.screen().size().width()- self.size().width(), self.screen().size().height() - self.size().height() - 50)
         if self.ui.btn_spam.text() != "STOP!":
-            self.data_manager.data["SPAM"]["image"] = [img for img in self.data_manager.data["SPAM"]["image"] if img]
-            self.data_manager.data["SPAM"]["content"] = [content for content in self.data_manager.data["SPAM"]["content"] if content]
-            if not (self.data_manager.data["SPAM"]["image"] or self.data_manager.data["SPAM"]["content"]):
-                self.ui.btn_spam.setText("SPAM!")
+            self.spam_ui.save_data()
+            spam_data = self.data_manager.data["SPAM"]
+            if not (spam_data["image"] or spam_data["content"]):
                 self.ui.statusHome.setText("SPAM: Thiếu thông tin để đi spam")
                 return
-            self.ui.btn_spam.setText("STOP!")
             if not self.driver_manager.setup_driver():
                 self.ui.statusHome.setText("Xung đột! Vui lòng đóng tất cả các trình duyệt Chrome")
                 return
@@ -212,9 +216,9 @@ class MainWindow(QMainWindow):
             if not self.driver_manager.is_login:
                 self.ui.statusHome.setText("SPAM: Chưa đăng nhập")
                 return
-            self.move(self.screen().size().width()- self.size().width(), self.screen().size().height() - self.size().height() - 50)
-            self.spam_ui.save_data()
             
+            self.ui.btn_spam.setText("STOP!")
+            self.spam.setup(self.ui.spamContentCheckBox.isChecked(), self.ui.spamImageCheckBox.isChecked(), self.ui.spamSpamListFilter.isChecked())
             self.spam.set_stop(False)  # Tell Spam to keep running
             QThreadPool.globalInstance().start(self.spam)
         else:

@@ -37,7 +37,7 @@ class CommentUI:
     def save_data(self):
         self.data_manager.data["COMMENT"]["image"] = self.image_viewer.list_image
         self.data_manager.data["COMMENT"]["content"] = list(map(str.strip, self.ui.commentContentInput.toPlainText().split("\n$\n")))
-        self.data_manager.data["COMMENT"]["delay"] = [int(x) for x in self.ui.commentDelayInput.text().split('-')]
+        self.data_manager.data["COMMENT"]["delay"] = [int(x) for x in self.ui.commentDelayInput.text().split('-') if x.strip().isdigit()]
 
     def toggle_image_input(self, state):
         if Qt.CheckState(state) == Qt.CheckState.Checked:

@@ -87,7 +87,7 @@ class Post(QRunnable):
                 time.sleep(1)
                 self.driver.find_element(By.XPATH, f"//div[@aria-label='{self.driver_manager.post}']").click()
                 time_delay = random.randint(self.post_delay[0], self.post_delay[len(self.post_delay)-1])
-                if countPost % 10 == 0: # Nghỉ mỗi 10 post
+                if countPost % 10 == 0 and countPost < len(self.table_data): # Nghỉ mỗi 10 post
                     delay_each_10 = time_delay * random.randint(5, 10)
                     self.signals.log.emit("POST: Đã đăng " + str(countPost) + " bài, đợi " + str(delay_each_10) + "s rồi đăng tiếp")
                     time.sleep(delay_each_10)

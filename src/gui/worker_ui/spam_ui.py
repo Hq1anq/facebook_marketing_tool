@@ -41,13 +41,39 @@ class SpamUI:
         self.image_viewer.show_images(self.data_manager.data["SPAM"]["image"], use_dialog=use_dialog)
     
     def save_data(self):
-        self.data_manager.data["SPAM"]["image"] = self.image_viewer.list_image
-        self.data_manager.data["SPAM"]["content"] = list(map(str.strip, self.ui.spamContentInput.toPlainText().split("\n$\n")))
-        self.data_manager.data["SPAM"]["scroll number"] = int(self.ui.spamScrollNumberInput.text())
-        self.data_manager.data["SPAM"]["post number"] = int(self.ui.spamPostNumberInput.text())
-        self.data_manager.data["SPAM"]["spam delay"] = [int(x) for x in self.ui.spamSpamDelayInput.text().split('-')]
-        self.data_manager.data["SPAM"]["scan delay"] = [int(x) for x in self.ui.spamScanDelayInput.text().strip().split('-')]
-        self.data_manager.data["SPAM"]["key filter"] = list(map(str.strip, self.ui.spamListFilter.text().split(",")))
+        spam_data = self.data_manager.data["SPAM"]
+        default_data = self.data_manager.DEFAULT_DATA["SPAM"]
+        spam_data["image"] = self.image_viewer.list_image
+        spam_data["content"] = list(map(str.strip, self.ui.spamContentInput.toPlainText().split("\n$\n")))
+        scroll_number = self.ui.spamScrollNumberInput.text().strip()
+        if not scroll_number.isdigit():
+            scroll_number = default_data["scroll number"]
+            self.ui.spamScrollNumberInput.setText(str(spam_data["scroll number"]))
+        spam_data["scroll number"] = int(scroll_number)
+        
+        post_number = self.ui.spamPostNumberInput.text().strip()
+        if not post_number.isdigit():
+            post_number = default_data["post number"]
+            self.ui.spamPostNumberInput.setText(str(spam_data["post number"]))
+        spam_data["post number"] = int(post_number)
+        
+        spam_delay = [int(x.strip()) for x in self.ui.spamSpamDelayInput.text().split('-') if x.strip().isdigit()]
+        if not spam_delay:
+            spam_delay = default_data["spam delay"]
+            self.ui.spamSpamDelayInput.setText(f'{spam_delay[0]} - {spam_delay[1]}')
+        spam_data["spam delay"] = spam_delay
+        
+        scan_delay = [int(x.strip()) for x in self.ui.spamScanDelayInput.text().split('-') if x.strip().isdigit()]
+        if not scan_delay:
+            scan_delay = default_data["scan delay"]
+            self.ui.spamScanDelayInput.setText(f'{scan_delay[0]} - {scan_delay[1]}')
+        spam_data["scan delay"] = scan_delay
+        
+        key_filter = list(map(str.strip, self.ui.spamListFilter.text().split(",")))
+        if key_filter == [""]:
+            key_filter = default_data["key filter"]
+            self.ui.spamListFilter.setText(", ".join(key_filter))
+        spam_data["key filter"] = key_filter
 
     def toggle_image_input(self, state):
         if Qt.CheckState(state) == Qt.CheckState.Checked:

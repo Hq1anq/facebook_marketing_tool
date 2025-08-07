@@ -21,6 +21,8 @@ from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QFormLayout,
     QScrollArea, QSizePolicy, QStackedWidget, QVBoxLayout,
     QWidget)
 
+from src.gui.custom_widget.highlighted_widget import HighlightLabel, HighlightPlainTextEdit
+
 import resources.resources_rc
 
 class Ui_MainWindow(object):
@@ -324,7 +326,7 @@ class Ui_MainWindow(object):
         self.gridLayout_8.setObjectName(u"gridLayout_8")
         self.gridLayout_8.setHorizontalSpacing(15)
         self.gridLayout_8.setVerticalSpacing(0)
-        self.statusHome = QLabel(self.homePage)
+        self.statusHome = HighlightLabel(self.homePage)
         self.statusHome.setObjectName(u"statusHome")
 
         self.gridLayout_8.addWidget(self.statusHome, 1, 0, 1, 3)
@@ -803,7 +805,7 @@ class Ui_MainWindow(object):
         self.gridLayout_7.setObjectName(u"gridLayout_7")
         self.gridLayout_7.setHorizontalSpacing(15)
         self.gridLayout_7.setVerticalSpacing(0)
-        self.statusGet = QLabel(self.getPage)
+        self.statusGet = HighlightLabel(self.getPage)
         self.statusGet.setObjectName(u"statusGet")
 
         self.gridLayout_7.addWidget(self.statusGet, 4, 0, 1, 3)
@@ -945,7 +947,7 @@ class Ui_MainWindow(object):
 
         self._11.addWidget(self.cookieCookieLabel)
 
-        self.cookieOutputText = QPlainTextEdit(self.cookieOutput)
+        self.cookieOutputText = HighlightPlainTextEdit(self.cookieOutput)
         self.cookieOutputText.setObjectName(u"cookieOutputText")
 
         self._11.addWidget(self.cookieOutputText)

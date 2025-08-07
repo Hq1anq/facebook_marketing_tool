@@ -21,7 +21,7 @@ def apply_int_range_validator(line_edit: QLineEdit, normalize: bool = True):
     if normalize:
         def normalize_input():
             text = line_edit.text()
-            parts = [x.strip() for x in text.split('-')]
+            parts = [x.strip() for x in text.split('-') if x.strip().isdigit()]
             if len(parts) == 1 and parts[0].isdigit():
                 line_edit.setText(f"{parts[0]}")
             elif len(parts) == 2 and all(p.isdigit() for p in parts):

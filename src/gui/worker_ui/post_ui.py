@@ -23,10 +23,12 @@ class PostUI:
     def load_data(self):
         content_string = "\n$\n".join(self.data_manager.data["POST"]["content"])
         self.ui.postContentInput.setPlainText(content_string)
-        self.ui.postDelayInput.setText(
-            str(self.data_manager.data["POST"]["delay"]) if len(self.data_manager.data["POST"]["delay"]) == 0
-            else f'{self.data_manager.data["POST"]["delay"][0]} - {self.data_manager.data["POST"]["delay"][1]}'
-        )
+        if len(self.data_manager.data["POST"]["delay"]) == 1:
+            self.ui.postDelayInput.setText(str(self.data_manager.data["POST"]["delay"][0]))
+        else:
+            self.ui.postDelayInput.setText(
+                f'{self.data_manager.data["POST"]["delay"][0]} - {self.data_manager.data["POST"]["delay"][1]}'
+            )
         
     def load_image(self, use_dialog=False):
         self.image_viewer.show_images(self.data_manager.data["POST"]["image"], use_dialog=use_dialog)
@@ -34,7 +36,11 @@ class PostUI:
     def save_data(self):
         self.data_manager.data["POST"]["image"] = self.image_viewer.list_image
         self.data_manager.data["POST"]["content"] = list(map(str.strip, self.ui.postContentInput.toPlainText().split("\n$\n")))
-        self.data_manager.data["POST"]["delay"] = [int(x) for x in self.ui.postDelayInput.text().split('-')]
+        delay = [int(x) for x in self.ui.postDelayInput.text().split('-') if x.strip().isdigit()]
+        if not delay:
+            delay = self.data_manager.DEFAULT_DATA["POST"]["delay"]
+            self.ui.postDelayInput.setText(f'{delay[0]} - {delay[1]}')
+        self.data_manager.data["POST"]["delay"] = delay
         
     def toggle_image_input(self, state):
         if Qt.CheckState(state) == Qt.CheckState.Checked:

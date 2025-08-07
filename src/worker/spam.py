@@ -31,6 +31,14 @@ class Spam(QRunnable):
         self.spam()
             
     def spam(self, spam_limit = 100):
+        print(self.scroll_number)
+        print(self.post_number)
+        print(self.spam_delay)
+        print(self.scan_delay)
+        print(self.key_filter)
+        print(self.list_image)
+        print(self.list_content)
+        return
         commented_path = os.path.join(self.data_manager.folder_path, "commented.pkl")
         if os.path.exists(commented_path):
             with open(commented_path, "rb") as file:
@@ -128,6 +136,11 @@ class Spam(QRunnable):
                     second -= 1
                 self.signals.log.emit("SPAM: Đang spam các post trong news feed")
             time.sleep(random.randint(self.scan_delay[0],self.scan_delay[len(self.scan_delay)-1]))
+    
+    def setup(self, use_content: bool, use_image: bool, use_filter: bool):
+        self.use_content = use_content
+        self.use_image = use_image
+        self.use_filter = use_filter
     
     def check_open_post(self):
         div = self.driver.find_element(By.XPATH, "//div[@role='banner']/following-sibling::div[1]")
