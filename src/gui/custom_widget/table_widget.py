@@ -42,7 +42,7 @@ class TableWidget(QFrame, Ui_tableWidget):
             QLineEdit {
                 background-color: rgb(50, 54, 62); /* slightly lighter/darker variant for edit mode */
                 selection-background-color: rgb(189, 147, 249); /* background when highlight */
-                selection-color: rgb(40, 44, 52);; /* text color when selected */
+                selection-color: rgb(40, 44, 52); /* text color when selected */
             }
             """)
         

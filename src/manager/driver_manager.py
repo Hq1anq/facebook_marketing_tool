@@ -15,8 +15,11 @@ class DriverManager:
         self.message_str = "Nhắn tin"
         self.post = "Đăng"
         self.comment_aria = "Viết bình luận"
+        self.comment_ok = "Bình luận"
+        self.no_comment = "tắt tính năng bình luận"
         self.add_image = "Ảnh/video"
         self.close_chat_str = "Đóng đoạn chat"
+        self.close_post = "Đóng"
         self.error_message = ["Bạn hiện không xem được nội dung này", "Trang này không hiển thị"]
 
     def setup_driver(self) -> bool:
@@ -47,16 +50,22 @@ class DriverManager:
             self.message_str = "Nhắn tin"
             self.post = "Đăng"
             self.comment_aria = "Viết bình luận"
+            self.comment_ok = "Bình luận"
+            self.no_comment = "tắt tính năng bình luận"
             self.add_image = "Ảnh/video"
             self.close_chat_str = "Đóng đoạn chat"
+            self.close_post = "Đóng"
             self.friend_str = "Bạn bè"
             self.error_message = ["Bạn hiện không xem được nội dung này", "Trang này không hiển thị"]
         else:
             self.message_str = "Message"
             self.post = "Post"
             self.comment_aria = "Leave a comment"
+            self.comment_ok = "Comment"
+            self.no_comment = "turned off commenting"
             self.add_image = "Photo/video"
             self.close_chat_str = "Close chat"
+            self.close_post = "Close"
             self.friend_str = "Friends"
             self.error_message = ["This content isn't available right now", "This Page Isn't Available"]
     

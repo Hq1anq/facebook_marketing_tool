@@ -54,8 +54,8 @@ QLineEdit {
 	border: 2px solid rgb(33, 37, 43);
 	padding-left: 3px;
 	font-size: 15px;
-	selection-color: rgb(255, 255, 255);
-	selection-background-color: rgb(255, 121, 198) }
+	selection-background-color: rgb(255, 121, 198);
+    selection-color: rgb(40, 44, 52) }
 QLineEdit:hover { border: 2px solid rgb(64, 71, 88) }
 QLineEdit:focus { border: 2px solid rgb(91, 101, 124) }
 QCheckBox::indicator {

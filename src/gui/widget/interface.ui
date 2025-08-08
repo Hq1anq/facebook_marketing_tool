@@ -469,8 +469,8 @@ QLineEdit, QTextEdit, QPlainTextEdit {
 	border-radius: 5px;
 	border: 2px solid rgb(33, 37, 43);
 	padding-left: 3px;
-	selection-color: rgb(255, 255, 255);
-	selection-background-color: rgb(255, 121, 198) }
+	selection-background-color: rgb(255, 121, 198);
+  selection-color: rgb(40, 44, 52) }
 QLineEdit:hover, QTextEdit:hover, QPlainTextEdit:hover { border: 2px solid rgb(64, 71, 88) }
 QLineEdit:focus,  QTextEdit:focus, QPlainTextEdit:hover { border: 2px solid rgb(91, 101, 124) }
 QComboBox { background-color: rgb(33, 37, 43) }

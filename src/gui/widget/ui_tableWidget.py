@@ -56,8 +56,8 @@ class Ui_tableWidget(object):
 "	border: 2px solid rgb(33, 37, 43);\n"
 "	padding-left: 3px;\n"
 "	font-size: 15px;\n"
-"	selection-color: rgb(255, 255, 255);\n"
-"	selection-background-color: rgb(255, 121, 198) }\n"
+"	selection-background-color: rgb(255, 121, 198);\n"
+"	selection-color: rgb(40, 44, 52) }\n"
 "QLineEdit:hover { border: 2px solid rgb(64, 71, 88) }\n"
 "QLineEdit:focus { border: 2px solid rgb(91, 101, 124) }\n"
 "QCheckBox::indicator {\n"
@@ -411,9 +411,9 @@ class Ui_tableWidget(object):
 "	border: 1px solid rgb(44, 49, 60);\n"
 "	font-size: 15px }\n"
 "QLineEdit {\n"
-"    background-color: rgb(50, 54, 62); /* slightly lighter/darker variant for edit mode */\n"
+"   background-color: rgb(50, 54, 62); /* slightly lighter/darker variant for edit mode */\n"
 "	selection-background-color: rgb(189, 147, 249); /* background when highlight */\n"
-"    selection-color: rgb(40, 44, 52); /* text color when selected */\n"
+"   selection-color: rgb(40, 44, 52); /* text color when selected */\n"
 "}")
         self.table.setWordWrap(False)
         self.table.horizontalHeader().setMinimumSectionSize(110)
