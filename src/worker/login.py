@@ -10,7 +10,6 @@ class Login(QRunnable):
         log = Signal(str)
         cookie_output = Signal(str)
         profile_name = Signal(str)
-        hide_loginFrame = Signal()
         
     def __init__(self, driver_manager: DriverManager, data_manager: DataManager):
         super().__init__()
@@ -40,12 +39,10 @@ class Login(QRunnable):
                 self.driver.set_window_position(0, 0)
                 login_status = self.login()
                 self.signals.log.emit(login_status)
-                if login_status ==  "Đăng nhập thành công":
-                    self.signals.hide_loginFrame.emit()
+                return
         if self.driver_manager.is_login:
             self.set_profile()
             self.signals.log.emit("Đăng nhập thành công")
-            self.signals.hide_loginFrame.emit()
             return
     
     def login(self) -> str:

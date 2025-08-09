@@ -63,9 +63,8 @@ class MainWindow(QMainWindow):
         self.post.signals.finished.connect(lambda: self._on_finished_use_table("POST"))
         
         self.login.signals.log.connect(lambda msg: self.ui.statusGet.setText(msg))
-        self.login.signals.cookie_output.connect(lambda cookie: self.ui.cookieOutputText.setPlainText(cookie))
+        self.login.signals.cookie_output.connect(lambda cookie: self.ui.cookieInput.setPlainText(cookie))
         self.login.signals.profile_name.connect(lambda profile_name: self.ui.profileName.setText(profile_name))
-        self.login.signals.hide_loginFrame.connect(self.ui.loginFrame.hide)
         
         self.get_group.signals.log.connect(lambda msg: self.table_widget.statusTable.setText(msg))
         self.get_group.signals.add_row.connect(lambda link, name: self.table_widget.add_row(link, name))
@@ -81,7 +80,6 @@ class MainWindow(QMainWindow):
         self.ui.btn_get.clicked.connect(self.chooseMenu)
         self.ui.btn_proxy.clicked.connect(self.chooseMenu)
         self.ui.btn_save.clicked.connect(self.save_all)
-        self.ui.btn_table.clicked.connect(None)
 
         # HOME
         self.ui.functionComboBox.activated.connect(self.chooseFunction)
@@ -104,15 +102,11 @@ class MainWindow(QMainWindow):
         self.ui.btn_spam.clicked.connect(self.run_spam)
 
         # GET
-        # self.ui.getComboBox.activated.connect(self.chooseGet)
         # self.ui.btn_getReload.clicked.connect(lambda: toolFunction.LoadGet(self.ui))
-        # self.ui.cookiesDetailCheckBox.stateChanged.connect(self.changeLoginUserPassMethod)
         # self.ui.loginDetailCheckBox.stateChanged.connect(self.changeLoginUserPassMethod)
-        # self.ui.cookie2FACheckBox.clicked.connect(self.changeUseOf2FA)
         # self.ui.twoFACheckBox.clicked.connect(self.changeUseOf2FA)
-        self.ui.btn_getCookie.clicked.connect(self.login.get_cookies)
         # self.ui.methodComboBox.activated.connect(self.chooseLoginMethod)
-        self.ui.copyButton.clicked.connect(self.copy_cookies)
+        self.ui.btn_copyCookie.clicked.connect(self.copy_cookies)
         
         self.ui.btn_post.clicked.connect(self.open_table)
         self.ui.btn_comment.clicked.connect(self.open_table)
@@ -331,10 +325,8 @@ class MainWindow(QMainWindow):
         self.ui.btn_spamImageFromFile.hide()
         self.ui.functionComboBox.setCurrentText("POST")
         self.ui.homeStackedWidget.setCurrentWidget(self.ui.postPage)
-        self.ui.getStacked.setCurrentWidget(self.ui.getGroupPostPage)
-        self.ui.loginFrame.hide()
+        self.ui.getStacked.setCurrentWidget(self.ui.getDataPage)
         self.ui.methodComboBox.setCurrentText("Cookie")
-        self.ui.cookieLoginDetailFrame.hide()
         self.ui.loginDetailFrame.hide()
         self.ui.loginMethodStacked.setCurrentWidget(self.ui.useCookie)
         self.ui.proxyInputDetailFrame.hide()
@@ -361,8 +353,6 @@ class MainWindow(QMainWindow):
     def center_table(self):
         self.table_frame_width = self.width()
         self.table_frame_height = self.height() - self.ui.contentTop.height() - self.ui.bottomBar.height() + 18
-        # self.table_widget.resize(self.table_frame_width, self.table_frame_height)
-        # self.table_widget.move(self.ui.leftMenu.width() // 4, self.ui.contentTop.height() - 10)
         self.table_widget.setGeometry(QRect(0, self.ui.contentTop.height() - 10 - 9, self.table_frame_width, self.table_frame_height))
 
     def toggleMenu(self):
@@ -376,6 +366,7 @@ class MainWindow(QMainWindow):
         self.animation.setEndValue(widthExtend)
         self.animation.setEasingCurve(QEasingCurve.InOutQuart)
         self.animation.start()
+        
     def resetStyle(self, widget):
         for w in self.ui.leftMenuBtn.findChildren(QPushButton):
             if w.objectName() != widget:
@@ -417,79 +408,9 @@ class MainWindow(QMainWindow):
             setCookie("%s");
             location.href = "https://facebook.com";
         })();
-        '''%self.ui.cookieOutputText.toPlainText()
+        '''%self.ui.cookieInput.toPlainText()
         pyperclip.copy(consoleCode)
         self.ui.statusGet.setText("Đã copy code cookies, paste vào console của chromeDevtool để login")
-    
-    # GET
-    # def chooseGet(self):
-    #     currentGet = self.ui.getComboBox.currentText()
-    #     if currentGet == "GET COOKIE":
-    #         self.ui.getStacked.setCurrentWidget(self.ui.getCookiePage)
-    #     else:
-    #         if self.ui.cookieInput != "":
-    #             self.ui.loginFrame.hide()
-    #         else:
-    #             self.ui.loginFrame.show()
-    #         self.ui.getStacked.setCurrentWidget(self.ui.getGroupPostPage)
-    # def chooseLoginMethod(self):
-    #     currentLoginMethod = self.ui.methodComboBox.currentText()
-    #     if currentLoginMethod == "Username|Password|2fa":
-    #         self.ui.loginMethodStacked.setCurrentWidget(self.ui.useUserPass)
-    #     if currentLoginMethod == "Cookie":
-    #         self.ui.loginMethodStacked.setCurrentWidget(self.ui.useCookie)
-    def changeUseOf2FA(self):
-        global using2FA
-        using2FA = not using2FA
-        # if using2FA:
-        #     self.ui.cookie2FAInput.show()
-        #     self.ui.twoFAInput.show()
-        #     self.ui.cookieLoginCheckBox.setText("USER|PASS|2FA")
-        #     self.ui.loginCheckBox.setText("USER|PASS|2FA")
-        #     self.ui.cookieLoginInput.setText(self.ui.cookieUserInput.text()+"|"+self.ui.cookiePassInput.text()+"|"+self.ui.cookie2FAInput.text().replace(" ", ""))
-        #     self.ui.loginInput.setText(self.ui.userInput.text()+"|"+self.ui.passInput.text()+"|"+self.ui.cookie2FAInput.text().replace(" ", ""))
-        #     self.ui.cookie2FACheckBox.setCheckState(Qt.CheckState.Checked)
-        #     self.ui.twoFACheckBox.setCheckState(Qt.CheckState.Checked)
-        # else:
-        #     self.ui.cookie2FAInput.hide()
-        #     self.ui.twoFAInput.hide()
-        #     self.ui.cookieLoginCheckBox.setText("USER|PASS")
-        #     self.ui.loginCheckBox.setText("USER|PASS")
-        #     self.ui.cookieLoginInput.setText(self.ui.cookieUserInput.text()+"|"+self.ui.cookiePassInput.text())
-        #     self.ui.loginInput.setText(self.ui.userInput.text()+"|"+self.ui.passInput.text())
-        #     self.ui.cookie2FACheckBox.setCheckState(Qt.CheckState.Unchecked)
-        #     self.ui.twoFACheckBox.setCheckState(Qt.CheckState.Unchecked)
-    def changeLoginUserPassMethod(self, state):
-        if Qt.CheckState(state) == Qt.CheckState.Checked:
-            self.ui.cookieLoginInput.show()
-            self.ui.cookieLoginDetailFrame.hide()
-            self.ui.loginInput.show()
-            self.ui.loginDetailFrame.hide()
-            if using2FA:
-                infoCookie = self.ui.cookieUserInput.text()+"|"+self.ui.cookiePassInput.text()+"|"+self.ui.cookie2FAInput.text()
-                infoGroup = self.ui.userInput.text()+"|"+self.ui.passInput.text()+"|"+self.ui.twoFAInput.text()
-            else:
-                infoCookie = self.ui.cookieUserInput.text()+"|"+self.ui.cookiePassInput.text()
-                infoGroup = self.ui.userInput.text()+"|"+self.ui.passInput.text()
-            self.ui.cookieLoginInput.setText(infoCookie)
-            self.ui.loginInput.setText(infoGroup)
-        else:
-            self.ui.cookieLoginInput.hide()
-            self.ui.cookieLoginDetailFrame.show()
-            self.ui.loginInput.hide()
-            self.ui.loginDetailFrame.show()
-            infoCookie = self.ui.cookieLoginInput.text().split("|")
-            infoGroup = self.ui.loginInput.text().split("|")
-            if len(infoCookie) >= 2:
-                self.ui.cookieUserInput.setText(infoCookie[0])
-                self.ui.cookiePassInput.setText(infoCookie[1])
-            if len(infoCookie) == 3:
-                self.ui.cookie2FAInput.setText(infoCookie[2].replace(" ", ""))
-            if len(infoGroup) >= 2:
-                self.ui.userInput.setText(infoGroup[0])
-                self.ui.passInput.setText(infoGroup[1])
-            if len(infoGroup) == 3:
-                self.ui.twoFAInput.setText(infoGroup[2].replace(" ", ""))
 
     # PROXY
     def changeStatusProxy(self):

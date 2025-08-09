@@ -1,25 +1,18 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'interfaceeZAzPm.ui'
+## Form generated from reading UI file 'interfaceieHyLP.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.8.2
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
 
-from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
-    QMetaObject, QObject, QPoint, QRect,
-    QSize, QTime, QUrl, Qt)
-from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
-    QFont, QFontDatabase, QGradient, QIcon,
-    QImage, QKeySequence, QLinearGradient, QPainter,
-    QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QFormLayout,
-    QFrame, QGridLayout, QHBoxLayout, QLabel,
-    QLineEdit, QMainWindow, QPlainTextEdit, QPushButton,
-    QScrollArea, QSizePolicy, QStackedWidget, QVBoxLayout,
-    QWidget)
+from PySide6.QtCore import QCoreApplication, QMetaObject, QRect, QSize, Qt
+from PySide6.QtGui import QCursor, QFont, QIcon, QPixmap
+from PySide6.QtWidgets import (QCheckBox, QComboBox, QFormLayout, QFrame,
+    QGridLayout, QHBoxLayout, QLabel, QLineEdit, QSpacerItem, QPlainTextEdit,
+    QPushButton, QScrollArea, QSizePolicy, QStackedWidget, QVBoxLayout, QWidget)
 
 from src.gui.custom_widget.highlighted_widget import HighlightLabel, HighlightPlainTextEdit
 
@@ -265,16 +258,6 @@ class Ui_MainWindow(object):
 
         self._8.addWidget(self.btn_save)
 
-        self.btn_table = QPushButton(self.leftMenuBtn)
-        self.btn_table.setObjectName(u"btn_table")
-        self.btn_table.setMinimumSize(QSize(60, 45))
-        icon6 = QIcon()
-        icon6.addFile(u":/icons/icons/table.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.btn_table.setIcon(icon6)
-        self.btn_table.setIconSize(QSize(32, 32))
-
-        self._8.addWidget(self.btn_table)
-
 
         self._19.addWidget(self.leftMenuBtn, 0, Qt.AlignmentFlag.AlignTop)
 
@@ -315,7 +298,7 @@ class Ui_MainWindow(object):
 "	border: 2px solid rgb(33, 37, 43);\n"
 "	padding-left: 3px;\n"
 "	selection-background-color: rgb(255, 121, 198);\n"
-"	selection-color: rgb(40, 44, 52) }\n"
+" 	selection-color: rgb(40, 44, 52) }\n"
 "QLineEdit:hover, QTextEdit:hover, QPlainTextEdit:hover { border: 2px solid rgb(64, 71, 88) }\n"
 "QLineEdit:focus,  QTextEdit:focus, QPlainTextEdit:hover { border: 2px solid rgb(91, 101, 124) }\n"
 "QComboBox { background-color: rgb(33, 37, 43) }\n"
@@ -349,9 +332,9 @@ class Ui_MainWindow(object):
         self.btn_homeReload = QPushButton(self.homePage)
         self.btn_homeReload.setObjectName(u"btn_homeReload")
         self.btn_homeReload.setMaximumSize(QSize(43, 43))
-        icon7 = QIcon()
-        icon7.addFile(u":/icons/icons/update.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.btn_homeReload.setIcon(icon7)
+        icon6 = QIcon()
+        icon6.addFile(u":/icons/icons/update.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.btn_homeReload.setIcon(icon6)
         self.btn_homeReload.setIconSize(QSize(30, 30))
 
         self.gridLayout_8.addWidget(self.btn_homeReload, 0, 1, 1, 1)
@@ -392,9 +375,9 @@ class Ui_MainWindow(object):
         self.btn_post.setObjectName(u"btn_post")
         sizePolicy.setHeightForWidth(self.btn_post.sizePolicy().hasHeightForWidth())
         self.btn_post.setSizePolicy(sizePolicy)
-        icon8 = QIcon()
-        icon8.addFile(u":/icons/icons/post.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.btn_post.setIcon(icon8)
+        icon7 = QIcon()
+        icon7.addFile(u":/icons/icons/post.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.btn_post.setIcon(icon7)
         self.btn_post.setIconSize(QSize(50, 40))
 
         self.formLayout_2.setWidget(0, QFormLayout.FieldRole, self.btn_post)
@@ -412,7 +395,7 @@ class Ui_MainWindow(object):
         self.postImageViewer.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.postImageViewerWidget = QWidget()
         self.postImageViewerWidget.setObjectName(u"postImageViewerWidget")
-        self.postImageViewerWidget.setGeometry(QRect(0, 0, 100, 30))
+        self.postImageViewerWidget.setGeometry(QRect(0, 0, 443, 358))
         self.postImageViewer.setWidget(self.postImageViewerWidget)
 
         self.gridLayout.addWidget(self.postImageViewer, 2, 0, 1, 1)
@@ -445,9 +428,9 @@ class Ui_MainWindow(object):
         self.btn_postImageFromFile = QPushButton(self.upImageCheckBoxFrame)
         self.btn_postImageFromFile.setObjectName(u"btn_postImageFromFile")
         self.btn_postImageFromFile.setMaximumSize(QSize(40, 40))
-        icon9 = QIcon()
-        icon9.addFile(u":/icons/icons/openedFile.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.btn_postImageFromFile.setIcon(icon9)
+        icon8 = QIcon()
+        icon8.addFile(u":/icons/icons/openedFile.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.btn_postImageFromFile.setIcon(icon8)
         self.btn_postImageFromFile.setIconSize(QSize(30, 30))
 
         self._9.addWidget(self.btn_postImageFromFile)
@@ -536,7 +519,7 @@ class Ui_MainWindow(object):
         self.btn_commentImageFromFile = QPushButton(self.commentImageCheckBoxFrame)
         self.btn_commentImageFromFile.setObjectName(u"btn_commentImageFromFile")
         self.btn_commentImageFromFile.setMaximumSize(QSize(40, 40))
-        self.btn_commentImageFromFile.setIcon(icon9)
+        self.btn_commentImageFromFile.setIcon(icon8)
         self.btn_commentImageFromFile.setIconSize(QSize(30, 30))
 
         self._10.addWidget(self.btn_commentImageFromFile)
@@ -557,9 +540,9 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.btn_comment.sizePolicy().hasHeightForWidth())
         self.btn_comment.setSizePolicy(sizePolicy)
         self.btn_comment.setMaximumSize(QSize(16777215, 70))
-        icon10 = QIcon()
-        icon10.addFile(u":/icons/icons/comment.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.btn_comment.setIcon(icon10)
+        icon9 = QIcon()
+        icon9.addFile(u":/icons/icons/comment.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.btn_comment.setIcon(icon9)
         self.btn_comment.setIconSize(QSize(50, 50))
 
         self.formLayout.setWidget(0, QFormLayout.FieldRole, self.btn_comment)
@@ -620,7 +603,7 @@ class Ui_MainWindow(object):
         self.btn_spamImageFromFile = QPushButton(self.spamImageCheckBoxFrame)
         self.btn_spamImageFromFile.setObjectName(u"btn_spamImageFromFile")
         self.btn_spamImageFromFile.setMaximumSize(QSize(40, 40))
-        self.btn_spamImageFromFile.setIcon(icon9)
+        self.btn_spamImageFromFile.setIcon(icon8)
         self.btn_spamImageFromFile.setIconSize(QSize(30, 30))
 
         self._12.addWidget(self.btn_spamImageFromFile)
@@ -730,7 +713,7 @@ class Ui_MainWindow(object):
 
         self.gridLayout_4.addWidget(self.btn_ok, 3, 0, 1, 3, Qt.AlignmentFlag.AlignHCenter)
 
-        self.proxyStatus = QLabel(self.proxyFrame)
+        self.proxyStatus = HighlightLabel(self.proxyFrame)
         self.proxyStatus.setObjectName(u"proxyStatus")
         sizePolicy2 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Fixed)
         sizePolicy2.setHorizontalStretch(0)
@@ -805,19 +788,6 @@ class Ui_MainWindow(object):
         self.gridLayout_7.setObjectName(u"gridLayout_7")
         self.gridLayout_7.setHorizontalSpacing(15)
         self.gridLayout_7.setVerticalSpacing(0)
-        self.statusGet = HighlightLabel(self.getPage)
-        self.statusGet.setObjectName(u"statusGet")
-
-        self.gridLayout_7.addWidget(self.statusGet, 4, 0, 1, 3)
-
-        self.btn_getReload = QPushButton(self.getPage)
-        self.btn_getReload.setObjectName(u"btn_getReload")
-        self.btn_getReload.setMaximumSize(QSize(43, 43))
-        self.btn_getReload.setIcon(icon7)
-        self.btn_getReload.setIconSize(QSize(30, 30))
-
-        self.gridLayout_7.addWidget(self.btn_getReload, 1, 1, 1, 1)
-
         self.getComboBox = QComboBox(self.getPage)
         self.getComboBox.addItem("")
         self.getComboBox.addItem("")
@@ -828,204 +798,89 @@ class Ui_MainWindow(object):
 
         self.gridLayout_7.addWidget(self.getComboBox, 1, 0, 1, 1)
 
+        self.statusGet = HighlightLabel(self.getPage)
+        self.statusGet.setObjectName(u"statusGet")
+
+        self.gridLayout_7.addWidget(self.statusGet, 4, 0, 1, 3)
+
         self.getStacked = QStackedWidget(self.getPage)
         self.getStacked.setObjectName(u"getStacked")
-        self.getCookiePage = QWidget()
-        self.getCookiePage.setObjectName(u"getCookiePage")
-        self._21 = QVBoxLayout(self.getCookiePage)
-        self._21.setObjectName(u"_21")
-        self.cookieUserPassInput = QFrame(self.getCookiePage)
-        self.cookieUserPassInput.setObjectName(u"cookieUserPassInput")
-        self.cookieUserPassInput.setMaximumSize(QSize(16777215, 200))
-        self.cookieUserPassInput.setFrameShape(QFrame.Shape.StyledPanel)
-        self.cookieUserPassInput.setFrameShadow(QFrame.Shadow.Raised)
-        self.gridLayout_5 = QGridLayout(self.cookieUserPassInput)
+        self.loginPage = QWidget()
+        self.loginPage.setObjectName(u"loginPage")
+        self.gridLayout_5 = QGridLayout(self.loginPage)
         self.gridLayout_5.setObjectName(u"gridLayout_5")
-        self.cookieOkFrame = QFrame(self.cookieUserPassInput)
-        self.cookieOkFrame.setObjectName(u"cookieOkFrame")
-        sizePolicy1.setHeightForWidth(self.cookieOkFrame.sizePolicy().hasHeightForWidth())
-        self.cookieOkFrame.setSizePolicy(sizePolicy1)
-        self.cookieOkFrame.setFrameShape(QFrame.Shape.StyledPanel)
-        self.cookieOkFrame.setFrameShadow(QFrame.Shadow.Raised)
-        self.verticalLayout = QVBoxLayout(self.cookieOkFrame)
-        self.verticalLayout.setSpacing(0)
-        self.verticalLayout.setObjectName(u"verticalLayout")
-        self.verticalLayout.setContentsMargins(0, 0, 0, 0)
-        self.btn_getCookie = QPushButton(self.cookieOkFrame)
-        self.btn_getCookie.setObjectName(u"btn_getCookie")
-        self.btn_getCookie.setIcon(icon8)
-        self.btn_getCookie.setIconSize(QSize(40, 32))
+        self.gridLayout_5.setContentsMargins(-1, -1, 25, -1)
+        self.methodComboBox = QComboBox(self.loginPage)
+        self.methodComboBox.addItem("")
+        self.methodComboBox.addItem("")
+        self.methodComboBox.setObjectName(u"methodComboBox")
+        sizePolicy.setHeightForWidth(self.methodComboBox.sizePolicy().hasHeightForWidth())
+        self.methodComboBox.setSizePolicy(sizePolicy)
 
-        self.verticalLayout.addWidget(self.btn_getCookie)
+        self.gridLayout_5.addWidget(self.methodComboBox, 0, 1, 1, 1)
 
+        self.btn_reload_loginMethod = QPushButton(self.loginPage)
+        self.btn_reload_loginMethod.setObjectName(u"btn_reload_loginMethod")
+        self.btn_reload_loginMethod.setMaximumSize(QSize(43, 43))
+        self.btn_reload_loginMethod.setIcon(icon6)
+        self.btn_reload_loginMethod.setIconSize(QSize(30, 30))
 
-        self.gridLayout_5.addWidget(self.cookieOkFrame, 0, 4, 3, 1)
+        self.gridLayout_5.addWidget(self.btn_reload_loginMethod, 0, 2, 1, 1)
 
-        self.cookieLoginCheckBox = QCheckBox(self.cookieUserPassInput)
-        self.cookieLoginCheckBox.setObjectName(u"cookieLoginCheckBox")
-        sizePolicy1.setHeightForWidth(self.cookieLoginCheckBox.sizePolicy().hasHeightForWidth())
-        self.cookieLoginCheckBox.setSizePolicy(sizePolicy1)
-        self.cookieLoginCheckBox.setChecked(True)
+        self.methodLabel = QLabel(self.loginPage)
+        self.methodLabel.setObjectName(u"methodLabel")
+        sizePolicy1.setHeightForWidth(self.methodLabel.sizePolicy().hasHeightForWidth())
+        self.methodLabel.setSizePolicy(sizePolicy1)
 
-        self.gridLayout_5.addWidget(self.cookieLoginCheckBox, 1, 0, 1, 1)
+        self.gridLayout_5.addWidget(self.methodLabel, 0, 0, 1, 1)
 
-        self.cookieLoginInput = QLineEdit(self.cookieUserPassInput)
-        self.cookieLoginInput.setObjectName(u"cookieLoginInput")
-
-        self.gridLayout_5.addWidget(self.cookieLoginInput, 1, 1, 1, 1)
-
-        self.cookieLoginDetailFrame = QFrame(self.cookieUserPassInput)
-        self.cookieLoginDetailFrame.setObjectName(u"cookieLoginDetailFrame")
-        self.cookieLoginDetailFrame.setEnabled(True)
-        sizePolicy3 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)
-        sizePolicy3.setHorizontalStretch(0)
-        sizePolicy3.setVerticalStretch(0)
-        sizePolicy3.setHeightForWidth(self.cookieLoginDetailFrame.sizePolicy().hasHeightForWidth())
-        self.cookieLoginDetailFrame.setSizePolicy(sizePolicy3)
-        self.cookieLoginDetailFrame.setFrameShape(QFrame.Shape.StyledPanel)
-        self.cookieLoginDetailFrame.setFrameShadow(QFrame.Shadow.Raised)
-        self._7 = QGridLayout(self.cookieLoginDetailFrame)
-        self._7.setObjectName(u"_7")
-        self._7.setContentsMargins(50, 0, 0, 0)
-        self.cookieUserLabel = QLabel(self.cookieLoginDetailFrame)
-        self.cookieUserLabel.setObjectName(u"cookieUserLabel")
-        font = QFont()
-        font.setFamilies([u"Segoe UI"])
-        font.setBold(False)
-        font.setItalic(False)
-        self.cookieUserLabel.setFont(font)
-
-        self._7.addWidget(self.cookieUserLabel, 0, 0, 1, 2)
-
-        self.cookiePassLabel = QLabel(self.cookieLoginDetailFrame)
-        self.cookiePassLabel.setObjectName(u"cookiePassLabel")
-
-        self._7.addWidget(self.cookiePassLabel, 1, 0, 1, 1)
-
-        self.cookieUserInput = QLineEdit(self.cookieLoginDetailFrame)
-        self.cookieUserInput.setObjectName(u"cookieUserInput")
-
-        self._7.addWidget(self.cookieUserInput, 0, 2, 1, 1)
-
-        self.cookiePassInput = QLineEdit(self.cookieLoginDetailFrame)
-        self.cookiePassInput.setObjectName(u"cookiePassInput")
-        self.cookiePassInput.setFont(font)
-
-        self._7.addWidget(self.cookiePassInput, 1, 2, 1, 1)
-
-        self.cookie2FACheckBox = QCheckBox(self.cookieLoginDetailFrame)
-        self.cookie2FACheckBox.setObjectName(u"cookie2FACheckBox")
-        sizePolicy.setHeightForWidth(self.cookie2FACheckBox.sizePolicy().hasHeightForWidth())
-        self.cookie2FACheckBox.setSizePolicy(sizePolicy)
-        self.cookie2FACheckBox.setChecked(True)
-
-        self._7.addWidget(self.cookie2FACheckBox, 2, 0, 1, 1)
-
-        self.cookie2FAInput = QLineEdit(self.cookieLoginDetailFrame)
-        self.cookie2FAInput.setObjectName(u"cookie2FAInput")
-
-        self._7.addWidget(self.cookie2FAInput, 2, 2, 1, 1)
-
-
-        self.gridLayout_5.addWidget(self.cookieLoginDetailFrame, 2, 0, 1, 2)
-
-
-        self._21.addWidget(self.cookieUserPassInput)
-
-        self.cookieOutput = QFrame(self.getCookiePage)
-        self.cookieOutput.setObjectName(u"cookieOutput")
-        sizePolicy4 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Expanding)
-        sizePolicy4.setHorizontalStretch(0)
-        sizePolicy4.setVerticalStretch(0)
-        sizePolicy4.setHeightForWidth(self.cookieOutput.sizePolicy().hasHeightForWidth())
-        self.cookieOutput.setSizePolicy(sizePolicy4)
-        self._11 = QHBoxLayout(self.cookieOutput)
-        self._11.setObjectName(u"_11")
-        self._11.setContentsMargins(-1, 0, -1, -1)
-        self.cookieCookieLabel = QLabel(self.cookieOutput)
-        self.cookieCookieLabel.setObjectName(u"cookieCookieLabel")
-
-        self._11.addWidget(self.cookieCookieLabel)
-
-        self.cookieOutputText = HighlightPlainTextEdit(self.cookieOutput)
-        self.cookieOutputText.setObjectName(u"cookieOutputText")
-
-        self._11.addWidget(self.cookieOutputText)
-
-        self.copyButton = QPushButton(self.cookieOutput)
-        self.copyButton.setObjectName(u"copyButton")
-        icon11 = QIcon()
-        icon11.addFile(u":/icons/icons/copy.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.copyButton.setIcon(icon11)
-        self.copyButton.setIconSize(QSize(32, 40))
-
-        self._11.addWidget(self.copyButton)
-
-
-        self._21.addWidget(self.cookieOutput)
-
-        self.getStacked.addWidget(self.getCookiePage)
-        self.getGroupPostPage = QWidget()
-        self.getGroupPostPage.setObjectName(u"getGroupPostPage")
-        self.gridLayout_9 = QGridLayout(self.getGroupPostPage)
-        self.gridLayout_9.setObjectName(u"gridLayout_9")
-        self.gridLayout_9.setContentsMargins(-1, -1, -1, 100)
-        self.loginFrame = QFrame(self.getGroupPostPage)
-        self.loginFrame.setObjectName(u"loginFrame")
-        sizePolicy3.setHeightForWidth(self.loginFrame.sizePolicy().hasHeightForWidth())
-        self.loginFrame.setSizePolicy(sizePolicy3)
-        self.gridLayout_6 = QGridLayout(self.loginFrame)
-        self.gridLayout_6.setObjectName(u"gridLayout_6")
-        self.loginMethodStacked = QStackedWidget(self.loginFrame)
+        self.loginMethodStacked = QStackedWidget(self.loginPage)
         self.loginMethodStacked.setObjectName(u"loginMethodStacked")
         self.useUserPass = QWidget()
         self.useUserPass.setObjectName(u"useUserPass")
-        self._2 = QGridLayout(self.useUserPass)
-        self._2.setObjectName(u"_2")
-        self.loginCheckBox = QCheckBox(self.useUserPass)
-        self.loginCheckBox.setObjectName(u"loginCheckBox")
-        sizePolicy1.setHeightForWidth(self.loginCheckBox.sizePolicy().hasHeightForWidth())
-        self.loginCheckBox.setSizePolicy(sizePolicy1)
-        self.loginCheckBox.setChecked(True)
+        self._5 = QGridLayout(self.useUserPass)
+        self._5.setObjectName(u"_5")
+        self._5.setContentsMargins(-1, -1, 0, -1)
+        self.fullLoginInput = QLineEdit(self.useUserPass)
+        self.fullLoginInput.setObjectName(u"fullLoginInput")
 
-        self._2.addWidget(self.loginCheckBox, 1, 0, 1, 1)
-
-        self.loginInput = QLineEdit(self.useUserPass)
-        self.loginInput.setObjectName(u"loginInput")
-
-        self._2.addWidget(self.loginInput, 1, 2, 1, 1)
+        self._5.addWidget(self.fullLoginInput, 1, 2, 1, 1)
 
         self.loginDetailFrame = QFrame(self.useUserPass)
         self.loginDetailFrame.setObjectName(u"loginDetailFrame")
         self.loginDetailFrame.setEnabled(True)
-        sizePolicy5 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
-        sizePolicy5.setHorizontalStretch(0)
-        sizePolicy5.setVerticalStretch(0)
-        sizePolicy5.setHeightForWidth(self.loginDetailFrame.sizePolicy().hasHeightForWidth())
-        self.loginDetailFrame.setSizePolicy(sizePolicy5)
-        self._13 = QGridLayout(self.loginDetailFrame)
-        self._13.setObjectName(u"_13")
-        self._13.setContentsMargins(50, 0, 0, 0)
+        sizePolicy3 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        sizePolicy3.setHorizontalStretch(0)
+        sizePolicy3.setVerticalStretch(0)
+        sizePolicy3.setHeightForWidth(self.loginDetailFrame.sizePolicy().hasHeightForWidth())
+        self.loginDetailFrame.setSizePolicy(sizePolicy3)
+        self._21 = QGridLayout(self.loginDetailFrame)
+        self._21.setObjectName(u"_21")
+        self._21.setContentsMargins(25, 0, 0, -1)
         self.userInput = QLineEdit(self.loginDetailFrame)
         self.userInput.setObjectName(u"userInput")
 
-        self._13.addWidget(self.userInput, 0, 2, 1, 1)
+        self._21.addWidget(self.userInput, 0, 2, 1, 1)
 
         self.passLabel = QLabel(self.loginDetailFrame)
         self.passLabel.setObjectName(u"passLabel")
 
-        self._13.addWidget(self.passLabel, 1, 0, 1, 1)
+        self._21.addWidget(self.passLabel, 1, 0, 1, 1)
 
         self.passInput = QLineEdit(self.loginDetailFrame)
         self.passInput.setObjectName(u"passInput")
+        font = QFont()
+        font.setFamilies([u"Segoe UI"])
+        font.setBold(False)
+        font.setItalic(False)
         self.passInput.setFont(font)
 
-        self._13.addWidget(self.passInput, 1, 2, 1, 1)
+        self._21.addWidget(self.passInput, 1, 2, 1, 1)
 
         self.twoFAInput = QLineEdit(self.loginDetailFrame)
         self.twoFAInput.setObjectName(u"twoFAInput")
 
-        self._13.addWidget(self.twoFAInput, 2, 2, 1, 1)
+        self._21.addWidget(self.twoFAInput, 2, 2, 1, 1)
 
         self.twoFACheckBox = QCheckBox(self.loginDetailFrame)
         self.twoFACheckBox.setObjectName(u"twoFACheckBox")
@@ -1033,90 +888,101 @@ class Ui_MainWindow(object):
         self.twoFACheckBox.setSizePolicy(sizePolicy)
         self.twoFACheckBox.setChecked(True)
 
-        self._13.addWidget(self.twoFACheckBox, 2, 0, 1, 1)
+        self._21.addWidget(self.twoFACheckBox, 2, 0, 1, 1)
 
         self.userLabel = QLabel(self.loginDetailFrame)
         self.userLabel.setObjectName(u"userLabel")
         self.userLabel.setFont(font)
 
-        self._13.addWidget(self.userLabel, 0, 0, 1, 2)
+        self._21.addWidget(self.userLabel, 0, 0, 1, 2)
 
 
-        self._2.addWidget(self.loginDetailFrame, 2, 0, 1, 4)
+        self._5.addWidget(self.loginDetailFrame, 2, 0, 1, 4)
+
+        self.fullLoginCheckBox = QCheckBox(self.useUserPass)
+        self.fullLoginCheckBox.setObjectName(u"fullLoginCheckBox")
+        sizePolicy1.setHeightForWidth(self.fullLoginCheckBox.sizePolicy().hasHeightForWidth())
+        self.fullLoginCheckBox.setSizePolicy(sizePolicy1)
+        self.fullLoginCheckBox.setChecked(True)
+
+        self._5.addWidget(self.fullLoginCheckBox, 1, 0, 1, 1)
 
         self.loginMethodStacked.addWidget(self.useUserPass)
         self.useCookie = QWidget()
         self.useCookie.setObjectName(u"useCookie")
-        self._17 = QHBoxLayout(self.useCookie)
-        self._17.setObjectName(u"_17")
+        self._22 = QHBoxLayout(self.useCookie)
+        self._22.setObjectName(u"_22")
         self.methodCookieLabel = QLabel(self.useCookie)
         self.methodCookieLabel.setObjectName(u"methodCookieLabel")
 
-        self._17.addWidget(self.methodCookieLabel)
+        self._22.addWidget(self.methodCookieLabel)
 
-        self.cookieInput = QPlainTextEdit(self.useCookie)
+        self.cookieInput = HighlightPlainTextEdit(self.useCookie)
         self.cookieInput.setObjectName(u"cookieInput")
 
-        self._17.addWidget(self.cookieInput)
+        self._22.addWidget(self.cookieInput)
+
+        self.btn_copyCookie = QPushButton(self.useCookie)
+        self.btn_copyCookie.setObjectName(u"btn_copyCookie")
+        self.btn_copyCookie.setMaximumSize(QSize(50, 16777215))
+        icon10 = QIcon()
+        icon10.addFile(u":/icons/icons/copy.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.btn_copyCookie.setIcon(icon10)
+        self.btn_copyCookie.setIconSize(QSize(40, 32))
+
+        self._22.addWidget(self.btn_copyCookie)
 
         self.loginMethodStacked.addWidget(self.useCookie)
 
-        self.gridLayout_6.addWidget(self.loginMethodStacked, 1, 0, 1, 5)
+        self.gridLayout_5.addWidget(self.loginMethodStacked, 1, 0, 1, 6)
 
-        self.btn_reload_loginMethod = QPushButton(self.loginFrame)
-        self.btn_reload_loginMethod.setObjectName(u"btn_reload_loginMethod")
-        self.btn_reload_loginMethod.setMaximumSize(QSize(43, 43))
-        self.btn_reload_loginMethod.setIcon(icon7)
-        self.btn_reload_loginMethod.setIconSize(QSize(30, 30))
-
-        self.gridLayout_6.addWidget(self.btn_reload_loginMethod, 0, 2, 1, 1)
-
-        self.methodComboBox = QComboBox(self.loginFrame)
-        self.methodComboBox.addItem("")
-        self.methodComboBox.addItem("")
-        self.methodComboBox.setObjectName(u"methodComboBox")
-        sizePolicy.setHeightForWidth(self.methodComboBox.sizePolicy().hasHeightForWidth())
-        self.methodComboBox.setSizePolicy(sizePolicy)
-
-        self.gridLayout_6.addWidget(self.methodComboBox, 0, 1, 1, 1)
-
-        self.methodLabel = QLabel(self.loginFrame)
-        self.methodLabel.setObjectName(u"methodLabel")
-        sizePolicy1.setHeightForWidth(self.methodLabel.sizePolicy().hasHeightForWidth())
-        self.methodLabel.setSizePolicy(sizePolicy1)
-
-        self.gridLayout_6.addWidget(self.methodLabel, 0, 0, 1, 1)
-
-        self.btn_login = QPushButton(self.loginFrame)
+        self.btn_login = QPushButton(self.loginPage)
         self.btn_login.setObjectName(u"btn_login")
-        sizePolicy1.setHeightForWidth(self.btn_login.sizePolicy().hasHeightForWidth())
-        self.btn_login.setSizePolicy(sizePolicy1)
+        sizePolicy4 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
+        sizePolicy4.setHorizontalStretch(0)
+        sizePolicy4.setVerticalStretch(0)
+        sizePolicy4.setHeightForWidth(self.btn_login.sizePolicy().hasHeightForWidth())
+        self.btn_login.setSizePolicy(sizePolicy4)
         self.btn_login.setIconSize(QSize(40, 32))
 
-        self.gridLayout_6.addWidget(self.btn_login, 0, 3, 1, 2, Qt.AlignmentFlag.AlignHCenter)
+        self.gridLayout_5.addWidget(self.btn_login, 2, 5, 1, 1)
 
-
-        self.gridLayout_9.addWidget(self.loginFrame, 0, 0, 1, 5)
-
-        self.btn_getGroup = QPushButton(self.getGroupPostPage)
+        self.getStacked.addWidget(self.loginPage)
+        self.getDataPage = QWidget()
+        self.getDataPage.setObjectName(u"getDataPage")
+        self.gridLayout_9 = QGridLayout(self.getDataPage)
+        self.gridLayout_9.setObjectName(u"gridLayout_9")
+        self.btn_getGroup = QPushButton(self.getDataPage)
         self.btn_getGroup.setObjectName(u"btn_getGroup")
         sizePolicy.setHeightForWidth(self.btn_getGroup.sizePolicy().hasHeightForWidth())
         self.btn_getGroup.setSizePolicy(sizePolicy)
         self.btn_getGroup.setStyleSheet(u"")
 
-        self.gridLayout_9.addWidget(self.btn_getGroup, 3, 1, 1, 1)
+        self.gridLayout_9.addWidget(self.btn_getGroup, 2, 0, 1, 1)
 
-        self.btn_getPost = QPushButton(self.getGroupPostPage)
+        self.btn_getPost = QPushButton(self.getDataPage)
         self.btn_getPost.setObjectName(u"btn_getPost")
         sizePolicy.setHeightForWidth(self.btn_getPost.sizePolicy().hasHeightForWidth())
         self.btn_getPost.setSizePolicy(sizePolicy)
         self.btn_getPost.setStyleSheet(u"")
 
-        self.gridLayout_9.addWidget(self.btn_getPost, 3, 3, 1, 1)
+        self.gridLayout_9.addWidget(self.btn_getPost, 2, 1, 1, 1)
 
-        self.getStacked.addWidget(self.getGroupPostPage)
+        self.getStacked.addWidget(self.getDataPage)
 
         self.gridLayout_7.addWidget(self.getStacked, 5, 0, 1, 3)
+
+        self.btn_getReload = QPushButton(self.getPage)
+        self.btn_getReload.setObjectName(u"btn_getReload")
+        self.btn_getReload.setMaximumSize(QSize(43, 43))
+        self.btn_getReload.setIcon(icon6)
+        self.btn_getReload.setIconSize(QSize(30, 30))
+
+        self.gridLayout_7.addWidget(self.btn_getReload, 1, 1, 1, 1)
+
+        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.gridLayout_7.addItem(self.verticalSpacer, 6, 0, 1, 1)
 
         self.pageStacked.addWidget(self.getPage)
 
@@ -1133,9 +999,9 @@ class Ui_MainWindow(object):
         self._31.setContentsMargins(0, 0, 0, 0)
         self.credits = QPushButton(self.bottomBar)
         self.credits.setObjectName(u"credits")
-        icon12 = QIcon()
-        icon12.addFile(u":/icons/icons/tele.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.credits.setIcon(icon12)
+        icon11 = QIcon()
+        icon11.addFile(u":/icons/icons/tele.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.credits.setIcon(icon11)
 
         self._31.addWidget(self.credits, 0, Qt.AlignmentFlag.AlignLeft)
 
@@ -1169,8 +1035,11 @@ class Ui_MainWindow(object):
 
         self.title = QLabel(self.contentTop)
         self.title.setObjectName(u"title")
-        sizePolicy3.setHeightForWidth(self.title.sizePolicy().hasHeightForWidth())
-        self.title.setSizePolicy(sizePolicy3)
+        sizePolicy5 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)
+        sizePolicy5.setHorizontalStretch(0)
+        sizePolicy5.setVerticalStretch(0)
+        sizePolicy5.setHeightForWidth(self.title.sizePolicy().hasHeightForWidth())
+        self.title.setSizePolicy(sizePolicy5)
         font1 = QFont()
         font1.setFamilies([u"Segoe UI"])
         font1.setBold(True)
@@ -1188,19 +1057,19 @@ class Ui_MainWindow(object):
         self.minimizeBtn = QPushButton(self.navigationBar)
         self.minimizeBtn.setObjectName(u"minimizeBtn")
         self.minimizeBtn.setFont(font1)
-        icon13 = QIcon()
-        icon13.addFile(u":/icons/icons/minimize.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.minimizeBtn.setIcon(icon13)
+        icon12 = QIcon()
+        icon12.addFile(u":/icons/icons/minimize.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.minimizeBtn.setIcon(icon12)
         self.minimizeBtn.setIconSize(QSize(20, 20))
 
         self._16.addWidget(self.minimizeBtn)
 
         self.changeWindowBtn = QPushButton(self.navigationBar)
         self.changeWindowBtn.setObjectName(u"changeWindowBtn")
-        icon14 = QIcon()
-        icon14.addFile(u":/icons/icons/maximize.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        icon14.addFile(u":/icons/icons/restore.svg", QSize(), QIcon.Mode.Normal, QIcon.State.On)
-        self.changeWindowBtn.setIcon(icon14)
+        icon13 = QIcon()
+        icon13.addFile(u":/icons/icons/maximize.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        icon13.addFile(u":/icons/icons/restore.svg", QSize(), QIcon.Mode.Normal, QIcon.State.On)
+        self.changeWindowBtn.setIcon(icon13)
         self.changeWindowBtn.setIconSize(QSize(20, 20))
         self.changeWindowBtn.setCheckable(True)
 
@@ -1208,9 +1077,9 @@ class Ui_MainWindow(object):
 
         self.closeBtn = QPushButton(self.navigationBar)
         self.closeBtn.setObjectName(u"closeBtn")
-        icon15 = QIcon()
-        icon15.addFile(u":/icons/icons/close.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.closeBtn.setIcon(icon15)
+        icon14 = QIcon()
+        icon14.addFile(u":/icons/icons/close.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.closeBtn.setIcon(icon14)
         self.closeBtn.setIconSize(QSize(20, 20))
 
         self._16.addWidget(self.closeBtn)
@@ -1233,8 +1102,8 @@ class Ui_MainWindow(object):
 
         self.pageStacked.setCurrentIndex(2)
         self.homeStackedWidget.setCurrentIndex(0)
-        self.getStacked.setCurrentIndex(1)
-        self.loginMethodStacked.setCurrentIndex(0)
+        self.getStacked.setCurrentIndex(0)
+        self.loginMethodStacked.setCurrentIndex(1)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -1247,7 +1116,6 @@ class Ui_MainWindow(object):
         self.btn_get.setText(QCoreApplication.translate("MainWindow", u"   Get", None))
         self.btn_proxy.setText(QCoreApplication.translate("MainWindow", u"   Proxy", None))
         self.btn_save.setText(QCoreApplication.translate("MainWindow", u"   Save", None))
-        self.btn_table.setText(QCoreApplication.translate("MainWindow", u"   Table", None))
         self.profileName.setText("")
         self.statusHome.setText("")
         self.functionComboBox.setItemText(0, QCoreApplication.translate("MainWindow", u"POST", None))
@@ -1289,25 +1157,15 @@ class Ui_MainWindow(object):
         self.proxyPassLabel.setText(QCoreApplication.translate("MainWindow", u"PASS", None))
         self.proxyPassInput.setText("")
         self.proxyInput.setText("")
-        self.statusGet.setText("")
-        self.getComboBox.setItemText(0, QCoreApplication.translate("MainWindow", u"GET GROUP/POST", None))
-        self.getComboBox.setItemText(1, QCoreApplication.translate("MainWindow", u"GET COOKIE", None))
+        self.getComboBox.setItemText(0, QCoreApplication.translate("MainWindow", u"GET DATA", None))
+        self.getComboBox.setItemText(1, QCoreApplication.translate("MainWindow", u"LOGIN", None))
 
-        self.btn_getCookie.setText("")
-        self.cookieLoginCheckBox.setText(QCoreApplication.translate("MainWindow", u"USER|PASS|2FA", None))
-        self.cookieLoginInput.setPlaceholderText(QCoreApplication.translate("MainWindow", u"xxxxxxxxxx@gmail.com|**********|ABXDEFGH6572PJUS9I01JKK567GHJOPO", None))
-        self.cookieUserLabel.setText(QCoreApplication.translate("MainWindow", u"Username", None))
-        self.cookiePassLabel.setText(QCoreApplication.translate("MainWindow", u"Password", None))
-        self.cookieUserInput.setPlaceholderText(QCoreApplication.translate("MainWindow", u"xxxxxxxxxx@gmail.com", None))
-        self.cookiePassInput.setText("")
-        self.cookiePassInput.setPlaceholderText(QCoreApplication.translate("MainWindow", u"**********", None))
-        self.cookie2FACheckBox.setText(QCoreApplication.translate("MainWindow", u"2FA", None))
-        self.cookie2FAInput.setText("")
-        self.cookie2FAInput.setPlaceholderText(QCoreApplication.translate("MainWindow", u"ABXDEFGH6572PJUS9I01JKK567GHJOPO", None))
-        self.cookieCookieLabel.setText(QCoreApplication.translate("MainWindow", u"Cookie", None))
-        self.cookieOutputText.setPlaceholderText(QCoreApplication.translate("MainWindow", u"(output)", None))
-        self.loginCheckBox.setText(QCoreApplication.translate("MainWindow", u"USER|PASS|2FA", None))
-        self.loginInput.setPlaceholderText(QCoreApplication.translate("MainWindow", u"xxxxxxxxxx@gmail.com|**********|ABXDEFGH6572PJUS9I01JKK567GHJOPO", None))
+        self.statusGet.setText("")
+        self.methodComboBox.setItemText(0, QCoreApplication.translate("MainWindow", u"Cookie", None))
+        self.methodComboBox.setItemText(1, QCoreApplication.translate("MainWindow", u"Username|Password|2fa", None))
+
+        self.methodLabel.setText(QCoreApplication.translate("MainWindow", u"Login method", None))
+        self.fullLoginInput.setPlaceholderText(QCoreApplication.translate("MainWindow", u"xxxxxxxxxx@gmail.com|**********|ABXDEFGH6572PJUS9I01JKK567GHJOPO", None))
         self.userInput.setPlaceholderText(QCoreApplication.translate("MainWindow", u"xxxxxxxxxx@gmail.com", None))
         self.passLabel.setText(QCoreApplication.translate("MainWindow", u"Password", None))
         self.passInput.setText("")
@@ -1316,12 +1174,10 @@ class Ui_MainWindow(object):
         self.twoFAInput.setPlaceholderText(QCoreApplication.translate("MainWindow", u"ABXDEFGH6572PJUS9I01JKK567GHJOPO", None))
         self.twoFACheckBox.setText(QCoreApplication.translate("MainWindow", u"2FA", None))
         self.userLabel.setText(QCoreApplication.translate("MainWindow", u"Username", None))
+        self.fullLoginCheckBox.setText(QCoreApplication.translate("MainWindow", u"USER|PASS|2FA", None))
         self.methodCookieLabel.setText(QCoreApplication.translate("MainWindow", u"Cookie", None))
         self.cookieInput.setPlaceholderText(QCoreApplication.translate("MainWindow", u"c_user=...;fr=...;sb=...;xs=...;datr=...", None))
-        self.methodComboBox.setItemText(0, QCoreApplication.translate("MainWindow", u"Cookie", None))
-        self.methodComboBox.setItemText(1, QCoreApplication.translate("MainWindow", u"Username|Password|2fa", None))
-
-        self.methodLabel.setText(QCoreApplication.translate("MainWindow", u"Login method", None))
+        self.btn_copyCookie.setText("")
         self.btn_login.setText(QCoreApplication.translate("MainWindow", u"LOGIN", None))
         self.btn_getGroup.setText(QCoreApplication.translate("MainWindow", u"GET GROUP", None))
         self.btn_getPost.setText(QCoreApplication.translate("MainWindow", u"GET POST", None))
