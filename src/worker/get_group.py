@@ -17,13 +17,6 @@ class GetGroup(QRunnable):
 
     @Slot()
     def run(self):
-        if not self.driver_manager.setup_driver():
-            self.signals.log.emit("Xung đột! Vui lòng đóng tất cả các trình duyệt Chrome")
-            return
-        self.driver_manager.jump_to_facebook()
-        if not self.driver_manager.is_login:
-            self.signals.log.emit("GET GROUP: Chưa đăng nhập")
-            return
         self.driver = self.driver_manager.driver
         self.driver.set_window_size(800, 700)
         self.driver.set_window_position(0, 0)

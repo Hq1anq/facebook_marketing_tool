@@ -138,6 +138,25 @@ class MainWindow(QMainWindow):
         if self.table_widget.btn_run.text() == "GET POST":
             self.run_getPost()
     
+    def open_table(self):
+        if not self.table_widget.isVisible():
+            self.center_table()  # Position it first
+            self.table_widget.show()
+        self.table_widget.load_group_table(self.data_manager.data)
+        # self.table_widget.table.setSpan(2, 1, 2, 1)  # Start at (0,1), span 2 rows, 1 column
+        # self.table_widget.table.setItem(2, 1, QTableWidgetItem("Merged"))
+        sender = self.sender()
+        if sender == self.ui.btn_post:
+            self.post_ui.save_data()
+            self.table_widget.setup("POST")
+        elif sender == self.ui.btn_comment:
+            self.table_widget.setup("COMMENT")
+        elif sender == self.ui.btn_getGroup:
+            self.table_widget.setup("GET GROUP")
+        elif sender == self.ui.btn_getPost:
+            self.table_widget.setup("GET POST")
+        self.table_widget.adjust_column_width()
+    
     def save_in_table(self):
         if self.table_widget.btn_run.text() == "GET GROUP" or "POST" in self.table_widget.btn_run.text():
             self.save_group_table()
@@ -160,7 +179,7 @@ class MainWindow(QMainWindow):
                 return
             self.driver_manager.jump_to_facebook()
             if not self.driver_manager.is_login:
-                self.table_widget.statusTable.setText("POST: Chưa đăng nhập")
+                self.handle_unLogin()
                 return
             
             self.table_widget.btn_run.setText("STOP POST!")
@@ -178,6 +197,15 @@ class MainWindow(QMainWindow):
     def run_getGroup(self):
         self.move(self.screen().size().width() - self.size().width(), self.screen().size().height() - self.size().height() - 50)
         filter_keys = [keyword.strip() for keyword in self.table_widget.filterGroupInput.text().split(",") if keyword.strip()]
+        
+        if not self.driver_manager.setup_driver():
+            self.ui.statusGet.setText("Xung đột! Vui lòng đóng tất cả các trình duyệt Chrome")
+            return
+        self.driver_manager.jump_to_facebook()
+        if not self.driver_manager.is_login:
+            self.handle_unLogin()
+            return
+        
         self.get_group.setup(self.table_widget.filterGroupCheckBox.isChecked(), filter_keys)
         
         self.get_ui.save_data()
@@ -186,7 +214,15 @@ class MainWindow(QMainWindow):
         QThreadPool.globalInstance().start(self.get_group)
     
     def run_getPost(self):
-        return
+        self.move(self.screen().size().width() - self.size().width(), self.screen().size().height() - self.size().height() - 50)
+        
+        if not self.driver_manager.setup_driver():
+            self.ui.statusGet.setText("Xung đột! Vui lòng đóng tất cả các trình duyệt Chrome")
+            return
+        self.driver_manager.jump_to_facebook()
+        if not self.driver_manager.is_login:
+            self.handle_unLogin()
+            return
     
     def run_login(self):
         self.move(self.screen().size().width()- self.size().width(), self.screen().size().height() - self.size().height() - 50)
@@ -208,7 +244,7 @@ class MainWindow(QMainWindow):
                 return
             self.driver_manager.jump_to_facebook()
             if not self.driver_manager.is_login:
-                self.ui.statusHome.setText("SPAM: Chưa đăng nhập")
+                self.handle_unLogin()
                 return
             
             self.ui.btn_spam.setText("STOP!")
@@ -219,6 +255,14 @@ class MainWindow(QMainWindow):
             self.ui.statusHome.setText("SPAM: Đã tạm dừng")
             self.ui.btn_spam.setText("CONTINUE")
             self.spam.set_stop(True)  # Tell Spam to pause
+    
+    def handle_unLogin(self):
+        if self.table_widget.isVisible():
+            self.table_widget.hide()
+        self.ui.btn_get.click()
+        self.ui.getComboBox.setCurrentIndex(1)
+        self.ui.getStacked.setCurrentWidget(self.ui.loginPage)
+        self.ui.statusGet.setText("Bạn chưa đăng nhập, vui lòng đăng nhập trước khi sử dụng chức năng này")
             
     def save_group_table(self):
         """Save current table content to data_manager.data['GET']['GROUP']"""
@@ -330,25 +374,6 @@ class MainWindow(QMainWindow):
         self.ui.loginDetailFrame.hide()
         self.ui.loginMethodStacked.setCurrentWidget(self.ui.useCookie)
         self.ui.proxyInputDetailFrame.hide()
-
-    def open_table(self):
-        if not self.table_widget.isVisible():
-            self.center_table()  # Position it first
-            self.table_widget.show()
-        self.table_widget.load_group_table(self.data_manager.data)
-        # self.table_widget.table.setSpan(2, 1, 2, 1)  # Start at (0,1), span 2 rows, 1 column
-        # self.table_widget.table.setItem(2, 1, QTableWidgetItem("Merged"))
-        sender = self.sender()
-        if sender == self.ui.btn_post:
-            self.post_ui.save_data()
-            self.table_widget.setup("POST")
-        elif sender == self.ui.btn_comment:
-            self.table_widget.setup("COMMENT")
-        elif sender == self.ui.btn_getGroup:
-            self.table_widget.setup("GET GROUP")
-        elif sender == self.ui.btn_getPost:
-            self.table_widget.setup("GET POST")
-        self.table_widget.adjust_column_width()
         
     def center_table(self):
         self.table_frame_width = self.width()
