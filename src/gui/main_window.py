@@ -49,7 +49,7 @@ class MainWindow(QMainWindow):
         self.table_widget = TableWidget(self)
         
         self.post = Post(self.driver_manager, self.data_manager)
-        self.login = Login(self.driver_manager, self.data_manager)
+        self.login = Login(self.driver_manager)
         self.get_group = GetGroup(self.driver_manager, self.data_manager)
         self.get_post = GetPost(self.driver_manager, self.data_manager)
         self.spam = Spam(self.driver_manager, self.data_manager)
@@ -64,7 +64,7 @@ class MainWindow(QMainWindow):
         
         self.login.signals.log.connect(lambda msg: self.ui.statusGet.setText(msg))
         self.login.signals.cookie_output.connect(lambda cookie: self.ui.cookieInput.setPlainText(cookie))
-        self.login.signals.profile_name.connect(lambda profile_name: self.ui.profileName.setText(profile_name))
+        self.login.signals.finished.connect(self._on_login_success)
         
         self.get_group.signals.log.connect(lambda msg: self.table_widget.statusTable.setText(msg))
         self.get_group.signals.add_row.connect(lambda link, name: self.table_widget.add_row(link, name))
@@ -128,6 +128,161 @@ class MainWindow(QMainWindow):
 
         self.show()
     
+    def run_login(self):
+        self.move(self.screen().size().width()- self.size().width(), self.screen().size().height() - self.size().height() - 50)
+        
+        self.get_ui.save_data()
+        cookie = self.data_manager.data["GET"]["LOGIN"]["cookies"]
+        username = self.data_manager.data["GET"]["LOGIN"]["username"]
+        password = self.data_manager.data["GET"]["LOGIN"]["password"]
+        twofa = self.data_manager.data["GET"]["LOGIN"]["2fa"]
+        if not (cookie or (username and password)):
+            self.ui.statusGet.setText("Thiếu thông tin đăng nhập")
+            return
+        
+        if not self.driver_manager.setup_driver():
+            self.ui.statusGet.setText("Xung đột! Vui lòng đóng tất cả các trình duyệt Chrome")
+            return
+        self.driver_manager.jump_to_facebook()
+        if self.driver_manager.is_login:
+            self.ui.profileName.setText(self.driver_manager.get_username())
+            return
+
+        self.login.setup(cookie, username, password, twofa)
+        QThreadPool.globalInstance().start(self.login)
+    
+    def handle_unLogin(self):
+        if self.table_widget.isVisible():
+            self.table_widget.hide()
+        self.ui.btn_get.click()
+        self.ui.getComboBox.setCurrentIndex(1)
+        self.ui.getStacked.setCurrentWidget(self.ui.loginPage)
+        self.ui.statusGet.setText("Bạn chưa đăng nhập, vui lòng đăng nhập trước khi sử dụng chức năng này")
+    
+    def _on_login_success(self):
+        profile_name = self.driver_manager.get_username()
+        self.ui.statusGet.setText("Đăng nhập thành công, profile: " + profile_name)
+        self.ui.profileName.setText(profile_name)
+        cookie = self.driver_manager.get_cookies()
+        self.ui.cookieInput.setPlainText(cookie)
+    
+    def run_post(self):
+        self.move(self.screen().size().width()- self.size().width(), self.screen().size().height() - self.size().height() - 50)
+        if self.table_widget.btn_run.text() != "STOP POST!":
+            self.post_ui.save_data()
+            post_data = self.data_manager.data["POST"]
+            if not (post_data["image"] or post_data["content"]):
+                self.ui.statusHome.setText("SPAM: Thiếu thông tin để đi spam")
+                return
+            if not self.driver_manager.setup_driver():
+                self.table_widget.statusTable.setText("Xung đột! Vui lòng đóng tất cả các trình duyệt Chrome")
+                return
+            self.driver_manager.jump_to_facebook()
+            if not self.driver_manager.is_login:
+                self.handle_unLogin()
+                return
+            self.ui.profileName.setText(self.driver_manager.get_username())
+            
+            self.table_widget.btn_run.setText("STOP POST!")
+            self.post.setup(self.table_widget.get_selected(), self.ui.postContentCheckBox.isChecked(), self.ui.postImageCheckBox.isChecked())
+            self.post.set_stop(False)  # Tell Spam to keep running
+            QThreadPool.globalInstance().start(self.post)
+        else:
+            self.table_widget.statusTable.setText("POST: Đã tạm dừng")
+            self.table_widget.btn_run.setText("POST")
+            self.post.set_stop(True)
+    
+    def run_spam(self):
+        self.move(self.screen().size().width()- self.size().width(), self.screen().size().height() - self.size().height() - 50)
+        if self.ui.btn_spam.text() != "STOP!":
+            self.spam_ui.save_data()
+            spam_data = self.data_manager.data["SPAM"]
+            if not (spam_data["image"] or spam_data["content"]):
+                self.ui.statusHome.setText("SPAM: Thiếu thông tin để đi spam")
+                return
+            if not self.driver_manager.setup_driver():
+                self.ui.statusHome.setText("Xung đột! Vui lòng đóng tất cả các trình duyệt Chrome")
+                return
+            self.driver_manager.jump_to_facebook()
+            if not self.driver_manager.is_login:
+                self.handle_unLogin()
+                return
+            self.ui.profileName.setText(self.driver_manager.get_username())
+            
+            self.ui.btn_spam.setText("STOP!")
+            self.spam.setup(self.ui.spamContentCheckBox.isChecked(), self.ui.spamImageCheckBox.isChecked(), self.ui.spamSpamListFilter.isChecked())
+            self.spam.set_stop(False)  # Tell Spam to keep running
+            QThreadPool.globalInstance().start(self.spam)
+        else:
+            self.ui.statusHome.setText("SPAM: Đã tạm dừng")
+            self.ui.btn_spam.setText("CONTINUE")
+            self.spam.set_stop(True)  # Tell Spam to pause
+    
+    def run_getGroup(self):
+        self.move(self.screen().size().width() - self.size().width(), self.screen().size().height() - self.size().height() - 50)
+        filter_keys = [keyword.strip() for keyword in self.table_widget.filterGroupInput.text().split(",") if keyword.strip()]
+        
+        if not self.driver_manager.setup_driver():
+            self.ui.statusGet.setText("Xung đột! Vui lòng đóng tất cả các trình duyệt Chrome")
+            return
+        self.driver_manager.jump_to_facebook()
+        if not self.driver_manager.is_login:
+            self.handle_unLogin()
+            return
+        self.ui.profileName.setText(self.driver_manager.get_username())
+        
+        self.get_group.setup(self.table_widget.filterGroupCheckBox.isChecked(), filter_keys)
+        
+        self.get_ui.save_data()
+        
+        self.table_widget.table.setRowCount(1) # Clear table
+        QThreadPool.globalInstance().start(self.get_group)
+    
+    def run_getPost(self):
+        self.move(self.screen().size().width() - self.size().width(), self.screen().size().height() - self.size().height() - 50)
+        
+        if not self.driver_manager.setup_driver():
+            self.ui.statusGet.setText("Xung đột! Vui lòng đóng tất cả các trình duyệt Chrome")
+            return
+        self.driver_manager.jump_to_facebook()
+        if not self.driver_manager.is_login:
+            self.handle_unLogin()
+            return
+        self.ui.profileName.setText(self.driver_manager.get_username())
+            
+    def save_group_table(self):
+        """Save current table content to data_manager.data['GET']['GROUP']"""
+        group_list = []
+        for row in range(1, self.table_widget.table.rowCount()): # except filter row
+            link_group = self.table_widget.table.item(row, 0).text() if self.table_widget.table.item(row, 0) else ""
+            link_post = self.table_widget.table.item(row, 1).text() if self.table_widget.table.item(row, 1) else ""
+            name_group = self.table_widget.table.item(row, 2).text() if self.table_widget.table.item(row, 2) else ""
+            
+            # ✅ Get status from custom chip widget
+            status_widget = self.table_widget.table.cellWidget(row, 3)
+            if status_widget:
+                label = status_widget.findChild(QLabel)
+                status = label.text() if label else ""
+            else:
+                status = ""
+
+            group_data = {
+                "link group": link_group,
+                "link post": link_post,
+                "name group": name_group,
+                "status": status
+            }
+            group_list.append(group_data)
+
+        # Save to data manager
+        self.data_manager.data["GET"]["GROUP"] = group_list
+        success = self.data_manager.save_data()
+        
+        if success:
+            self.table_widget.statusTable.setText("Đã lưu dữ liệu bảng vào " + self.data_manager.data_path)
+        else:
+            self.table_widget.statusTable.setText("Lỗi: không thể lưu dữ liệu")
+    
     def run_in_table(self):
         if "POST" in self.table_widget.btn_run.text():
             self.run_post()
@@ -165,157 +320,10 @@ class MainWindow(QMainWindow):
         self.table_widget.btn_run.setText(func)
         self.table_widget.adjust_column_width()
         self.save_in_table()
-        
-    def run_post(self):
-        self.move(self.screen().size().width()- self.size().width(), self.screen().size().height() - self.size().height() - 50)
-        if self.table_widget.btn_run.text() != "STOP POST!":
-            self.post_ui.save_data()
-            post_data = self.data_manager.data["POST"]
-            if not (post_data["image"] or post_data["content"]):
-                self.ui.statusHome.setText("SPAM: Thiếu thông tin để đi spam")
-                return
-            if not self.driver_manager.setup_driver():
-                self.table_widget.statusTable.setText("Xung đột! Vui lòng đóng tất cả các trình duyệt Chrome")
-                return
-            self.driver_manager.jump_to_facebook()
-            if not self.driver_manager.is_login:
-                self.handle_unLogin()
-                return
-            self.ui.profileName.setText(self.driver_manager.get_username())
-            
-            self.table_widget.btn_run.setText("STOP POST!")
-            self.post.setup(self.table_widget.get_selected(), self.ui.postContentCheckBox.isChecked(), self.ui.postImageCheckBox.isChecked())
-            self.post.set_stop(False)  # Tell Spam to keep running
-            QThreadPool.globalInstance().start(self.post)
-        else:
-            self.table_widget.statusTable.setText("POST: Đã tạm dừng")
-            self.table_widget.btn_run.setText("POST")
-            self.post.set_stop(True)
     
     def run_comment(self):
         self.move(self.screen().size().width() - self.size().width(), self.screen().size().height() - self.size().height() - 50)
     
-    def run_getGroup(self):
-        self.move(self.screen().size().width() - self.size().width(), self.screen().size().height() - self.size().height() - 50)
-        filter_keys = [keyword.strip() for keyword in self.table_widget.filterGroupInput.text().split(",") if keyword.strip()]
-        
-        if not self.driver_manager.setup_driver():
-            self.ui.statusGet.setText("Xung đột! Vui lòng đóng tất cả các trình duyệt Chrome")
-            return
-        self.driver_manager.jump_to_facebook()
-        if not self.driver_manager.is_login:
-            self.handle_unLogin()
-            return
-        self.ui.profileName.setText(self.driver_manager.get_username())
-        
-        self.get_group.setup(self.table_widget.filterGroupCheckBox.isChecked(), filter_keys)
-        
-        self.get_ui.save_data()
-        
-        self.table_widget.table.setRowCount(1) # Clear table
-        QThreadPool.globalInstance().start(self.get_group)
-    
-    def run_getPost(self):
-        self.move(self.screen().size().width() - self.size().width(), self.screen().size().height() - self.size().height() - 50)
-        
-        if not self.driver_manager.setup_driver():
-            self.ui.statusGet.setText("Xung đột! Vui lòng đóng tất cả các trình duyệt Chrome")
-            return
-        self.driver_manager.jump_to_facebook()
-        if not self.driver_manager.is_login:
-            self.handle_unLogin()
-            return
-        self.ui.profileName.setText(self.driver_manager.get_username())
-    
-    def run_login(self):
-        self.move(self.screen().size().width()- self.size().width(), self.screen().size().height() - self.size().height() - 50)
-        
-        self.get_ui.save_data()
-        
-        if not self.driver_manager.setup_driver():
-            self.ui.statusHome.setText("Xung đột! Vui lòng đóng tất cả các trình duyệt Chrome")
-            return
-        self.driver_manager.jump_to_facebook()
-        if self.driver_manager.is_login:
-            self.ui.profileName.setText(self.driver_manager.get_username())
-            return
-        QThreadPool.globalInstance().start(self.login)
-    
-    def run_spam(self):
-        self.move(self.screen().size().width()- self.size().width(), self.screen().size().height() - self.size().height() - 50)
-        if self.ui.btn_spam.text() != "STOP!":
-            self.spam_ui.save_data()
-            spam_data = self.data_manager.data["SPAM"]
-            if not (spam_data["image"] or spam_data["content"]):
-                self.ui.statusHome.setText("SPAM: Thiếu thông tin để đi spam")
-                return
-            if not self.driver_manager.setup_driver():
-                self.ui.statusHome.setText("Xung đột! Vui lòng đóng tất cả các trình duyệt Chrome")
-                return
-            self.driver_manager.jump_to_facebook()
-            if not self.driver_manager.is_login:
-                self.handle_unLogin()
-                return
-            self.ui.profileName.setText(self.driver_manager.get_username())
-            
-            self.ui.btn_spam.setText("STOP!")
-            self.spam.setup(self.ui.spamContentCheckBox.isChecked(), self.ui.spamImageCheckBox.isChecked(), self.ui.spamSpamListFilter.isChecked())
-            self.spam.set_stop(False)  # Tell Spam to keep running
-            QThreadPool.globalInstance().start(self.spam)
-        else:
-            self.ui.statusHome.setText("SPAM: Đã tạm dừng")
-            self.ui.btn_spam.setText("CONTINUE")
-            self.spam.set_stop(True)  # Tell Spam to pause
-    
-    def handle_unLogin(self):
-        if self.table_widget.isVisible():
-            self.table_widget.hide()
-        self.ui.btn_get.click()
-        self.ui.getComboBox.setCurrentIndex(1)
-        self.ui.getStacked.setCurrentWidget(self.ui.loginPage)
-        self.ui.statusGet.setText("Bạn chưa đăng nhập, vui lòng đăng nhập trước khi sử dụng chức năng này")
-            
-    def save_group_table(self):
-        """Save current table content to data_manager.data['GET']['GROUP']"""
-        group_list = []
-        for row in range(1, self.table_widget.table.rowCount()): # except filter row
-            link_group = self.table_widget.table.item(row, 0).text() if self.table_widget.table.item(row, 0) else ""
-            link_post = self.table_widget.table.item(row, 1).text() if self.table_widget.table.item(row, 1) else ""
-            name_group = self.table_widget.table.item(row, 2).text() if self.table_widget.table.item(row, 2) else ""
-            
-            # ✅ Get status from custom chip widget
-            status_widget = self.table_widget.table.cellWidget(row, 3)
-            if status_widget:
-                label = status_widget.findChild(QLabel)
-                status = label.text() if label else ""
-            else:
-                status = ""
-
-            group_data = {
-                "link group": link_group,
-                "link post": link_post,
-                "name group": name_group,
-                "status": status
-            }
-            group_list.append(group_data)
-
-        # Save to data manager
-        self.data_manager.data["GET"]["GROUP"] = group_list
-        success = self.data_manager.save_data()
-        
-        if success:
-            self.table_widget.statusTable.setText("Đã lưu dữ liệu bảng vào " + self.data_manager.data_path)
-        else:
-            self.table_widget.statusTable.setText("Lỗi: không thể lưu dữ liệu")
-        
-    def mousePressEvent(self, event):
-        self.window_controller.handle_mouse_press(event)
-        
-    def resizeEvent(self, event):
-        # Update Size Grips
-        self.window_controller.update_grips_geometry()
-        self.center_table()
-        
     def load(self):
         """Load initial settings and data"""
         self.post_ui.load_data()
@@ -366,6 +374,14 @@ class MainWindow(QMainWindow):
             self.ui.statusHome.setText("Đã lưu toàn bộ dữ liệu tool vào file " + self.data_manager.data_path.split("\\")[-1])
         except:
             self.ui.statusHome.setText("Không thể lưu dữ liệu vào file đang mở, vui lòng đóng file " + self.data_manager.data_path.split("\\")[-1])
+        
+    def mousePressEvent(self, event):
+        self.window_controller.handle_mouse_press(event)
+        
+    def resizeEvent(self, event):
+        # Update Size Grips
+        self.window_controller.update_grips_geometry()
+        self.center_table()
         
     def defaultSetting(self):
         # toolFunction.LoadHome(self, first=True)

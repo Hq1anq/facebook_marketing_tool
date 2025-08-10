@@ -94,6 +94,15 @@ class DriverManager:
     def get_username(self):
         profile_name = self.driver.find_element(By.XPATH, '//span[@class="x1lliihq x6ikm8r x10wlt62 x1n2onr6"]').text
         return profile_name
+
+    def get_userID(self):
+        script_text = self.driver.find_element(
+            By.CSS_SELECTOR, "head > script#__eqmc"
+        ).get_attribute("innerHTML")
+
+        user_id = script_text.split("__user=")[1].split("&")[0]
+        
+        return user_id
     
     def check_login(self) -> bool:
         self.is_login = self.friend_str in self.driver.page_source
@@ -104,6 +113,18 @@ class DriverManager:
         self.adjust_language()
         self.check_login()
         return self.is_login
+    
+    def get_cookies(self):
+        if self.is_login:
+            return "c_user=%s; fr=%s; sb=%s; xs=%s; datr=%s"%(
+                self.driver.get_cookie("c_user")["value"],
+                self.driver.get_cookie("fr")["value"],
+                self.driver.get_cookie("sb")["value"],
+                self.driver.get_cookie("xs")["value"],
+                self.driver.get_cookie("datr")["value"]
+            )
+        else:
+            return None
     
     def add_cookie(self, cookie_string: str):
         cookies = [cookie.strip() for cookie in cookie_string.split(';')]
