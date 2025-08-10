@@ -113,7 +113,7 @@ class MainWindow(QMainWindow):
         self.ui.btn_getGroup.clicked.connect(self.open_table)
         self.ui.btn_getPost.clicked.connect(self.open_table)
 
-        self.ui.btn_login.clicked.connect(self.login.run)
+        self.ui.btn_login.clicked.connect(self.run_login)
 
         # PROXY
         self.ui.proxyCheckBox.clicked.connect(self.changeStatusProxy)
@@ -181,6 +181,7 @@ class MainWindow(QMainWindow):
             if not self.driver_manager.is_login:
                 self.handle_unLogin()
                 return
+            self.ui.profileName.setText(self.driver_manager.get_username())
             
             self.table_widget.btn_run.setText("STOP POST!")
             self.post.setup(self.table_widget.get_selected(), self.ui.postContentCheckBox.isChecked(), self.ui.postImageCheckBox.isChecked())
@@ -205,6 +206,7 @@ class MainWindow(QMainWindow):
         if not self.driver_manager.is_login:
             self.handle_unLogin()
             return
+        self.ui.profileName.setText(self.driver_manager.get_username())
         
         self.get_group.setup(self.table_widget.filterGroupCheckBox.isChecked(), filter_keys)
         
@@ -223,12 +225,20 @@ class MainWindow(QMainWindow):
         if not self.driver_manager.is_login:
             self.handle_unLogin()
             return
+        self.ui.profileName.setText(self.driver_manager.get_username())
     
     def run_login(self):
         self.move(self.screen().size().width()- self.size().width(), self.screen().size().height() - self.size().height() - 50)
         
         self.get_ui.save_data()
-
+        
+        if not self.driver_manager.setup_driver():
+            self.ui.statusHome.setText("Xung đột! Vui lòng đóng tất cả các trình duyệt Chrome")
+            return
+        self.driver_manager.jump_to_facebook()
+        if self.driver_manager.is_login:
+            self.ui.profileName.setText(self.driver_manager.get_username())
+            return
         QThreadPool.globalInstance().start(self.login)
     
     def run_spam(self):
@@ -246,6 +256,7 @@ class MainWindow(QMainWindow):
             if not self.driver_manager.is_login:
                 self.handle_unLogin()
                 return
+            self.ui.profileName.setText(self.driver_manager.get_username())
             
             self.ui.btn_spam.setText("STOP!")
             self.spam.setup(self.ui.spamContentCheckBox.isChecked(), self.ui.spamImageCheckBox.isChecked(), self.ui.spamSpamListFilter.isChecked())
@@ -332,6 +343,7 @@ class MainWindow(QMainWindow):
                 self.spam_ui.save_data()
         elif current_page == self.ui.getPage:
             # Save GET data
+            current_function = "LOGIN" if self.ui.getStacked.currentWidget() == self.ui.loginPage else "GET DATA"
             self.get_ui.save_data()
         
         try:

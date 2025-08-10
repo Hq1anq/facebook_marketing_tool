@@ -91,6 +91,10 @@ class DriverManager:
         if self.driver is not None:
             self.driver.get(url)
     
+    def get_username(self):
+        profile_name = self.driver.find_element(By.XPATH, '//span[@class="x1lliihq x6ikm8r x10wlt62 x1n2onr6"]').text
+        return profile_name
+    
     def check_login(self) -> bool:
         self.is_login = self.friend_str in self.driver.page_source
         return self.is_login

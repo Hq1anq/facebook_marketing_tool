@@ -96,9 +96,9 @@ class GetUI:
                 password = self.ui.passInput.text()
                 twoFA = self.ui.twoFAInput.text()
             cookie = self.ui.cookieInput.toPlainText()
-        self.data_manager.data["GET"]["LOGIN"]["username"] = username
-        self.data_manager.data["GET"]["LOGIN"]["password"] = password
-        self.data_manager.data["GET"]["LOGIN"]["2fa"] = twoFA
-        self.data_manager.data["GET"]["LOGIN"]["cookie"] = cookie
+            self.data_manager.data["GET"]["LOGIN"]["username"] = username
+            self.data_manager.data["GET"]["LOGIN"]["password"] = password
+            self.data_manager.data["GET"]["LOGIN"]["2fa"] = twoFA
+            self.data_manager.data["GET"]["LOGIN"]["cookie"] = cookie
         if self.ui.profileName.text() != "":
             self.data_manager.data["GET"]["LOGIN"]["profile name"] = self.ui.profileName.text()
