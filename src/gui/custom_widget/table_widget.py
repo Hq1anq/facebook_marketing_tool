@@ -1,6 +1,6 @@
-from PySide6.QtWidgets import QHeaderView, QTableWidgetItem, QFrame, QGraphicsDropShadowEffect, QLineEdit, QLabel, QWidget, QHBoxLayout
-from PySide6.QtCore import Qt, QPropertyAnimation, QRect
-from PySide6.QtGui import QShortcut, QKeySequence, QColor
+from PySide6.QtWidgets import QHeaderView, QTableWidgetItem, QFrame, QGraphicsDropShadowEffect, QLineEdit, QLabel, QWidget, QHBoxLayout, QStyledItemDelegate, QStyleOptionViewItem
+from PySide6.QtCore import Qt, QPropertyAnimation, QRect, QModelIndex
+from PySide6.QtGui import QShortcut, QKeySequence, QColor, QPainter, QFont, QFontMetrics
 
 from src.gui.widget.ui_tableWidget import Ui_tableWidget
 from src.settings import TIME_ANIMATION
@@ -45,6 +45,8 @@ class TableWidget(QFrame, Ui_tableWidget):
                 selection-color: rgb(40, 44, 52); /* text color when selected */
             }
             """)
+        
+        self.table.setItemDelegateForColumn(3, StatusChipDelegate())
         
         self._highlighted_rows = set()
         self.visible_index = None
@@ -100,11 +102,7 @@ class TableWidget(QFrame, Ui_tableWidget):
             self.table.setItem(row_position, 0, self.table_item(group.get("link group", "")))
             self.table.setItem(row_position, 1, self.table_item(group.get("link post", "")))
             self.table.setItem(row_position, 2, self.table_item(group.get("name group", "")))
-            status = group.get("status", "")
-            if status:
-                self.table.setCellWidget(row_position, 3, self.status_chip(status))
-            else:
-                self.table.setItem(row_position, 3, self.table_item(""))
+            self.table.setItem(row_position, 3, self.table_item(group.get("status", ""), "center"))
                 
             self.table.setVerticalHeaderItem(row_position, QTableWidgetItem(str(row_position)))
     
@@ -212,41 +210,6 @@ class TableWidget(QFrame, Ui_tableWidget):
             item.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
         return item
 
-    def status_chip(self, status: str) -> QWidget:
-        label = QLabel()
-        status_lower = status.lower()
-
-        status_styles = {
-            "đã post": "background-color: #16a34a; color: white;",                      # green-600
-            "đã comment": "background-color: #eab308; color: black;",                   # yellow-500
-            "chưa post": "background-color: #dc2626; color: white;",                    # red-600
-            "chưa comment": "background-color: #dc2626; color: white;",                 # red-600
-            "không phải nhóm vps/proxy": "background-color: #eab308; color: black;",    # yellow-500
-            "bị chặn": "background-color: #dc2626; color: white;",                      # red-600
-            "unknow": "background-color: #6b7280; color: white;"                        # gray-500
-        }
-
-        chip_style = f"""
-            border-radius: 8px;
-            padding: 2px 8px;
-            font-size: 11px;
-            font-weight: 600;
-            {status_styles.get(status_lower, status_styles['unknow'])}
-        """
-
-        label.setText(status)
-        label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        label.setStyleSheet(chip_style)
-
-        container = QWidget()
-        layout = QHBoxLayout()
-        layout.addWidget(label)
-        layout.setContentsMargins(0, 0, 0, 0)
-        layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        container.setLayout(layout)
-
-        return container
-
     def get_selected(self):
         selected_rows = set(item.row() for item in self.table.selectedItems())
         if not selected_rows: return []
@@ -278,14 +241,8 @@ class TableWidget(QFrame, Ui_tableWidget):
                 if current_row != 0:
                     row_data = []
                     for col in range(self.table.columnCount()):
-                        widget = self.table.cellWidget(current_row, col)
-                        if widget:
-                            label = widget.findChild(QLabel)
-                            status_text = label.text() if label else ""
-                            row_data.append(("widget", self.status_chip(status_text)))
-                        else:
-                            item = self.table.item(current_row, col)
-                            row_data.append(("item", item.clone() if item else None))  # clone item for safety
+                        item = self.table.item(current_row, col)
+                        row_data.append(item.clone() if item else None)  # clone item for safety
                     self.deleted_rows.append((current_row, row_data))
                     self.table.removeRow(current_row)
 
@@ -293,11 +250,8 @@ class TableWidget(QFrame, Ui_tableWidget):
         if self.deleted_rows:
             row_index, row_data = self.deleted_rows.pop()
             self.table.insertRow(row_index)
-            for col, (cell_type, value) in enumerate(row_data):
-                if cell_type == "widget" and value:
-                    self.table.setCellWidget(row_index, col, value)
-                elif cell_type == "item" and value:
-                    self.table.setItem(row_index, col, value)
+            for col, value in enumerate(row_data):
+                self.table.setItem(row_index, col, value)
             self.table.setVerticalHeaderItem(row_index, QTableWidgetItem(str(row_index)))
 
     def animated_close(self):
@@ -315,3 +269,88 @@ class TableWidget(QFrame, Ui_tableWidget):
         self.setGraphicsEffect(None)
         self.animation.start()
         self.animation.finished.connect(self.hide)  # Hide after animation ends
+
+class StatusChipDelegate(QStyledItemDelegate):
+    def paint(self, painter: QPainter, option: QStyleOptionViewItem, index: QModelIndex):
+        status = index.data(Qt.ItemDataRole.DisplayRole)
+        
+        if not status:  # Handle None or empty
+            super().paint(painter, option, index)
+            return
+        
+        status_lower = status.lower()
+
+        status_styles = {
+            "đã post": ("#16a34a", "white"),
+            "đã comment": ("#eab308", "black"),
+            "chưa post": ("#dc2626", "white"),
+            "chưa comment": ("#dc2626", "white"),
+            "không phải nhóm vps/proxy": ("#eab308", "black"),
+            "bị chặn": ("#dc2626", "white"),
+            "unknow": ("#6b7280", "white")
+        }
+
+        bg_color, text_color = status_styles.get(status_lower, status_styles["unknow"])
+
+        # Let table draw selection background first
+        super().paint(painter, option, index)
+
+        # Draw the chip
+        painter.save()
+        painter.setRenderHint(QPainter.Antialiasing) # Khử răng cưa
+
+        # Font setup
+        font = QFont(option.font)
+        font.setPointSize(10)
+        painter.setFont(font)
+        metrics = QFontMetrics(font)
+
+        # Text size + padding
+        text_width = metrics.horizontalAdvance(status)
+        text_height = metrics.height()
+        padding_x = 8
+        padding_y = 2
+        chip_width = text_width + padding_x * 2
+        chip_height = text_height + padding_y * 2
+
+        # Center chip in cell
+        cell_rect = option.rect
+        chip_rect = QRect(
+            cell_rect.x() + (cell_rect.width() - chip_width) // 2,
+            cell_rect.y() + (cell_rect.height() - chip_height) // 2,
+            chip_width,
+            chip_height
+        )
+
+        # Draw chip background
+        painter.setBrush(QColor(bg_color))
+        painter.setPen(Qt.PenStyle.NoPen)
+        painter.drawRoundedRect(chip_rect, 10, 10)
+
+        # Draw chip text
+        painter.setPen(QColor(text_color))
+        painter.drawText(chip_rect, Qt.AlignmentFlag.AlignCenter, status)
+
+        painter.restore()
+    '''
+    Double-click cell
+    ↓
+    createEditor()         ← make QLineEdit
+    ↓
+    setEditorData()        ← fill QLineEdit with current cell value
+    ↓  [user edits text]
+    setModelData()         ← save new text back to model
+    ↓
+    paint()                ← draw updated cell (with chip)
+    '''
+    def createEditor(self, parent, option, index):
+        editor = QLineEdit(parent)
+        editor.setAlignment(Qt.AlignmentFlag.AlignCenter)  # 👈 Center text while editing
+        return editor 
+
+    def setEditorData(self, editor, index):
+        value = index.data(Qt.ItemDataRole.DisplayRole) or ""
+        editor.setText(value)
+
+    def setModelData(self, editor, model, index):
+        model.setData(index, editor.text(), Qt.ItemDataRole.EditRole)
