@@ -1,9 +1,7 @@
 from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.common.action_chains import ActionChains
 from PySide6.QtCore import QRunnable, QObject, Signal, Slot
 
-import pyotp
+import pyotp, time
 
 from src.manager import DriverManager, DataManager
 
@@ -57,31 +55,34 @@ class Login(QRunnable):
         if self.driver_manager.check_login():
             return "Đăng nhập thành công"
         else:
-            actions = self.driver_manager.actions
-            element = self.driver.find_element(By.CSS_SELECTOR, "body")
-            actions.move_to_element(element).perform()
-            # Chọn xác thực cách khác
-            self.driver.find_element(By.CSS_SELECTOR, ".x6ikm8r").click()
-            # Chọn xác thực bằng ứng dụng
-            self.driver.find_element(By.XPATH, "//div[@id=\':r5:\']/div/div[2]").click()
-            # Chọn tiếp tục
-            actions = ActionChains(self.driver) 
-            actions.send_keys(Keys.TAB * 6)
-            actions.perform()
-            actions.send_keys(Keys.ENTER)
-            actions.perform()
+            try:
+                # Chọn xác thực cách khác
+                try_another_btn = self.driver_manager.wait_for_clickable_element(By.CSS_SELECTOR, ".xjbqb8w")
+                self.driver_manager.click_element(try_another_btn)
+                
+                # Chọn xác thực bằng ứng dụng
+                authen_use_app = self.driver_manager.wait_for_element(By.XPATH, "(//label[@class='x1lliihq x1n2onr6 x1exlly7 x1e7cf47 x44cjkt x1dygckn'])[2]")
+                self.driver_manager.click_element(authen_use_app)
+            
+                # Chọn tiếp tục
+                continue_button = self.driver_manager.wait_for_clickable_element(By.XPATH, "//div[@class='x9f619 x1n2onr6 x1ja2u2z x78zum5 xdt5ytf x193iq5w xeuugli x1iyjqo2 xs83m0k xdl72j9 x1yrsyyn x1icxu4v x10b6aqq x25sj25']//div[@role='button']")
+                self.driver_manager.click_element(continue_button)
+            except:
+                return "Đăng nhập thất bại, sai username/password hoặc dính captcha"
+            
+            # Nhập code 2fa
             totp = pyotp.TOTP(self.twoFA.replace(" ", "").upper())
             code = totp.now()
-            # Nhập code 2fa
-            self.driver.find_element(By.ID, ":r9:").send_keys(code)
-            self.driver.find_element(By.CSS_SELECTOR, ".xtvsq51 > .x6s0dn4").click()
-            # Lưu đăng nhập
-            if "remember_browser" in self.driver.current_url:
-                self.driver.find_element(By.CSS_SELECTOR, ".xtk6v10 > .x1lliihq").click()
-            if self.driver_manager.check_login():
+            self.driver_manager.wait_for_element(By.CSS_SELECTOR, ".xtpw4lu").send_keys(code)
+            self.driver_manager.wait_for_clickable_element(By.XPATH, "//div[@class='xod5an3 xg87l8a']//div[@role='button']").click()
+            
+            #Chờ xác nhận (hiện dialog lưu thông tin đăng nhập)
+            self.driver_manager.wait_for_element(By.XPATH, "div[@role='dialog']")
+            
+            if self.driver_manager.jump_to_facebook():
                 return "Đăng nhập thành công"
             else:
-                return "Đăng nhập thất bại, vui lòng kiểm tra lại thông tin đăng nhập"
+                return "Đăng nhập thất bại, sai mã 2fa"
         
     def add_cookie(self, cookie_string: str):
         cookies = [cookie.strip() for cookie in cookie_string.split(';')]

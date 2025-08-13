@@ -174,6 +174,13 @@ class DriverManager:
         except Exception as e:
             print(f"Error waiting for element: {e}")
             return None
+    
+    def wait_for_clickable_element(self, by, value):
+        try:
+            return self.wait10.until(EC.element_to_be_clickable((by, value)))
+        except Exception as e:
+            print(f"Error waiting for clickable element: {e}")
+            return None
         
     def click_element(self, element):
         self.actions.click(element).perform()
