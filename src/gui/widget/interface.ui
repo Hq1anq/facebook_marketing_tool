@@ -192,7 +192,7 @@ QScrollBar::add-line:vertical:pressed, QScrollBar::sub-line:vertical:pressed {
 #bottomBar QPushButton {
 	font-size: 11px; color: rgb(113, 126, 149);
 	padding-left: 2px; padding-bottom: 2px }
-#profileName { font-size: 10px }</string>
+#profileName { font-size: 15px }</string>
       </property>
       <layout class="QGridLayout" name="_14">
        <property name="leftMargin">
@@ -387,19 +387,6 @@ QScrollBar::add-line:vertical:pressed, QScrollBar::sub-line:vertical:pressed {
               </widget>
              </item>
             </layout>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLabel" name="profileName">
-            <property name="text">
-             <string/>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignmentFlag::AlignCenter</set>
-            </property>
-            <property name="wordWrap">
-             <bool>true</bool>
-            </property>
            </widget>
           </item>
          </layout>
@@ -618,8 +605,8 @@ QComboBox { background-color: rgb(33, 37, 43) }
                          <rect>
                           <x>0</x>
                           <y>0</y>
-                          <width>443</width>
-                          <height>358</height>
+                          <width>100</width>
+                          <height>30</height>
                          </rect>
                         </property>
                        </widget>
@@ -1766,6 +1753,31 @@ QComboBox { background-color: rgb(33, 37, 43) }
            </widget>
           </item>
           <item>
+           <widget class="QPushButton" name="profileName">
+            <property name="font">
+             <font>
+              <family>Segoe UI</family>
+              <pointsize>-1</pointsize>
+              <italic>false</italic>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="icon">
+             <iconset resource="../../../resources/resources.qrc">
+              <normaloff>:/icons/icons/account.svg</normaloff>:/icons/icons/account.svg</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>40</width>
+              <height>40</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="QFrame" name="navigationBar">
             <layout class="QHBoxLayout" name="_16">
              <property name="spacing">
@@ -1853,8 +1865,6 @@ QComboBox { background-color: rgb(33, 37, 43) }
   </widget>
  </widget>
  <resources>
-  <include location="../../../resources/resources.qrc"/>
-  <include location="../../../resources/resources.qrc"/>
   <include location="../../../resources/resources.qrc"/>
  </resources>
  <connections/>

@@ -59,7 +59,7 @@ class MainWindow(QMainWindow):
     
         # Connect signal update ui
         self.post.signals.log.connect(lambda msg: self.table_widget.statusTable.setText(msg))
-        self.post.signals.table_status.connect(lambda row, status: self.table_widget.table.setCellWidget(row, 3, self.table_widget.status_chip(status)))
+        self.post.signals.table_status.connect(lambda row, status: self.table_widget.table.setItem(row, 3, self.table_widget.table_item(status, "center")))
         self.post.signals.finished.connect(lambda: self._on_finished_use_table("POST"))
         
         self.login.signals.log.connect(lambda msg: self.ui.statusGet.setText(msg))
@@ -80,6 +80,7 @@ class MainWindow(QMainWindow):
         self.ui.btn_get.clicked.connect(self.chooseMenu)
         self.ui.btn_proxy.clicked.connect(self.chooseMenu)
         self.ui.btn_save.clicked.connect(self.save_all)
+        self.ui.profileName.clicked.connect(self.open_login_page)
 
         # HOME
         self.ui.functionComboBox.activated.connect(self.chooseFunction)
@@ -132,7 +133,7 @@ class MainWindow(QMainWindow):
         self.move(self.screen().size().width()- self.size().width(), self.screen().size().height() - self.size().height() - 50)
         
         self.get_ui.save_data()
-        cookie = self.data_manager.data["GET"]["LOGIN"]["cookies"]
+        cookie = self.data_manager.data["GET"]["LOGIN"]["cookie"]
         username = self.data_manager.data["GET"]["LOGIN"]["username"]
         password = self.data_manager.data["GET"]["LOGIN"]["password"]
         twofa = self.data_manager.data["GET"]["LOGIN"]["2fa"]
@@ -145,18 +146,26 @@ class MainWindow(QMainWindow):
             return
         self.driver_manager.jump_to_facebook()
         if self.driver_manager.is_login:
-            self.ui.profileName.setText(self.driver_manager.get_username())
+            username = self.driver_manager.get_username()
+            self.ui.statusGet.setText("Bạn đã đăng nhập, profile: " + username)
+            self.ui.profileName.setText(username)
+            cookie = self.driver_manager.get_cookies()
+            self.ui.cookieInput.setPlainText(cookie)
             return
 
         self.login.setup(cookie, username, password, twofa)
         QThreadPool.globalInstance().start(self.login)
-    
-    def handle_unLogin(self):
-        if self.table_widget.isVisible():
+        
+    def open_login_page(self):
+        if not self.table_widget.isVisible():
             self.table_widget.hide()
-        self.ui.btn_get.click()
+        if self.ui.pageStacked.currentWidget() != self.ui.getPage:
+            self.ui.btn_get.click()
         self.ui.getComboBox.setCurrentIndex(1)
         self.ui.getStacked.setCurrentWidget(self.ui.loginPage)
+    
+    def handle_unLogin(self):
+        self.open_login_page()
         self.ui.statusGet.setText("Bạn chưa đăng nhập, vui lòng đăng nhập trước khi sử dụng chức năng này")
     
     def _on_login_success(self):
@@ -257,14 +266,7 @@ class MainWindow(QMainWindow):
             link_group = self.table_widget.table.item(row, 0).text() if self.table_widget.table.item(row, 0) else ""
             link_post = self.table_widget.table.item(row, 1).text() if self.table_widget.table.item(row, 1) else ""
             name_group = self.table_widget.table.item(row, 2).text() if self.table_widget.table.item(row, 2) else ""
-            
-            # ✅ Get status from custom chip widget
-            status_widget = self.table_widget.table.cellWidget(row, 3)
-            if status_widget:
-                label = status_widget.findChild(QLabel)
-                status = label.text() if label else ""
-            else:
-                status = ""
+            status = self.table_widget.table.item(row, 3).text() if self.table_widget.table.item(row, 3) else ""
 
             group_data = {
                 "link group": link_group,

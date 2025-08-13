@@ -92,7 +92,10 @@ class DriverManager:
             self.driver.get(url)
     
     def get_username(self):
-        profile_name = self.driver.find_element(By.XPATH, '//span[@class="x1lliihq x6ikm8r x10wlt62 x1n2onr6"]').text
+        profile_name = self.driver.find_element(By.XPATH,
+            '//li[@class="html-li xdj266r x14z9mp xat24cr x1lziwak xexx8yu xyri2b x18d9i69 x1c1uobl"]'
+            '//div[@class="x9f619 x1ja2u2z x78zum5 x1n2onr6 x1iyjqo2 xs83m0k xeuugli x1qughib x6s0dn4 x1a02dak x1q0g3np xdl72j9"]'
+        ).text
         return profile_name
 
     def get_userID(self):

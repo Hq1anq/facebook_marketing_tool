@@ -1,6 +1,7 @@
 <RCC>
   <qresource prefix="icons">
     <file>icons/addGroup.svg</file>
+    <file>icons/account.svg</file>
     <file>icons/arrowDown.svg</file>
     <file>icons/change.svg</file>
     <file>icons/check.svg</file>

@@ -1,4 +1,4 @@
-from PySide6.QtWidgets import QHeaderView, QTableWidgetItem, QFrame, QGraphicsDropShadowEffect, QLineEdit, QLabel, QWidget, QHBoxLayout, QStyledItemDelegate, QStyleOptionViewItem
+from PySide6.QtWidgets import QHeaderView, QTableWidgetItem, QFrame, QGraphicsDropShadowEffect, QLineEdit, QStyledItemDelegate, QStyleOptionViewItem
 from PySide6.QtCore import Qt, QPropertyAnimation, QRect, QModelIndex
 from PySide6.QtGui import QShortcut, QKeySequence, QColor, QPainter, QFont, QFontMetrics
 

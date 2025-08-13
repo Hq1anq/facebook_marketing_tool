@@ -46,8 +46,9 @@ class Login(QRunnable):
             self.driver.refresh()
             self.driver_manager.wait_for_element(By.ID, "facebook")
             if not self.driver_manager.check_login():
-                self.signals.log.emit("Chưa đăng nhập, sai cookie")
-                return
+                self.signals.log.emit("Sai cookie đăng nhập, đang thử cách khác...")
+            else:
+                return "Đăng nhập thành công"
         if not (self.username and self.password):
             return "Thiếu thông tin đăng nhập"
         self.driver_manager.wait_for_element(by=By.ID, value="email").send_keys(self.username)

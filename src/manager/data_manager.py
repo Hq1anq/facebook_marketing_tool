@@ -6,11 +6,11 @@ class DataManager:
     DEFAULT_DATA = {
         "GET": {
             "LOGIN": {
-                "cookie": "c_user=...;fr=...;sb=...;xs=...;datr=...",
+                "cookie": "",
                 "username": "xxxxxxxxxx@gmail.com", 
                 "password": "**********",
                 "2fa": "ABXDEFGH6572PJUS9I01JKK567GHJOPO",
-                "profile name": "xxxxx"
+                "profile name": ""
             },
             "GROUP": [
                 {

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'interfaceieHyLP.ui'
+## Form generated from reading UI file 'interfaceyUQOiE.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.8.2
 ##
@@ -185,7 +185,7 @@ class Ui_MainWindow(object):
 "#bottomBar QPushButton {\n"
 "	font-size: 11px; color: rgb(113, 126, 149);\n"
 "	padding-left: 2px; padding-bottom: 2px }\n"
-"#profileName { font-size: 10px }")
+"#profileName { font-size: 15px }")
         self._14 = QGridLayout(self.App)
         self._14.setObjectName(u"_14")
         self._14.setHorizontalSpacing(0)
@@ -260,13 +260,6 @@ class Ui_MainWindow(object):
 
 
         self._19.addWidget(self.leftMenuBtn, 0, Qt.AlignmentFlag.AlignTop)
-
-        self.profileName = QLabel(self.leftMenu)
-        self.profileName.setObjectName(u"profileName")
-        self.profileName.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.profileName.setWordWrap(True)
-
-        self._19.addWidget(self.profileName)
 
 
         self._14.addWidget(self.leftMenu, 1, 0, 1, 1)
@@ -395,7 +388,7 @@ class Ui_MainWindow(object):
         self.postImageViewer.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.postImageViewerWidget = QWidget()
         self.postImageViewerWidget.setObjectName(u"postImageViewerWidget")
-        self.postImageViewerWidget.setGeometry(QRect(0, 0, 443, 358))
+        self.postImageViewerWidget.setGeometry(QRect(0, 0, 100, 30))
         self.postImageViewer.setWidget(self.postImageViewerWidget)
 
         self.gridLayout.addWidget(self.postImageViewer, 2, 0, 1, 1)
@@ -1048,6 +1041,16 @@ class Ui_MainWindow(object):
 
         self._15.addWidget(self.title)
 
+        self.profileName = QPushButton(self.contentTop)
+        self.profileName.setObjectName(u"profileName")
+        self.profileName.setFont(font1)
+        icon12 = QIcon()
+        icon12.addFile(u":/icons/icons/account.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.profileName.setIcon(icon12)
+        self.profileName.setIconSize(QSize(40, 40))
+
+        self._15.addWidget(self.profileName)
+
         self.navigationBar = QFrame(self.contentTop)
         self.navigationBar.setObjectName(u"navigationBar")
         self._16 = QHBoxLayout(self.navigationBar)
@@ -1057,19 +1060,19 @@ class Ui_MainWindow(object):
         self.minimizeBtn = QPushButton(self.navigationBar)
         self.minimizeBtn.setObjectName(u"minimizeBtn")
         self.minimizeBtn.setFont(font1)
-        icon12 = QIcon()
-        icon12.addFile(u":/icons/icons/minimize.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.minimizeBtn.setIcon(icon12)
+        icon13 = QIcon()
+        icon13.addFile(u":/icons/icons/minimize.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.minimizeBtn.setIcon(icon13)
         self.minimizeBtn.setIconSize(QSize(20, 20))
 
         self._16.addWidget(self.minimizeBtn)
 
         self.changeWindowBtn = QPushButton(self.navigationBar)
         self.changeWindowBtn.setObjectName(u"changeWindowBtn")
-        icon13 = QIcon()
-        icon13.addFile(u":/icons/icons/maximize.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        icon13.addFile(u":/icons/icons/restore.svg", QSize(), QIcon.Mode.Normal, QIcon.State.On)
-        self.changeWindowBtn.setIcon(icon13)
+        icon14 = QIcon()
+        icon14.addFile(u":/icons/icons/maximize.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        icon14.addFile(u":/icons/icons/restore.svg", QSize(), QIcon.Mode.Normal, QIcon.State.On)
+        self.changeWindowBtn.setIcon(icon14)
         self.changeWindowBtn.setIconSize(QSize(20, 20))
         self.changeWindowBtn.setCheckable(True)
 
@@ -1077,9 +1080,9 @@ class Ui_MainWindow(object):
 
         self.closeBtn = QPushButton(self.navigationBar)
         self.closeBtn.setObjectName(u"closeBtn")
-        icon14 = QIcon()
-        icon14.addFile(u":/icons/icons/close.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.closeBtn.setIcon(icon14)
+        icon15 = QIcon()
+        icon15.addFile(u":/icons/icons/close.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.closeBtn.setIcon(icon15)
         self.closeBtn.setIconSize(QSize(20, 20))
 
         self._16.addWidget(self.closeBtn)
@@ -1116,7 +1119,6 @@ class Ui_MainWindow(object):
         self.btn_get.setText(QCoreApplication.translate("MainWindow", u"   Get", None))
         self.btn_proxy.setText(QCoreApplication.translate("MainWindow", u"   Proxy", None))
         self.btn_save.setText(QCoreApplication.translate("MainWindow", u"   Save", None))
-        self.profileName.setText("")
         self.statusHome.setText("")
         self.functionComboBox.setItemText(0, QCoreApplication.translate("MainWindow", u"POST", None))
         self.functionComboBox.setItemText(1, QCoreApplication.translate("MainWindow", u"COMMENT", None))
@@ -1183,5 +1185,6 @@ class Ui_MainWindow(object):
         self.btn_getPost.setText(QCoreApplication.translate("MainWindow", u"GET POST", None))
         self.credits.setText(QCoreApplication.translate("MainWindow", u"contact: @Giang_vps", None))
         self.title.setText(QCoreApplication.translate("MainWindow", u"Tools Facebook", None))
+        self.profileName.setText("")
     # retranslateUi
 
