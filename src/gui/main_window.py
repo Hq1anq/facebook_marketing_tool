@@ -56,6 +56,7 @@ class MainWindow(QMainWindow):
         
         self.post.setAutoDelete(False)
         self.spam.setAutoDelete(False)
+        self.login.setAutoDelete(False)
     
         # Connect signal update ui
         self.post.signals.log.connect(lambda msg: self.table_widget.statusTable.setText(msg))

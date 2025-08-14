@@ -4,7 +4,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-import os
+import time
 
 class DriverManager:
     def __init__(self, chrome_path: str):
@@ -92,10 +92,10 @@ class DriverManager:
             self.driver.get(url)
     
     def get_username(self):
+        self.get("https://www.facebook.com/me")
         profile_name = self.driver.find_element(By.XPATH,
-            '//li[@class="html-li xdj266r x14z9mp xat24cr x1lziwak xexx8yu xyri2b x18d9i69 x1c1uobl"]'
-            '//div[@class="x9f619 x1ja2u2z x78zum5 x1n2onr6 x1iyjqo2 xs83m0k xeuugli x1qughib x6s0dn4 x1a02dak x1q0g3np xdl72j9"]'
-        ).text
+            "//div[@class='x78zum5 xdt5ytf x1wsgfga x9otpla']//h1"
+        ).text.strip()
         return profile_name
 
     def get_userID(self):
@@ -184,3 +184,8 @@ class DriverManager:
         
     def click_element(self, element):
         self.actions.click(element).perform()
+        
+    def human_type(self, element, text, delay=0.1):
+        for ch in text:
+            element.send_keys(ch)
+            time.sleep(delay)
