@@ -19,7 +19,7 @@ class GetPost(QRunnable):
         self.driver = self.driver_manager.driver
         self.driver.set_window_size(800, 700)
         self.driver.set_window_position(0, 0)
-        self.get_group()
+        self.get_post()
             
     def get_post(self):
         self.driver.get("https://www.facebook.com/groups/joins")
@@ -40,6 +40,9 @@ class GetPost(QRunnable):
                 name = group.text
                 self.signals.add_row.emit(link, name)
         self.signals.log.emit("Đã lấy thông tin các group")
+    
+    def get_post_time(self):
+        pass
     
     def setup(self, use_filter: bool, filter_keys: list):
         self.use_filter = use_filter

@@ -48,7 +48,7 @@ class MainWindow(QMainWindow):
         self.get_ui = GetUI(self.ui, self.data_manager)
         self.table_widget = TableWidget(self)
         
-        self.post = Post(self.driver_manager, self.data_manager)
+        self.post = Post(self.driver_manager)
         self.login = Login(self.driver_manager)
         self.get_group = GetGroup(self.driver_manager, self.data_manager)
         self.get_post = GetPost(self.driver_manager, self.data_manager)
@@ -182,7 +182,7 @@ class MainWindow(QMainWindow):
             self.post_ui.save_data()
             post_data = self.data_manager.data["POST"]
             if not (post_data["image"] or post_data["content"]):
-                self.ui.statusHome.setText("SPAM: Thiếu thông tin để đi spam")
+                self.ui.statusHome.setText("POST: Thiếu thông tin để đăng bài")
                 return
             if not self.driver_manager.setup_driver():
                 self.table_widget.statusTable.setText("Xung đột! Vui lòng đóng tất cả các trình duyệt Chrome")
@@ -194,7 +194,14 @@ class MainWindow(QMainWindow):
             self.ui.profileName.setText(self.driver_manager.get_username())
             
             self.table_widget.btn_run.setText("STOP POST!")
-            self.post.setup(self.table_widget.get_selected(), self.ui.postContentCheckBox.isChecked(), self.ui.postImageCheckBox.isChecked())
+            self.post.setup(
+                self.table_widget.get_selected(),
+                self.ui.postContentCheckBox.isChecked(),
+                self.ui.postImageCheckBox.isChecked(),
+                post_data["image"],
+                post_data["content"],
+                self.data_manager.data["POST"]["delay"] or self.data_manager.DEFAULT_DATA["POST"]["delay"]
+            )
             self.post.set_stop(False)  # Tell Spam to keep running
             QThreadPool.globalInstance().start(self.post)
         else:

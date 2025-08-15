@@ -12,18 +12,22 @@ class Post(QRunnable):
         table_status = Signal(int, str)
         finished = Signal()
         
-    def __init__(self, driver_manager: DriverManager, data_manager: DataManager):
+    def __init__(self, driver_manager: DriverManager):
         super().__init__()
         self.driver_manager = driver_manager
-        self.data_manager = data_manager
         self.signals = self.Signals()
         self._stop = False
+    
+    def setup(self, table_data: list, use_content: bool, use_image: bool, list_image, list_content, post_delay):
+        self.table_data = table_data
+        self.use_content = use_content
+        self.use_image = use_image
+        self.list_image = list_image
+        self.list_content = list_content
+        self.post_delay = post_delay
 
     @Slot()
     def run(self):
-        self.post_delay = self.data_manager.data["POST"]["delay"] or self.data_manager.DEFAULT_DATA["POST"]["delay"]
-        self.list_image = self.data_manager.data["POST"]["image"]
-        self.list_content = self.data_manager.data["POST"]["content"]
         self.driver = self.driver_manager.driver
         if not self.table_data:
             self.signals.log.emit("Chọn ít nhất một group để đăng bài")
@@ -108,11 +112,6 @@ class Post(QRunnable):
         self.signals.log.emit("POST : Đã đăng xong!")
         self.signals.finished.emit()
         self.set_stop(True)
-            
-    def setup(self, table_data: list, use_content: bool, use_image: bool):
-        self.table_data = table_data
-        self.use_content = use_content
-        self.use_image = use_image
             
     def set_stop(self, value: bool):
         self._stop = value
