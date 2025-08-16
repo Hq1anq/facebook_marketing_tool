@@ -19,6 +19,13 @@ class Spam(QRunnable):
         self.signals = self.Signals()
         self._stop = False
 
+    def setup(self, use_content: bool, use_image: bool, use_filter: bool, list_image, list_content):
+        self.use_content = use_content
+        self.use_image = use_image
+        self.use_filter = use_filter
+        self.list_image = list_image
+        self.list_content = list_content
+
     @Slot()
     def run(self):
         self.scroll_number = self.data_manager.data["SPAM"]["scroll number"] or self.data_manager.DEFAULT_DATA["SPAM"]["scroll number"]
@@ -26,8 +33,6 @@ class Spam(QRunnable):
         self.spam_delay = self.data_manager.data["SPAM"]["spam delay"] or self.data_manager.DEFAULT_DATA["SPAM"]["spam delay"]
         self.scan_delay = self.data_manager.data["SPAM"]["scan delay"] or self.data_manager.DEFAULT_DATA["SPAM"]["scan delay"]
         self.key_filter = self.data_manager.data["SPAM"]["key filter"] or self.data_manager.DEFAULT_DATA["SPAM"]["key filter"]
-        self.list_image = self.data_manager.data["SPAM"]["image"]
-        self.list_content = self.data_manager.data["SPAM"]["content"]
         self.driver = self.driver_manager.driver
         self.spam()
             
@@ -133,12 +138,7 @@ class Spam(QRunnable):
                 self.signals.log.emit("SPAM: Đang spam các post trong news feed")
             else:
                 time.sleep(random.randint(self.scan_delay[0],self.scan_delay[len(self.scan_delay)-1]))
-    
-    def setup(self, use_content: bool, use_image: bool, use_filter: bool):
-        self.use_content = use_content
-        self.use_image = use_image
-        self.use_filter = use_filter
-    
+        
     def check_open_post(self):
         div = self.driver.find_element(By.XPATH, "//div[@role='banner']/following-sibling::div[1]")
         if div.get_attribute("class") == "x9f619 x1n2onr6 x1ja2u2z":

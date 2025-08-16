@@ -227,7 +227,13 @@ class MainWindow(QMainWindow):
             self.ui.profileName.setText(self.driver_manager.get_username())
             
             self.ui.btn_spam.setText("STOP!")
-            self.spam.setup(self.ui.spamContentCheckBox.isChecked(), self.ui.spamImageCheckBox.isChecked(), self.ui.spamSpamListFilter.isChecked())
+            self.spam.setup(
+                self.ui.spamContentCheckBox.isChecked(),
+                self.ui.spamImageCheckBox.isChecked(),
+                self.ui.spamSpamListFilter.isChecked(),
+                spam_data["image"],
+                spam_data["content"]
+            )
             self.spam.set_stop(False)  # Tell Spam to keep running
             QThreadPool.globalInstance().start(self.spam)
         else:
