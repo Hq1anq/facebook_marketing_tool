@@ -70,13 +70,18 @@ class TableWidget(QFrame, Ui_tableWidget):
 
         # Set columns 2, 3 to ResizeToContents (fixed, minimum size)
         for i in range(2, 4):
-            header.setSectionResizeMode(i, QHeaderView.ResizeMode.Interactive)
-            self.table.resizeColumnToContents(i)
-            self.table.setColumnWidth(i, self.table.columnWidth(i) + 10)  # Add extra width
+            if not self.table.isColumnHidden(i):
+                header.setSectionResizeMode(i, QHeaderView.ResizeMode.Interactive)
+                self.table.resizeColumnToContents(i)
+                self.table.setColumnWidth(i, self.table.columnWidth(i) + 10)  # Add extra width
 
-        # Set last column 0, 1 to Stretch (expand with parent)
-        header.setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
-        header.setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
+        # Set columns 0, 1 to Stretch if visible
+        for i in range(2):
+            if not self.table.isColumnHidden(i):
+                header.setSectionResizeMode(i, QHeaderView.ResizeMode.Stretch)
+            else:
+                header.setSectionResizeMode(i, QHeaderView.ResizeMode.Fixed)
+        
         # Show filter row again
         self.table.setRowHidden(0, False)
     
@@ -102,7 +107,10 @@ class TableWidget(QFrame, Ui_tableWidget):
             self.table.setItem(row_position, 0, self.table_item(group.get("link group", "")))
             self.table.setItem(row_position, 1, self.table_item(group.get("link post", "")))
             self.table.setItem(row_position, 2, self.table_item(group.get("name group", "")))
-            self.table.setItem(row_position, 3, self.table_item(group.get("status", ""), "center"))
+            
+            # Hide original status text
+            status_item = self.table_item(group.get("status", ""), "center", QColor(40, 44, 52))
+            self.table.setItem(row_position, 3, status_item)
                 
             self.table.setVerticalHeaderItem(row_position, QTableWidgetItem(str(row_position)))
     
@@ -161,16 +169,24 @@ class TableWidget(QFrame, Ui_tableWidget):
         self._highlighted_rows = selected_rows
         self.countRows.setText(f"Selected: {len(selected_rows)}     Total rows: {self.visible_index if self.visible_index else self.table.rowCount()}")
     
-    def add_row(self, link: str, name: str):
+    def add_row(self, link_group: str = "", link_post: str = "", name: str = "", status: str = ""):
         row_position = self.table.rowCount()
         self.table.insertRow(row_position)
-        self.table.setItem(row_position, 0, self.table_item(link))
-        self.table.setItem(row_position, 1, self.table_item(""))
+        self.table.setItem(row_position, 0, self.table_item(link_group))
+        self.table.setItem(row_position, 1, self.table_item(link_post))
         self.table.setItem(row_position, 2, self.table_item(name))
-        self.table.setItem(row_position, 3, self.table_item(""))
+        
+        # Hide original status text by setting its color to background color
+        status_item = self.table_item(status, "center", QColor(40, 44, 52))
+        self.table.setItem(row_position, 3, status_item)
+        
         self.table.setVerticalHeaderItem(row_position, QTableWidgetItem(str(row_position)))
     
     def setup(self, func: str):
+        # Reset visibility before applying specific mode settings
+        for i in range(self.table.columnCount()):
+            self.table.setColumnHidden(i, False)
+
         match func:
             case "POST":
                 self.btn_run.setText("POST")
@@ -180,6 +196,7 @@ class TableWidget(QFrame, Ui_tableWidget):
                 self.fromLabel.setText("Từ group")
                 self.toLabel.setText("đến group")
                 self.listLabel.setText("List group")
+                self.table.setColumnHidden(1, True) # Hide link post
             case "COMMENT":
                 self.btn_run.setText("COMMENT")
                 self.fromToFrame.show()
@@ -188,11 +205,13 @@ class TableWidget(QFrame, Ui_tableWidget):
                 self.fromLabel.setText("Từ post")
                 self.toLabel.setText("đến post")
                 self.listLabel.setText("ListPost")
+                self.table.setColumnHidden(0, True) # Hide link group
             case "GET GROUP":
                 self.btn_run.setText("GET GROUP")
                 self.fromToFrame.hide()
                 self.latestPost.hide()
                 self.filterGroup.show()
+                self.table.setColumnHidden(1, True) # Hide link post
             case "GET POST":
                 self.btn_run.setText("GET POST")
                 self.fromToFrame.show()
@@ -201,13 +220,18 @@ class TableWidget(QFrame, Ui_tableWidget):
                 self.fromLabel.setText("Từ group")
                 self.toLabel.setText("đến group")
                 self.listLabel.setText("List group")
+                self.table.setColumnHidden(0, True) # Hide link group
+        
+        self.adjust_column_width()
                 
-    def table_item(self, text: str, align: str = "left"):
+    def table_item(self, text: str, align: str = "left", color: QColor = None):
         item = QTableWidgetItem(text)
         if align == "left":
             item.setTextAlignment(Qt.AlignmentFlag.AlignLeft)
         if align == "center":
             item.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
+        if color:
+            item.setForeground(color)
         return item
 
     def get_selected(self):
@@ -282,12 +306,12 @@ class StatusChipDelegate(QStyledItemDelegate):
         status_lower = status.lower()
 
         status_styles = {
-            "đã post": ("#16a34a", "white"),
-            "đã comment": ("#eab308", "black"),
-            "chưa post": ("#dc2626", "white"),
-            "chưa comment": ("#dc2626", "white"),
-            "không phải nhóm vps/proxy": ("#eab308", "black"),
-            "bị chặn": ("#dc2626", "white"),
+            "đã post": ("#1e7d4b", "#4dffa3"),
+            "đã comment": ("#9a5b12", "#ffc861"),
+            "chưa post": ("#922c3c", "#ff99a3"),
+            "chưa comment": ("#922c3c", "#ff99a3"),
+            "không phải nhóm vps/proxy": ("#9a5b12", "#ffc861"),
+            "bị chặn": ("#922c3c", "#ff99a3"),
             "unknow": ("#6b7280", "white")
         }
 
@@ -300,9 +324,14 @@ class StatusChipDelegate(QStyledItemDelegate):
         painter.save()
         painter.setRenderHint(QPainter.Antialiasing) # Khử răng cưa
 
-        # Font setup
+        # Font setup - reduce font size for very long text
         font = QFont(option.font)
-        font.setPointSize(10)
+        if len(status) > 20: 
+            font.setPointSize(8)
+        elif len(status) > 12:
+            font.setPointSize(9)
+        else:
+            font.setPointSize(10)
         painter.setFont(font)
         metrics = QFontMetrics(font)
 
@@ -326,7 +355,7 @@ class StatusChipDelegate(QStyledItemDelegate):
         # Draw chip background
         painter.setBrush(QColor(bg_color))
         painter.setPen(Qt.PenStyle.NoPen)
-        painter.drawRoundedRect(chip_rect, 10, 10)
+        painter.drawRoundedRect(chip_rect, chip_height // 2, chip_height // 2)
 
         # Draw chip text
         painter.setPen(QColor(text_color))
