@@ -302,8 +302,8 @@ class MainWindow(QMainWindow):
         
     def center_table(self):
         table_frame_width = self.width()
-        table_frame_height = self.height() - self.ui.contentTop.height() - self.ui.bottomBar.height() + 18
-        self.table_widget.setGeometry(QRect(0, self.ui.contentTop.height() - 10 - 9, table_frame_width, table_frame_height))
+        table_frame_height = self.height() - self.ui.contentTop.height() - self.ui.bottomBar.height() + 50
+        self.table_widget.setGeometry(QRect(0, self.ui.contentTop.height() - 30, table_frame_width, table_frame_height))
 
     def toggleMenu(self):
         if self.ui.leftMenu.width() == settings.SIDE_MENU_WIDTH:

@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'tableWidgetkbZYXl.ui'
+## Form generated from reading UI file 'tableWidgetyuvJsw.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.8.2
+## Created by: Qt User Interface Compiler version 6.10.2
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -34,7 +34,7 @@ class Ui_tableWidget(object):
 "QWidget {\n"
 "	background-color: rgb(40, 44, 52);\n"
 "	color: rgb(221, 221, 221);\n"
-"	font: 10pt \"Segoe UI\" }\n"
+"	font: 12pt \"Segoe UI\" }\n"
 "QPushButton {\n"
 "	border: 3px solid rgb(52, 59, 72);\n"
 "	border-radius: 5px;	\n"
@@ -51,7 +51,7 @@ class Ui_tableWidget(object):
 "	padding-left: 3px;\n"
 "	font-size: 15px;\n"
 "	selection-background-color: rgb(255, 121, 198);\n"
-"	selection-color: rgb(40, 44, 52) }\n"
+"    selection-color: rgb(40, 44, 52) }\n"
 "QLineEdit:hover { border: 2px solid rgb(64, 71, 88) }\n"
 "QLineEdit:focus { border: 2px solid rgb(91, 101, 124) }\n"
 "QCheckBox::indicator {\n"
@@ -134,7 +134,8 @@ class Ui_tableWidget(object):
 "	background: rgb(64, 69, 77) }\n"
 "QScrollBar::add-line:horizontal:pressed, QScrollBar::sub-line:horizontal:pressed,\n"
 "QScrollBar::add-line:vertical:pressed, QScrollBar::sub-line:vertical:pressed {\n"
-"	background: rgb(189, 147, 249) }")
+"	background: rgb(189, 147, 249) }\n"
+"#countRows, #statusTable { font-size: 14pt }")
         self.contentFrame.setFrameShape(QFrame.Shape.StyledPanel)
         self.contentFrame.setFrameShadow(QFrame.Shadow.Raised)
         self.verticalLayout_2 = QVBoxLayout(self.contentFrame)
@@ -271,6 +272,7 @@ class Ui_tableWidget(object):
         self.fromToFrame.setObjectName(u"fromToFrame")
         self.horizontalLayout_5 = QHBoxLayout(self.fromToFrame)
         self.horizontalLayout_5.setObjectName(u"horizontalLayout_5")
+        self.horizontalLayout_5.setContentsMargins(-1, -1, -1, 0)
         self.horizontalSpacer = QSpacerItem(150, 20, QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Minimum)
 
         self.horizontalLayout_5.addItem(self.horizontalSpacer)
@@ -355,7 +357,7 @@ class Ui_tableWidget(object):
         self.horizontalLayout_6.setObjectName(u"horizontalLayout_6")
         self.statusTable = HighlightLabel(self.contentFrame)
         self.statusTable.setObjectName(u"statusTable")
-        sizePolicy4 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
+        sizePolicy4 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
         sizePolicy4.setHorizontalStretch(0)
         sizePolicy4.setVerticalStretch(0)
         sizePolicy4.setHeightForWidth(self.statusTable.sizePolicy().hasHeightForWidth())
@@ -405,9 +407,9 @@ class Ui_tableWidget(object):
 "	border: 1px solid rgb(44, 49, 60);\n"
 "	font-size: 15px }\n"
 "QLineEdit {\n"
-"   background-color: rgb(50, 54, 62); /* slightly lighter/darker variant for edit mode */\n"
+"    background-color: rgb(50, 54, 62); /* slightly lighter/darker variant for edit mode */\n"
 "	selection-background-color: rgb(189, 147, 249); /* background when highlight */\n"
-"   selection-color: rgb(40, 44, 52); /* text color when selected */\n"
+"    selection-color: rgb(40, 44, 52); /* text color when selected */\n"
 "}")
         self.table.setWordWrap(False)
         self.table.horizontalHeader().setMinimumSectionSize(110)
@@ -434,15 +436,12 @@ class Ui_tableWidget(object):
         self.latestPostCheckBox.setText(QCoreApplication.translate("tableWidget", u"L\u1ea5y post m\u1edbi nh\u1ea5t", None))
         self.postIndex.setPlaceholderText(QCoreApplication.translate("tableWidget", u"\u0110i\u1ec1n s\u1ed1 th\u1ee9 t\u1ef1 post trong group", None))
         self.filterGroupCheckBox.setText(QCoreApplication.translate("tableWidget", u"Filter", None))
-        self.filterGroupInput.setText("")
         self.filterGroupInput.setPlaceholderText(QCoreApplication.translate("tableWidget", u"vps, proxy, rdp", None))
         self.listLabel.setText(QCoreApplication.translate("tableWidget", u"List post", None))
         self.listBox.setPlaceholderText(QCoreApplication.translate("tableWidget", u"ng\u0103n c\u00e1ch nhau b\u1edbi d\u1ea5u ,", None))
         self.fromLabel.setText(QCoreApplication.translate("tableWidget", u"T\u1eeb post", None))
-        self.fromBox.setText("")
         self.toLabel.setText(QCoreApplication.translate("tableWidget", u"\u0111\u1ebfn post", None))
         self.btn_fromTo.setText("")
-        self.statusTable.setText("")
         self.countRows.setText(QCoreApplication.translate("tableWidget", u"Total rows:", None))
         ___qtablewidgetitem = self.table.horizontalHeaderItem(0)
         ___qtablewidgetitem.setText(QCoreApplication.translate("tableWidget", u"LINK GROUP", None));

@@ -38,7 +38,7 @@
 QWidget {
 	background-color: rgb(40, 44, 52);
 	color: rgb(221, 221, 221);
-	font: 10pt &quot;Segoe UI&quot; }
+	font: 12pt &quot;Segoe UI&quot; }
 QPushButton {
 	border: 3px solid rgb(52, 59, 72);
 	border-radius: 5px;	
@@ -135,7 +135,8 @@ QScrollBar::add-line:vertical:hover, QScrollBar::sub-line:vertical:hover {
 	background: rgb(64, 69, 77) }
 QScrollBar::add-line:horizontal:pressed, QScrollBar::sub-line:horizontal:pressed,
 QScrollBar::add-line:vertical:pressed, QScrollBar::sub-line:vertical:pressed {
-	background: rgb(189, 147, 249) }</string>
+	background: rgb(189, 147, 249) }
+#countRows, #statusTable { font-size: 14pt }</string>
      </property>
      <property name="frameShape">
       <enum>QFrame::Shape::StyledPanel</enum>
@@ -387,9 +388,6 @@ QPushButton:pressed { background-color: rgb(23, 26, 30); border: 4px solid rgb(2
          </item>
          <item>
           <widget class="QLineEdit" name="filterGroupInput">
-           <property name="text">
-            <string/>
-           </property>
            <property name="placeholderText">
             <string>vps, proxy, rdp</string>
            </property>
@@ -401,6 +399,9 @@ QPushButton:pressed { background-color: rgb(23, 26, 30); border: 4px solid rgb(2
       <item>
        <widget class="QFrame" name="fromToFrame">
         <layout class="QHBoxLayout" name="horizontalLayout_5">
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
          <item>
           <spacer name="horizontalSpacer">
            <property name="orientation">
@@ -503,9 +504,6 @@ QPushButton:pressed { background-color: rgb(23, 26, 30); border: 4px solid rgb(2
                 <height>16777215</height>
                </size>
               </property>
-              <property name="text">
-               <string/>
-              </property>
              </widget>
             </item>
             <item>
@@ -569,13 +567,10 @@ QPushButton:pressed { background-color: rgb(23, 26, 30); border: 4px solid rgb(2
         <item>
          <widget class="QLabel" name="statusTable">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+           <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
-          </property>
-          <property name="text">
-           <string/>
           </property>
           <property name="alignment">
            <set>Qt::AlignmentFlag::AlignCenter</set>

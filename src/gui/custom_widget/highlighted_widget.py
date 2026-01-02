@@ -1,6 +1,6 @@
 from PySide6.QtWidgets import QLabel, QPlainTextEdit
-from PySide6.QtCore import QTimer, Property, QPropertyAnimation, QEasingCurve, QRectF
-from PySide6.QtGui import QPainter
+from PySide6.QtCore import QTimer, Property, QPropertyAnimation, QEasingCurve, QRectF, Qt
+from PySide6.QtGui import QFontMetrics, QPainter
 from PySide6.QtSvg import QSvgRenderer
 
 
@@ -89,24 +89,41 @@ class HighlightLabel(QLabel):
         painter = QPainter(self)
         painter.setRenderHint(QPainter.RenderHint.Antialiasing)
 
-        # draw spinner
         margin = 4
         size = self.height() - (margin * 2)
-        
-        # Center horizontally if no text, otherwise fixed margin
-        icon_x = margin
 
+        # ===== measure text =====
+        fm = QFontMetrics(self.font())
+        text_width = fm.horizontalAdvance(self.text())
+
+        spacing = margin
+        total_width = size + spacing + text_width
+
+        # ===== compute start X based on alignment =====
+        if self.alignment() & Qt.AlignmentFlag.AlignHCenter:
+            start_x = (self.width() - total_width) / 2
+        elif self.alignment() & Qt.AlignmentFlag.AlignRight:
+            start_x = self.width() - total_width - margin
+        else:
+            start_x = margin
+
+        icon_x = start_x
+        text_x = icon_x + size + spacing
+
+        # ===== draw spinner =====
         painter.save()
         painter.translate(icon_x + size / 2, self.height() / 2)
         painter.rotate(self._angle)
-        # Render centered at translated origin
-        self.renderer.render(painter, QRectF(-size / 2, -size / 2, size, size))
+        self.renderer.render(
+            painter,
+            QRectF(-size / 2, -size / 2, size, size)
+        )
         painter.restore()
 
-        # draw text (offset to the right of the icon)
+        # ===== draw text =====
         painter.drawText(
-            self.rect().adjusted(icon_x + size + margin, 0, 0, 0),
-            self.alignment(),
+            QRectF(text_x, 0, text_width, self.height()),
+            Qt.AlignmentFlag.AlignVCenter,
             self.text()
         )
 
