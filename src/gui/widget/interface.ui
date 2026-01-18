@@ -1288,7 +1288,7 @@ QComboBox { background-color: rgb(33, 37, 43) }</string>
                       </size>
                      </property>
                      <property name="text">
-                      <string>  Add Proxy</string>
+                      <string>  Thêm Proxy</string>
                      </property>
                      <property name="icon">
                       <iconset resource="../../../resources/resources.qrc">

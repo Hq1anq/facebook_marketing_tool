@@ -22,6 +22,17 @@ class ProxyUI:
         self.add_worker.setAutoDelete(False)
 
         self.setup_connections()
+    
+    def setup_connections(self):
+        self.check_worker.signals.success.connect(self.on_check_success)
+        self.check_worker.signals.error.connect(self.on_check_error)
+        self.add_worker.signals.success.connect(self.on_add_success)
+        self.add_worker.signals.error.connect(self.on_add_error)
+        self.driver_manager.browser_closed.connect(self.on_close_browser)
+
+        self.ui.proxyDetailCheckbox.stateChanged.connect(self.changeProxyInputMethod)
+        self.ui.checkProxyBtn.clicked.connect(self.check_proxy)
+        self.ui.addProxyBtn.clicked.connect(self.add_proxy)
 
     def on_check_success(self, sw_options, protocol):
         self.check_res = [self.ip, sw_options]
@@ -45,31 +56,31 @@ class ProxyUI:
         
     def on_add_success(self):
         self.ui.status.setSuccess("Gắn proxy thành công!")
-        icon = QIcon()
-        icon.addFile(u":/icons/icons/proxyOK.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.ui.btn_proxy.setIcon(icon)
+        self.set_add_button(pause=True)
         self.on_finished()
 
     def on_add_error(self, err_msg):
         self.ui.status.setError(err_msg)
-        icon = QIcon()
-        icon.addFile(u":/icons/icons/proxyERR.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.ui.btn_proxy.setIcon(icon)
+        self.ui.btn_proxy.setIcon(QIcon(":/icons/icons/proxyERR.svg"))
         self.on_finished()
+
+    def on_close_browser(self):
+        self.set_add_button(pause=False)
+        self.ui.btn_proxy.setIcon(QIcon(":/icons/icons/proxyERR.svg"))
 
     def on_finished(self):
         self.ui.addProxyBtn.setEnabled(True)
         self.ui.checkProxyBtn.setEnabled(True)
-
-    def setup_connections(self):
-        self.check_worker.signals.success.connect(self.on_check_success)
-        self.check_worker.signals.error.connect(self.on_check_error)
-        self.add_worker.signals.success.connect(self.on_add_success)
-        self.add_worker.signals.error.connect(self.on_add_error)
-
-        self.ui.proxyDetailCheckbox.stateChanged.connect(self.changeProxyInputMethod)
-        self.ui.checkProxyBtn.clicked.connect(self.check_proxy)
-        self.ui.addProxyBtn.clicked.connect(self.add_proxy)
+    
+    def set_add_button(self, pause: bool):
+        if (pause):
+            self.ui.addProxyBtn.setText("  Dừng proxy")
+            self.ui.addProxyBtn.setIcon(QIcon(":/icons/icons/pause.svg"))
+            self.ui.btn_proxy.setIcon(QIcon(":/icons/icons/proxyOK.svg"))
+        else:
+            self.ui.addProxyBtn.setText("  Thêm proxy")
+            self.ui.addProxyBtn.setIcon(QIcon(":/icons/icons/play.svg"))
+            self.ui.btn_proxy.setIcon(QIcon(":/icons/icons/proxyERR.svg"))
     
     def check_proxy(self):
         try:
@@ -90,6 +101,11 @@ class ProxyUI:
         QThreadPool.globalInstance().start(self.check_worker)
 
     def add_proxy(self):
+        if (self.ui.addProxyBtn.text() == "  Dừng proxy"):
+            self.driver_manager.set_proxy({})
+            self.set_add_button(pause=False)
+            self.ui.status.setSuccess("Đã dừng proxy")
+            return
         try:
             self.save_data()
         except SyntaxError as e:

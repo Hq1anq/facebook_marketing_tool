@@ -8,10 +8,17 @@ from selenium.webdriver.chrome.service import Service
 from selenium.common.exceptions import TimeoutException, NoSuchElementException, WebDriverException
 from webdriver_manager.chrome import ChromeDriverManager
 import time
+import threading
+from PySide6.QtCore import QObject, Signal
 
-class DriverManager:
+class DriverManager(QObject):
+    browser_closed = Signal()
+
     def __init__(self, chrome_path: str):
+        super().__init__()
         self.driver = None
+        self.is_browser_open = False
+        self._monitor_thread = None
         self.chrome_path = chrome_path
         self.proxy_config = None
         self.language = "vi"
@@ -48,16 +55,44 @@ class DriverManager:
             else:
                 self.driver = webdriver.Chrome(service=service, options=options)
             self.actions = ActionChains(self.driver)
+            self.is_browser_open = True
+            self.start_monitoring()
         except Exception:
             return False
         return True
+    
+    def start_monitoring(self):
+        if self._monitor_thread is None or not self._monitor_thread.is_alive():
+            self._monitor_thread = threading.Thread(target=self.check_browser_state_loop, daemon=True)
+            self._monitor_thread.start()
+
+    def check_browser_state_loop(self):
+        while self.is_browser_open:
+            time.sleep(1) # Check every 1 second
+            if self.driver is not None:
+                try:
+                    # Kiểm tra xem title có còn truy cập được không
+                    _ = self.driver.title
+                except WebDriverException:
+                    # Nếu văng lỗi nghĩa là cửa sổ đã bị đóng
+                    self.is_browser_open = False
+                    try:
+                        self.driver.quit() # Đảm bảo dọn dẹp các process ngầm
+                    except Exception:
+                        pass
+                    self.driver = None
+                    self.browser_closed.emit()
+                    break
     
     def set_proxy(self, proxy_dict):
         self.proxy_config = proxy_dict
         if self.driver is not None:
             try:
                 # Dynamically set proxy for seleniumwire
-                self.driver.proxy = proxy_dict.get('proxy', {}) if proxy_dict else {}
+                if proxy_dict:
+                    self.driver.proxy = proxy_dict.get('proxy', {})
+                else:
+                    self.driver.proxy = {}
             except Exception as e:
                 print(f"Lỗi khi set proxy dynamically: {e}")
                 return False
@@ -109,17 +144,6 @@ class DriverManager:
     def get(self, url):
         if self.driver is not None:
             self.driver.get(url)
-    
-    def get_username(self):
-        try:
-            self.get("https://www.facebook.com/me")
-            profile_name = self.driver.find_element(By.XPATH,
-                "//div[@class='x78zum5 xdt5ytf x1wsgfga x9otpla']//h1"
-            ).text.strip()
-            return profile_name
-        except (NoSuchElementException, Exception) as e:
-            print(f"Error getting username: {e}")
-            return None
 
     def get_userID(self):
         try:
@@ -142,8 +166,12 @@ class DriverManager:
         return self.check_login()
 
     def close(self):
+        self.is_browser_open = False
         if self.driver is not None:
-            self.driver.quit()
+            try:
+                self.driver.quit()
+            except Exception:
+                pass
             self.driver = None
     
     def scroll(self, scroll_times: int, timeout: float = 5.0) -> None:

@@ -1144,7 +1144,7 @@ class Ui_MainWindow(object):
         self.fullProxyLabel.setText(QCoreApplication.translate("MainWindow", u"IP:PORT:USER:PASS", None))
         self.proxyDetailCheckbox.setText(QCoreApplication.translate("MainWindow", u"Detail", None))
         self.checkProxyBtn.setText(QCoreApplication.translate("MainWindow", u"  Check Proxy", None))
-        self.addProxyBtn.setText(QCoreApplication.translate("MainWindow", u"  Add Proxy", None))
+        self.addProxyBtn.setText(QCoreApplication.translate("MainWindow", u"  Thêm Proxy", None))
         self.methodLabel.setText(QCoreApplication.translate("MainWindow", u"Login method", None))
         self.btn_login.setText(QCoreApplication.translate("MainWindow", u"LOGIN", None))
         self.methodComboBox.setItemText(0, QCoreApplication.translate("MainWindow", u"Username|Password|2fa", None))
