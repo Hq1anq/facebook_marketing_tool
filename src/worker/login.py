@@ -1,9 +1,9 @@
 from selenium.webdriver.common.by import By
 from PySide6.QtCore import QRunnable, QObject, Signal, Slot
 
-import pyotp, time
+import json, pyotp, time
 
-from src.manager import DriverManager, DataManager
+from src.manager import DriverManager
 
 class Signals(QObject):
     loading = Signal(str)
@@ -28,8 +28,7 @@ class Login(QRunnable):
         if not self.driver_manager.setup_driver():
             self.signals.error.emit("Xung đột! Vui lòng đóng tất cả các trình duyệt Chrome")
             return
-        self.driver_manager.jump_to_facebook()
-        if self.driver_manager.is_login:
+        if self.driver_manager.check_login():
             self.signals.finished.emit()
             return
             
@@ -44,8 +43,9 @@ class Login(QRunnable):
     
     def login(self) -> str:
         if self.cookie != "":
-            self.cookie = self.driver_manager.format_cookie(self.cookie)
-            self.driver_manager.add_cookie(self.cookie)
+            self.cookie = self.format_cookie(self.cookie)
+            self.driver.get("https://www.facebook.com")
+            self.add_cookie(self.cookie)
             self.driver.refresh()
             self.driver_manager.wait_for_url_contains("") # full loaded
             if not self.driver_manager.check_login():
@@ -54,6 +54,8 @@ class Login(QRunnable):
                 return "Đăng nhập thành công"
         if not (self.username and self.password):
             return "Thiếu thông tin đăng nhập"
+        
+        self.driver_manager.jump_to_facebook()
         
         email_field = self.driver_manager.wait_for_element(by=By.NAME, value="email")
         self.driver_manager.human_type(email_field, self.username, delay=0.1)
@@ -112,3 +114,108 @@ class Login(QRunnable):
                 return "Đăng nhập thành công"
             else:
                 return "Đăng nhập thất bại, sai mã 2fa"
+    
+    def format_cookie(self, cookie_string: str) -> str:
+        """
+        Convert multiple cookie formats (JSON, Tabular, Standard) to standard "name=value; name=value" format.
+        """
+        
+        if not cookie_string:
+            return ""
+            
+        cookie_string = cookie_string.strip()
+        cookies = []
+        parsed_names = set()
+
+        # 1. Thử phân tích dạng JSON (Từ các Extension như EditThisCookie, J2Team)
+        try:
+            cookie_list = json.loads(cookie_string)
+            if isinstance(cookie_list, list):
+                for item in cookie_list:
+                    if isinstance(item, dict) and 'name' in item and 'value' in item:
+                        name = str(item['name']).strip()
+                        value = str(item['value']).strip()
+                        if name and name not in parsed_names:
+                            cookies.append(f"{name}={value}")
+                            parsed_names.add(name)
+                if cookies:
+                    return "; ".join(cookies)
+        except json.JSONDecodeError:
+            pass
+
+        # 2. Xử lý dạng văn bản (Bảng DevTools hoặc chuỗi chuẩn)
+        lines = cookie_string.split('\n')
+        
+        for line in lines:
+            line = line.strip()
+            if not line:
+                continue
+            
+            # Kiểm tra xem có phải dạng chuẩn name=value không (điển hình thường có "=")
+            if '=' in line:
+                for part in line.split(';'):
+                    part = part.strip()
+                    if not part:
+                        continue
+                    if '=' in part:
+                        name, value = part.split('=', 1)
+                        name = name.strip()
+                        value = value.strip()
+                        if name not in parsed_names:
+                            cookies.append(f"{name}={value}")
+            else: # Trường hợp Dạng bảng: Dùng `.split()` để tách bằng bất kỳ khoảng trắng liên tiếp nào (Space, Tab, hỗn hợp)
+                parts = line.split()
+                if len(parts) >= 2:
+                    name = parts[0].strip()
+                    value = parts[1].strip()
+                    
+                    # Bỏ qua các tiêu đề cột hoặc các giá trị rỗng bị đẩy nhầm cột lùi lên
+                    if name.lower() in ['name', 'domain', 'path', 'expires', 'size']:
+                        continue
+                    if value.startswith('.') or value == '/' or value.lower() == 'session':
+                        continue
+                    
+                    if name and name not in parsed_names:
+                        cookies.append(f"{name}={value}")
+                        parsed_names.add(name)
+
+        return "; ".join(cookies)
+
+    def get_cookie(self):
+        if self.driver_manager.check_login():
+            try:
+                self.driver = self.driver_manager.driver
+                c_user = self.driver.get_cookie("c_user")
+                fr = self.driver.get_cookie("fr")
+                sb = self.driver.get_cookie("sb")
+                xs = self.driver.get_cookie("xs")
+                datr = self.driver.get_cookie("datr")
+                
+                if not all([c_user, fr, sb, xs, datr]):
+                    print("Warning: One or more cookies are missing")
+                    return None
+                
+                return "c_user=%s; fr=%s; sb=%s; xs=%s; datr=%s"%(
+                    c_user["value"],
+                    fr["value"],
+                    sb["value"],
+                    xs["value"],
+                    datr["value"]
+                )
+            except (TypeError, KeyError) as e:
+                print(f"Error getting cookies: {e}")
+                return None
+        else:
+            return None
+
+    def add_cookie(self, cookie_string: str):
+        formatted_cookie = self.format_cookie(cookie_string)
+        self.signals.cookie_output.emit(cookie_string)
+        cookies = [cookie.strip() for cookie in formatted_cookie.split(';') if cookie.strip()]
+        for cookie in cookies:
+            if '=' in cookie:
+                name, value = cookie.split('=', 1)
+                self.driver.add_cookie({
+                    'name': name.strip(),
+                    'value': value.strip()
+                })

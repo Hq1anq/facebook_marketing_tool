@@ -14,7 +14,6 @@ class DriverManager:
         self.driver = None
         self.chrome_path = chrome_path
         self.proxy_config = None
-        self.is_login = False
         self.language = "vi"
         self.friend_str = "Bạn bè"
         self.message_str = "Nhắn tin"
@@ -135,46 +134,12 @@ class DriverManager:
             return None
     
     def check_login(self) -> bool:
-        self.is_login = self.friend_str in self.driver.page_source
-        return self.is_login
+        return self.friend_str in self.driver.page_source
     
     def jump_to_facebook(self) -> bool:
         self.driver.get("https://www.facebook.com/login?locale=en_US")
         self.adjust_language()
-        self.check_login()
-        return self.is_login
-    
-    def get_cookies(self):
-        if self.is_login:
-            try:
-                c_user = self.driver.get_cookie("c_user")
-                fr = self.driver.get_cookie("fr")
-                sb = self.driver.get_cookie("sb")
-                xs = self.driver.get_cookie("xs")
-                datr = self.driver.get_cookie("datr")
-                
-                if not all([c_user, fr, sb, xs, datr]):
-                    print("Warning: One or more cookies are missing")
-                    return None
-                
-                return "c_user=%s; fr=%s; sb=%s; xs=%s; datr=%s"%(
-                    c_user["value"],
-                    fr["value"],
-                    sb["value"],
-                    xs["value"],
-                    datr["value"]
-                )
-            except (TypeError, KeyError) as e:
-                print(f"Error getting cookies: {e}")
-                return None
-        else:
-            return None
-    
-    def add_cookie(self, cookie_string: str):
-        cookies = [cookie.strip() for cookie in cookie_string.split(';')]
-        for cookie in cookies:
-            name, value = cookie.split('=', 1)
-            self.driver.add_cookie({'name': name, 'value': value})
+        return self.check_login()
 
     def close(self):
         if self.driver is not None:

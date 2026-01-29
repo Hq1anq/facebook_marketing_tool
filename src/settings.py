@@ -14,7 +14,6 @@ spamImageInput = False
 spamContentInput = True
 stopSpam = False
 stopComment = False
-is_login = False
 use_fromTo = True
 is_latestPost = True
 postDelay = [10, 20] # Chờ từ 10s đến 20s khi up

@@ -35,7 +35,7 @@ class LoginUI:
         profile_name = self.driver_manager.get_username()
         self.ui.status.setSuccess("Đăng nhập thành công, profile: " + profile_name)
         self.updateProfileName(profile_name)
-        cookie = self.driver_manager.get_cookies()
+        cookie = self.worker.get_cookie()
         self.ui.cookieInput.setPlainText(cookie)
     
     def updateProfileName(self, name):

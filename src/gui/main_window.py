@@ -140,8 +140,7 @@ class MainWindow(QMainWindow):
             if not self.driver_manager.setup_driver():
                 self.table_widget.statusTable.setError("Xung đột! Vui lòng đóng tất cả các trình duyệt Chrome")
                 return
-            self.driver_manager.jump_to_facebook()
-            if not self.driver_manager.is_login:
+            if not self.driver_manager.check_login():
                 self.handle_unLogin()
                 return
             
@@ -172,8 +171,7 @@ class MainWindow(QMainWindow):
             if not self.driver_manager.setup_driver():
                 self.ui.status.setError("Xung đột! Vui lòng đóng tất cả các trình duyệt Chrome")
                 return
-            self.driver_manager.jump_to_facebook()
-            if not self.driver_manager.is_login:
+            if not self.driver_manager.check_login():
                 self.handle_unLogin()
                 return
             
@@ -199,8 +197,7 @@ class MainWindow(QMainWindow):
         if not self.driver_manager.setup_driver():
             self.ui.status.setError("Xung đột! Vui lòng đóng tất cả các trình duyệt Chrome")
             return
-        self.driver_manager.jump_to_facebook()
-        if not self.driver_manager.is_login:
+        if not self.driver_manager.check_login():
             self.handle_unLogin()
             return
         
@@ -215,8 +212,7 @@ class MainWindow(QMainWindow):
         if not self.driver_manager.setup_driver():
             self.ui.status.setError("Xung đột! Vui lòng đóng tất cả các trình duyệt Chrome")
             return
-        self.driver_manager.jump_to_facebook()
-        if not self.driver_manager.is_login:
+        if not self.driver_manager.check_login():
             self.handle_unLogin()
             return
 
