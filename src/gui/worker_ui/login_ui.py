@@ -1,24 +1,71 @@
-from PySide6.QtCore import Qt, QSize
+from PySide6.QtCore import QThreadPool, Qt, QSize
 
 import src.settings as settings
-from src.manager import DataManager
+from src.manager import DataManager, DriverManager
 from src.gui.widget.ui_interface import Ui_MainWindow
+from src.worker import Login
 from src.gui.styles import BUTTON_STYLE
 
 class LoginUI:
-    def __init__(self, ui: Ui_MainWindow, data_manager: DataManager):
+    def __init__(self, before_run, ui: Ui_MainWindow, data_manager: DataManager, driver_manager: DriverManager):
         self.ui = ui
+        self.before_run = before_run
         self.data_manager = data_manager
+        self.driver_manager = driver_manager
+
+        self.worker = Login(driver_manager)
+        self.worker.setAutoDelete(False)
         
         self.setup_connections()
 
     def setup_connections(self):
-        self.ui.btn_reload_loginMethod.clicked.connect(self.load_data)
+        self.worker.signals.loading.connect(self.ui.status.setLoading)
+        self.worker.signals.error.connect(self.ui.status.setError)
+        self.worker.signals.cookie_output.connect(lambda cookie: self.ui.cookieInput.setPlainText(cookie))
+        self.worker.signals.finished.connect(self.on_login_success)
         
-        # Login Page
+        self.ui.btn_reload_loginMethod.clicked.connect(self.load_data)
+        self.ui.btn_login.clicked.connect(self.run_login)
+
         self.ui.methodComboBox.activated.connect(self.toggle_login_method)
         self.ui.loginDetail.stateChanged.connect(self.toggle_login_detail)
         self.ui.twoFACheckBox.stateChanged.connect(self.toggle_use_2fa)
+    
+    def on_login_success(self):
+        profile_name = self.driver_manager.get_username()
+        self.ui.status.setSuccess("Đăng nhập thành công, profile: " + profile_name)
+        self.updateProfileName(profile_name)
+        cookie = self.driver_manager.get_cookies()
+        self.ui.cookieInput.setPlainText(cookie)
+    
+    def updateProfileName(self, name):
+        if (name):
+            self.ui.profileName.setText(name)
+            self.ui.profileName.setIconSize(QSize(40, 40))
+            self.ui.profileName.setStyleSheet(None)
+        else:
+            self.ui.profileName.setText("LOGIN")
+            self.ui.profileName.setIconSize(QSize(0, 0))
+            self.ui.profileName.setStyleSheet(BUTTON_STYLE)
+    
+    def run_login(self):
+        try:
+            self.save_data()
+        except SyntaxError as e:
+            self.ui.status.setError(str(e))
+            return
+        cookie = self.data_manager.data["LOGIN"]["cookie"]
+        username = self.data_manager.data["LOGIN"]["username"]
+        password = self.data_manager.data["LOGIN"]["password"]
+        twofa = self.data_manager.data["LOGIN"]["2fa"]
+        if not (cookie or (username and password)):
+            self.ui.status.setError("Thiếu thông tin đăng nhập")
+            return
+
+        self.before_run()
+        self.ui.status.setLoading("Đang đăng nhập...")
+        self.worker.setup(cookie, username, password, twofa)
+        QThreadPool.globalInstance().start(self.worker)
     
     def toggle_login_method(self):
         match self.ui.methodComboBox.currentText():
@@ -89,16 +136,18 @@ class LoginUI:
     def save_data(self):
         username, password, twoFA = "", "", ""
         if self.ui.loginDetail.isChecked():
+            username = self.ui.userInput.text()
+            password = self.ui.passInput.text()
+            twoFA = self.ui.twoFAInput.text()
+        else:
             info = self.ui.fullLoginInput.text().split("|")
             if len(info) >= 2:
                 username = info[0]
                 password = info[1]
             if len(info) == 3:
                 twoFA = info[2].replace(" ", "")
-        else:
-            username = self.ui.userInput.text()
-            password = self.ui.passInput.text()
-            twoFA = self.ui.twoFAInput.text()
+            if len(info) < 2:
+                raise SyntaxError("Sai định dạng dữ liệu login")
         cookie = self.ui.cookieInput.toPlainText()
         self.data_manager.data["LOGIN"]["username"] = username
         self.data_manager.data["LOGIN"]["password"] = password

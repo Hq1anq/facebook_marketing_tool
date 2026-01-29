@@ -5,16 +5,17 @@ import pyotp, time
 
 from src.manager import DriverManager, DataManager
 
+class Signals(QObject):
+    loading = Signal(str)
+    error = Signal(str)
+    cookie_output = Signal(str)
+    finished = Signal()
 class Login(QRunnable):
-    class Signals(QObject):
-        log = Signal(str)
-        cookie_output = Signal(str)
-        finished = Signal()
         
     def __init__(self, driver_manager: DriverManager):
         super().__init__()
         self.driver_manager = driver_manager
-        self.signals = self.Signals()
+        self.signals = Signals()
     
     def setup(self, cookie: str, username: str, password: str, twofa: str):
         self.cookie = cookie
@@ -24,31 +25,36 @@ class Login(QRunnable):
         
     @Slot()
     def run(self):
-        self.driver = self.driver_manager.driver
-        
+        if not self.driver_manager.setup_driver():
+            self.signals.error.emit("Xung đột! Vui lòng đóng tất cả các trình duyệt Chrome")
+            return
+        self.driver_manager.jump_to_facebook()
         if self.driver_manager.is_login:
             self.signals.finished.emit()
             return
             
+        self.driver = self.driver_manager.driver
         self.driver.set_window_size(800, 700)
         self.driver.set_window_position(0, 0)
         login_status = self.login()
         if login_status == "Đăng nhập thành công":
             self.signals.finished.emit()
         else:
-            self.signals.log.emit(login_status)
+            self.signals.error.emit(login_status)
     
     def login(self) -> str:
         if self.cookie != "":
+            self.cookie = self.driver_manager.format_cookie(self.cookie)
             self.driver_manager.add_cookie(self.cookie)
             self.driver.refresh()
             self.driver_manager.wait_for_url_contains("") # full loaded
             if not self.driver_manager.check_login():
-                self.signals.log.emit("Sai cookie đăng nhập, đang thử cách khác...")
+                self.signals.loading.emit("Sai cookie đăng nhập, đang thử cách khác...")
             else:
                 return "Đăng nhập thành công"
         if not (self.username and self.password):
             return "Thiếu thông tin đăng nhập"
+        
         email_field = self.driver_manager.wait_for_element(by=By.NAME, value="email")
         self.driver_manager.human_type(email_field, self.username, delay=0.1)
         
@@ -106,9 +112,3 @@ class Login(QRunnable):
                 return "Đăng nhập thành công"
             else:
                 return "Đăng nhập thất bại, sai mã 2fa"
-        
-    def add_cookie(self, cookie_string: str):
-        cookies = [cookie.strip() for cookie in cookie_string.split(';')]
-        for cookie in cookies:
-            name, value = cookie.split('=', 1)
-            self.driver.add_cookie({'name': name, 'value': value})

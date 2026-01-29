@@ -108,7 +108,7 @@ class AddWorker(QRunnable):
     def run(self):
         try:
             if not self.driver_manager.setup_driver():
-                self.signals.error.emit("Khởi tạo driver thất bại, thử lại sau")
+                self.signals.error.emit("Xung đột! Vui lòng đóng tất cả các trình duyệt Chrome")
                 return
             
             self.driver_manager.get("http://httpbin.io/ip")

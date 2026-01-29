@@ -45,28 +45,22 @@ class MainWindow(QMainWindow):
         self.post_ui = PostUI(self.ui, self.data_manager)
         self.comment_ui = CommentUI(self.ui, self.data_manager)
         self.spam_ui = SpamUI(self.ui, self.data_manager)
-        self.login_ui = LoginUI(self.ui, self.data_manager)
+        self.login_ui = LoginUI(self.move_window_to_corner, self.ui, self.data_manager, self.driver_manager)
         self.proxy_ui = ProxyUI(self.move_window_to_corner, self.ui, self.data_manager, self.driver_manager)
         self.table_widget = TableWidget(self)
         
         self.post = Post(self.driver_manager)
-        self.login = Login(self.driver_manager)
         self.get_group = GetGroup(self.driver_manager, self.data_manager)
         self.get_post = GetPost(self.driver_manager, self.data_manager)
         self.spam = Spam(self.driver_manager, self.data_manager)
         
         self.post.setAutoDelete(False)
         self.spam.setAutoDelete(False)
-        self.login.setAutoDelete(False)
     
         # Connect signal update ui
         self.post.signals.log.connect(lambda msg: self.table_widget.statusTable.setText(msg))
         self.post.signals.table_status.connect(lambda row, status: self.table_widget.table.setItem(row, 3, self.table_widget.table_item(status, "center")))
         self.post.signals.finished.connect(lambda: self._on_finished_use_table("POST"))
-        
-        self.login.signals.log.connect(lambda msg: self.ui.status.setText(msg))
-        self.login.signals.cookie_output.connect(lambda cookie: self.ui.cookieInput.setPlainText(cookie))
-        self.login.signals.finished.connect(self._on_login_success)
         
         self.get_group.signals.log.connect(lambda msg: self.table_widget.statusTable.setText(msg))
         self.get_group.signals.add_row.connect(lambda link, name: self.table_widget.add_row(link, name))
@@ -114,8 +108,6 @@ class MainWindow(QMainWindow):
         self.ui.btn_comment.clicked.connect(self.open_table)
         self.ui.btn_getGroup.clicked.connect(self.open_table)
         self.ui.btn_getPost.clicked.connect(self.open_table)
-
-        self.ui.btn_login.clicked.connect(self.run_login)
         
         # self.table_widget.resize(self.width() - self.ui.leftMenu.width() // 2, self.height() - self.ui.contentTop.height() - self.ui.bottomBar.height())
         # self.table_widget.move(self.ui.leftMenu.width() // 4, self.ui.contentTop.height() - 10)
@@ -125,42 +117,8 @@ class MainWindow(QMainWindow):
 
         self.show()
     
-    def run_login(self):
+    def move_window_to_corner(self):
         self.move(self.screen().size().width()- self.size().width(), self.screen().size().height() - self.size().height() - 50)
-        
-        self.login_ui.save_data()
-        cookie = self.data_manager.data["LOGIN"]["cookie"]
-        username = self.data_manager.data["LOGIN"]["username"]
-        password = self.data_manager.data["LOGIN"]["password"]
-        twofa = self.data_manager.data["LOGIN"]["2fa"]
-        if not (cookie or (username and password)):
-            self.ui.status.setText("Thiếu thông tin đăng nhập")
-            return
-        
-        if not self.driver_manager.setup_driver():
-            self.ui.status.setText("Xung đột! Vui lòng đóng tất cả các trình duyệt Chrome")
-            return
-        self.driver_manager.jump_to_facebook()
-        if self.driver_manager.is_login:
-            username = self.driver_manager.get_username()
-            self.ui.status.setText("Bạn đã đăng nhập, profile: " + username)
-            self.updateProfileName(username)
-            cookie = self.driver_manager.get_cookies()
-            self.ui.cookieInput.setPlainText(cookie)
-            return
-
-        self.login.setup(cookie, username, password, twofa)
-        QThreadPool.globalInstance().start(self.login)
-    
-    def updateProfileName(self, name):
-        if (name):
-            self.ui.profileName.setText(name)
-            self.ui.profileName.setIconSize(QSize(40, 40))
-            self.ui.profileName.setStyleSheet(None)
-        else:
-            self.ui.profileName.setText("LOGIN")
-            self.ui.profileName.setIconSize(QSize(0, 0))
-            self.ui.profileName.setStyleSheet(BUTTON_STYLE)
         
     def open_login_page(self):
         if not self.table_widget.isVisible():
@@ -171,15 +129,8 @@ class MainWindow(QMainWindow):
         self.open_login_page()
         self.ui.status.setText("Bạn chưa đăng nhập, vui lòng đăng nhập trước khi sử dụng chức năng này")
     
-    def _on_login_success(self):
-        profile_name = self.driver_manager.get_username()
-        self.ui.status.setText("Đăng nhập thành công, profile: " + profile_name)
-        self.updateProfileName(profile_name)
-        cookie = self.driver_manager.get_cookies()
-        self.ui.cookieInput.setPlainText(cookie)
-    
     def run_post(self):
-        self.move(self.screen().size().width()- self.size().width(), self.screen().size().height() - self.size().height() - 50)
+        self.move_window_to_corner()
         if self.table_widget.btn_run.text() != "STOP POST!":
             self.post_ui.save_data()
             post_data = self.data_manager.data["POST"]
@@ -193,7 +144,6 @@ class MainWindow(QMainWindow):
             if not self.driver_manager.is_login:
                 self.handle_unLogin()
                 return
-            self.updateProfileName(self.driver_manager.get_username())
             
             self.table_widget.btn_run.setText("STOP POST!")
             self.post.setup(
@@ -212,7 +162,7 @@ class MainWindow(QMainWindow):
             self.post.set_stop(True)
     
     def run_spam(self):
-        self.move(self.screen().size().width()- self.size().width(), self.screen().size().height() - self.size().height() - 50)
+        self.move_window_to_corner()
         if self.ui.btn_spam.text() != "STOP!":
             self.spam_ui.save_data()
             spam_data = self.data_manager.data["SPAM"]
@@ -226,7 +176,6 @@ class MainWindow(QMainWindow):
             if not self.driver_manager.is_login:
                 self.handle_unLogin()
                 return
-            self.updateProfileName(self.driver_manager.get_username())
             
             self.ui.btn_spam.setText("STOP!")
             self.spam.setup(
@@ -244,7 +193,7 @@ class MainWindow(QMainWindow):
             self.spam.set_stop(True)  # Tell Spam to pause
     
     def run_getGroup(self):
-        self.move(self.screen().size().width() - self.size().width(), self.screen().size().height() - self.size().height() - 50)
+        self.move_window_to_corner()
         filter_keys = [keyword.strip() for keyword in self.table_widget.filterGroupInput.text().split(",") if keyword.strip()]
         
         if not self.driver_manager.setup_driver():
@@ -254,7 +203,6 @@ class MainWindow(QMainWindow):
         if not self.driver_manager.is_login:
             self.handle_unLogin()
             return
-        self.updateProfileName(self.driver_manager.get_username())
         
         self.get_group.setup(self.table_widget.filterGroupCheckBox.isChecked(), filter_keys)
         
@@ -262,7 +210,7 @@ class MainWindow(QMainWindow):
         QThreadPool.globalInstance().start(self.get_group)
     
     def run_getPost(self):
-        self.move(self.screen().size().width() - self.size().width(), self.screen().size().height() - self.size().height() - 50)
+        self.move_window_to_corner()
         
         if not self.driver_manager.setup_driver():
             self.ui.status.setError("Xung đột! Vui lòng đóng tất cả các trình duyệt Chrome")
@@ -271,8 +219,7 @@ class MainWindow(QMainWindow):
         if not self.driver_manager.is_login:
             self.handle_unLogin()
             return
-        self.updateProfileName(self.driver_manager.get_username())
-            
+
     def save_group_table(self):
         """Save current table content to data_manager.data['GET']['GROUP']"""
         group_list = []
@@ -338,7 +285,7 @@ class MainWindow(QMainWindow):
         self.save_in_table()
     
     def run_comment(self):
-        self.move(self.screen().size().width() - self.size().width(), self.screen().size().height() - self.size().height() - 50)
+        self.move_window_to_corner()
     
     def load(self):
         """Load initial settings and data"""
