@@ -4,7 +4,6 @@ from PySide6.QtCore import QObject, Signal, Slot, QRunnable, QThreadPool
 from src.manager import DriverManager
 
 class CheckSignals(QObject):
-    log = Signal(str)
     success = Signal(dict, str) # success(sw_options, protocol)
     error = Signal(str)
 class CheckWorker(QRunnable):
@@ -54,7 +53,6 @@ class CheckWorker(QRunnable):
     def run(self):
         self.reset_state()
         try:
-            self.signals.log.emit("Khởi tạo kiểm tra Proxy...")
             auth = f"{self.username}:{self.password}@" if self.username and self.password else ""
             socks5_url = f"socks5://{auth}{self.ip}:{self.port}"
             http_url = f"http://{auth}{self.ip}:{self.port}"
@@ -68,7 +66,6 @@ class CheckWorker(QRunnable):
             # Sử dụng QThreadPool của PySide6
             pool = QThreadPool.globalInstance()
 
-            self.signals.log.emit(f"Đang kiểm tra...")
             pool.start(checker_socks5)
             pool.start(checker_http)
             
@@ -82,7 +79,6 @@ class CheckWorker(QRunnable):
                 return
             self.success_emitted = True
             
-        self.signals.log.emit(f"Proxy {protocol} khả dụng!")
         self.signals.success.emit(sw_options, protocol)
 
     def _handle_error(self):
@@ -95,7 +91,6 @@ class CheckWorker(QRunnable):
                 self.signals.error.emit("Proxy không hoạt động")
 
 class AddSignal(QObject):
-    log = Signal(str)
     success = Signal()
     error = Signal(str)
 class AddWorker(QRunnable):

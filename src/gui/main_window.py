@@ -46,7 +46,7 @@ class MainWindow(QMainWindow):
         self.comment_ui = CommentUI(self.ui, self.data_manager)
         self.spam_ui = SpamUI(self.ui, self.data_manager)
         self.login_ui = LoginUI(self.ui, self.data_manager)
-        self.proxy_ui = ProxyUI(self.ui, self.data_manager, self.driver_manager)
+        self.proxy_ui = ProxyUI(self.move_window_to_corner, self.ui, self.data_manager, self.driver_manager)
         self.table_widget = TableWidget(self)
         
         self.post = Post(self.driver_manager)
@@ -72,7 +72,7 @@ class MainWindow(QMainWindow):
         self.get_group.signals.add_row.connect(lambda link, name: self.table_widget.add_row(link, name))
         self.get_group.signals.finished.connect(self.table_widget.adjust_column_width)
         
-        self.spam.signals.log.connect(lambda msg: self.ui.status.setText(msg))
+        self.spam.signals.log.connect(self.ui.status.setText)
         self.spam.signals.finished.connect(lambda: self.ui.btn_spam.setText("SPAM!"))
         
         self.load()
@@ -184,10 +184,10 @@ class MainWindow(QMainWindow):
             self.post_ui.save_data()
             post_data = self.data_manager.data["POST"]
             if not (post_data["image"] or post_data["content"]):
-                self.ui.status.setText("POST: Thiếu thông tin để đăng bài")
+                self.ui.status.setError("POST: Thiếu thông tin để đăng bài")
                 return
             if not self.driver_manager.setup_driver():
-                self.table_widget.statusTable.setText("Xung đột! Vui lòng đóng tất cả các trình duyệt Chrome")
+                self.table_widget.statusTable.setError("Xung đột! Vui lòng đóng tất cả các trình duyệt Chrome")
                 return
             self.driver_manager.jump_to_facebook()
             if not self.driver_manager.is_login:
@@ -217,10 +217,10 @@ class MainWindow(QMainWindow):
             self.spam_ui.save_data()
             spam_data = self.data_manager.data["SPAM"]
             if not (spam_data["image"] or spam_data["content"]):
-                self.ui.status.setText("SPAM: Thiếu thông tin để đi spam")
+                self.ui.status.setError("SPAM: Thiếu thông tin để đi spam")
                 return
             if not self.driver_manager.setup_driver():
-                self.ui.status.setText("Xung đột! Vui lòng đóng tất cả các trình duyệt Chrome")
+                self.ui.status.setError("Xung đột! Vui lòng đóng tất cả các trình duyệt Chrome")
                 return
             self.driver_manager.jump_to_facebook()
             if not self.driver_manager.is_login:
@@ -248,7 +248,7 @@ class MainWindow(QMainWindow):
         filter_keys = [keyword.strip() for keyword in self.table_widget.filterGroupInput.text().split(",") if keyword.strip()]
         
         if not self.driver_manager.setup_driver():
-            self.ui.status.setText("Xung đột! Vui lòng đóng tất cả các trình duyệt Chrome")
+            self.ui.status.setError("Xung đột! Vui lòng đóng tất cả các trình duyệt Chrome")
             return
         self.driver_manager.jump_to_facebook()
         if not self.driver_manager.is_login:
@@ -265,7 +265,7 @@ class MainWindow(QMainWindow):
         self.move(self.screen().size().width() - self.size().width(), self.screen().size().height() - self.size().height() - 50)
         
         if not self.driver_manager.setup_driver():
-            self.ui.status.setText("Xung đột! Vui lòng đóng tất cả các trình duyệt Chrome")
+            self.ui.status.setError("Xung đột! Vui lòng đóng tất cả các trình duyệt Chrome")
             return
         self.driver_manager.jump_to_facebook()
         if not self.driver_manager.is_login:
@@ -378,9 +378,9 @@ class MainWindow(QMainWindow):
         
         try:
             self.data_manager.save_data()
-            self.ui.status.setText(f"Đã lưu dữ liệu {current_function}")
+            self.ui.status.setSuccess(f"Đã lưu dữ liệu {current_function}")
         except:
-            self.ui.status.setText("Không thể lưu dữ liệu vào file đang mở, vui lòng đóng file " + self.data_manager.data_path.split("\\")[-1])
+            self.ui.status.setError("Không thể lưu dữ liệu vào file đang mở, vui lòng đóng file " + self.data_manager.data_path.split("\\")[-1])
     
     def save_all(self):
         """Save all data regardless of current page"""
@@ -392,9 +392,9 @@ class MainWindow(QMainWindow):
         
         try:
             self.data_manager.save_data()
-            self.ui.status.setText("Đã lưu toàn bộ dữ liệu tool vào file " + self.data_manager.data_path.split("\\")[-1])
+            self.ui.status.setSuccess("Đã lưu toàn bộ dữ liệu tool vào file " + self.data_manager.data_path.split("\\")[-1])
         except:
-            self.ui.status.setText("Không thể lưu dữ liệu vào file đang mở, vui lòng đóng file " + self.data_manager.data_path.split("\\")[-1])
+            self.ui.status.setError("Không thể lưu dữ liệu vào file đang mở, vui lòng đóng file " + self.data_manager.data_path.split("\\")[-1])
         
     def mousePressEvent(self, event):
         self.window_controller.handle_mouse_press(event)
@@ -483,4 +483,4 @@ class MainWindow(QMainWindow):
         })();
         '''%self.ui.cookieInput.toPlainText()
         pyperclip.copy(consoleCode)
-        self.ui.status.setText("Đã copy code cookies, paste vào console của chromeDevtool để login")
+        self.ui.status.setSuccess("Đã copy code cookies, paste vào console của chromeDevtool để login")

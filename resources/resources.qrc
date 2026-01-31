@@ -1,6 +1,7 @@
 <RCC>
   <qresource prefix="icons">
     <file>icons/search.svg</file>
+    <file>icons/spinner.svg</file>
     <file>icons/play.svg</file>
     <file>icons/pause.svg</file>
     <file>icons/proxyOK.svg</file>

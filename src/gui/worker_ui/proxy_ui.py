@@ -1,4 +1,4 @@
-from PySide6.QtCore import Qt, QSize, QThreadPool, QTimer
+from PySide6.QtCore import Qt, QSize, QThreadPool
 from PySide6.QtGui import QIcon
 
 from src.manager import DataManager, DriverManager
@@ -6,7 +6,8 @@ from src.gui.widget.ui_interface import Ui_MainWindow
 from src.worker.proxy import CheckWorker, AddWorker
 
 class ProxyUI:
-    def __init__(self, ui: Ui_MainWindow, data_manager: DataManager, driver_manager: DriverManager):
+    def __init__(self, before_run, ui: Ui_MainWindow, data_manager: DataManager, driver_manager: DriverManager):
+        self.before_run = before_run
         self.ui = ui
         self.data_manager = data_manager
         self.driver_manager = driver_manager
@@ -16,28 +17,23 @@ class ProxyUI:
         
         # Instantiate worker
         self.check_worker = CheckWorker()
-        self.add_worker = AddWorker(self.driver_manager)
-
-        self.check_worker.signals.success.connect(self.on_check_success)
-        self.check_worker.signals.error.connect(self.on_check_error)
-        self.check_worker.signals.log.connect(self.ui.status.setText)
         self.check_worker.setAutoDelete(False)
-        
-        self.add_worker.signals.success.connect(self.on_add_success)
-        self.add_worker.signals.error.connect(self.on_add_error)
-        self.add_worker.signals.log.connect(self.ui.status.setText)
+        self.add_worker = AddWorker(self.driver_manager)
         self.add_worker.setAutoDelete(False)
+
         self.setup_connections()
 
     def on_check_success(self, sw_options, protocol):
         self.check_res = [self.ip, sw_options]
-        self.ui.status.setSuccess(f"Proxy {protocol} đang hoạt động")
         self.driver_manager.set_proxy(sw_options)
         
         if self._is_adding_proxy_pending:
+            self.before_run()
+            self.ui.status.setLoading(f"Proxy {protocol} hoạt động, đăng gắn vào trình duyệt...")
             self._is_adding_proxy_pending = False
             self._start_add_worker()
         else:
+            self.ui.status.setSuccess(f"Proxy {protocol} hoạt động")
             self.on_finished()
 
     def on_check_error(self, err_msg):
@@ -66,6 +62,11 @@ class ProxyUI:
         self.ui.checkProxyBtn.setEnabled(True)
 
     def setup_connections(self):
+        self.check_worker.signals.success.connect(self.on_check_success)
+        self.check_worker.signals.error.connect(self.on_check_error)
+        self.add_worker.signals.success.connect(self.on_add_success)
+        self.add_worker.signals.error.connect(self.on_add_error)
+
         self.ui.proxyDetailCheckbox.stateChanged.connect(self.changeProxyInputMethod)
         self.ui.checkProxyBtn.clicked.connect(self.check_proxy)
         self.ui.addProxyBtn.clicked.connect(self.add_proxy)
@@ -81,7 +82,7 @@ class ProxyUI:
         username = self.data_manager.data["PROXY"]["username"]
         password = self.data_manager.data["PROXY"]["password"]
 
-        self.ui.status.setText("Đang kiểm tra proxy (Socks5/HTTP)...")
+        self.ui.status.setLoading("Đang kiểm tra proxy (Socks5/HTTP)...")
         self.ui.addProxyBtn.setEnabled(False)
         self.ui.checkProxyBtn.setEnabled(False)
         
@@ -96,6 +97,8 @@ class ProxyUI:
             return
             
         if self.check_res[0] == self.ip and self.check_res[1]:
+            self.before_run()
+            self.ui.status.setLoading("Đăng gắn proxy vào trình duyệt...")
             self.driver_manager.set_proxy(self.check_res[1])
             self._start_add_worker()
         else:
