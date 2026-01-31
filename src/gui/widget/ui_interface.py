@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'interfaceYbsQsR.ui'
+## Form generated from reading UI file 'interfacewnCAwG.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.10.2
 ##
@@ -780,17 +780,6 @@ class Ui_MainWindow(object):
         self.gridLayout_5 = QGridLayout(self.loginPage)
         self.gridLayout_5.setObjectName(u"gridLayout_5")
         self.gridLayout_5.setContentsMargins(-1, -1, 25, -1)
-        self.btn_login = QPushButton(self.loginPage)
-        self.btn_login.setObjectName(u"btn_login")
-        sizePolicy3 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
-        sizePolicy3.setHorizontalStretch(0)
-        sizePolicy3.setVerticalStretch(0)
-        sizePolicy3.setHeightForWidth(self.btn_login.sizePolicy().hasHeightForWidth())
-        self.btn_login.setSizePolicy(sizePolicy3)
-        self.btn_login.setIconSize(QSize(40, 32))
-
-        self.gridLayout_5.addWidget(self.btn_login, 2, 5, 1, 1)
-
         self.btn_reload_loginMethod = QPushButton(self.loginPage)
         self.btn_reload_loginMethod.setObjectName(u"btn_reload_loginMethod")
         self.btn_reload_loginMethod.setMaximumSize(QSize(43, 43))
@@ -799,25 +788,41 @@ class Ui_MainWindow(object):
 
         self.gridLayout_5.addWidget(self.btn_reload_loginMethod, 0, 2, 1, 1)
 
-        self.methodLabel = QLabel(self.loginPage)
-        self.methodLabel.setObjectName(u"methodLabel")
-        sizePolicy1.setHeightForWidth(self.methodLabel.sizePolicy().hasHeightForWidth())
-        self.methodLabel.setSizePolicy(sizePolicy1)
-
-        self.gridLayout_5.addWidget(self.methodLabel, 0, 0, 1, 1)
-
         self.loginMethodStacked = QStackedWidget(self.loginPage)
         self.loginMethodStacked.setObjectName(u"loginMethodStacked")
         self.useUserPass = QWidget()
         self.useUserPass.setObjectName(u"useUserPass")
-        sizePolicy4 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Minimum)
-        sizePolicy4.setHorizontalStretch(0)
-        sizePolicy4.setVerticalStretch(0)
-        sizePolicy4.setHeightForWidth(self.useUserPass.sizePolicy().hasHeightForWidth())
-        self.useUserPass.setSizePolicy(sizePolicy4)
+        sizePolicy3 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Minimum)
+        sizePolicy3.setHorizontalStretch(0)
+        sizePolicy3.setVerticalStretch(0)
+        sizePolicy3.setHeightForWidth(self.useUserPass.sizePolicy().hasHeightForWidth())
+        self.useUserPass.setSizePolicy(sizePolicy3)
         self._5 = QGridLayout(self.useUserPass)
         self._5.setObjectName(u"_5")
         self._5.setContentsMargins(-1, -1, 0, -1)
+        self.frame = QFrame(self.useUserPass)
+        self.frame.setObjectName(u"frame")
+        self.formLayout_3 = QFormLayout(self.frame)
+        self.formLayout_3.setObjectName(u"formLayout_3")
+        self.fullLoginLabel = QLabel(self.frame)
+        self.fullLoginLabel.setObjectName(u"fullLoginLabel")
+
+        self.formLayout_3.setWidget(1, QFormLayout.ItemRole.LabelRole, self.fullLoginLabel)
+
+        self.fullLoginInput = QLineEdit(self.frame)
+        self.fullLoginInput.setObjectName(u"fullLoginInput")
+
+        self.formLayout_3.setWidget(1, QFormLayout.ItemRole.FieldRole, self.fullLoginInput)
+
+        self.loginDetail = QCheckBox(self.frame)
+        self.loginDetail.setObjectName(u"loginDetail")
+        self.loginDetail.setChecked(True)
+
+        self.formLayout_3.setWidget(0, QFormLayout.ItemRole.LabelRole, self.loginDetail)
+
+
+        self._5.addWidget(self.frame, 3, 0, 1, 4)
+
         self.loginDetailFrame = QFrame(self.useUserPass)
         self.loginDetailFrame.setObjectName(u"loginDetailFrame")
         self.loginDetailFrame.setEnabled(True)
@@ -858,30 +863,7 @@ class Ui_MainWindow(object):
         self._21.addWidget(self.passLabel, 1, 0, 1, 1)
 
 
-        self._5.addWidget(self.loginDetailFrame, 3, 0, 1, 4)
-
-        self.frame = QFrame(self.useUserPass)
-        self.frame.setObjectName(u"frame")
-        self.formLayout_3 = QFormLayout(self.frame)
-        self.formLayout_3.setObjectName(u"formLayout_3")
-        self.fullLoginLabel = QLabel(self.frame)
-        self.fullLoginLabel.setObjectName(u"fullLoginLabel")
-
-        self.formLayout_3.setWidget(1, QFormLayout.ItemRole.LabelRole, self.fullLoginLabel)
-
-        self.fullLoginInput = QLineEdit(self.frame)
-        self.fullLoginInput.setObjectName(u"fullLoginInput")
-
-        self.formLayout_3.setWidget(1, QFormLayout.ItemRole.FieldRole, self.fullLoginInput)
-
-        self.loginDetail = QCheckBox(self.frame)
-        self.loginDetail.setObjectName(u"loginDetail")
-        self.loginDetail.setChecked(True)
-
-        self.formLayout_3.setWidget(0, QFormLayout.ItemRole.LabelRole, self.loginDetail)
-
-
-        self._5.addWidget(self.frame, 2, 0, 1, 4)
+        self._5.addWidget(self.loginDetailFrame, 4, 0, 1, 4)
 
         self.loginMethodStacked.addWidget(self.useUserPass)
         self.useCookie = QWidget()
@@ -910,7 +892,11 @@ class Ui_MainWindow(object):
 
         self.loginMethodStacked.addWidget(self.useCookie)
 
-        self.gridLayout_5.addWidget(self.loginMethodStacked, 1, 0, 1, 6)
+        self.gridLayout_5.addWidget(self.loginMethodStacked, 2, 0, 1, 6)
+
+        self.verticalSpacer_2 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.gridLayout_5.addItem(self.verticalSpacer_2, 4, 5, 1, 1)
 
         self.methodComboBox = QComboBox(self.loginPage)
         self.methodComboBox.addItem("")
@@ -921,9 +907,28 @@ class Ui_MainWindow(object):
 
         self.gridLayout_5.addWidget(self.methodComboBox, 0, 1, 1, 1)
 
-        self.verticalSpacer_2 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+        self.btn_login = QPushButton(self.loginPage)
+        self.btn_login.setObjectName(u"btn_login")
+        sizePolicy4 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
+        sizePolicy4.setHorizontalStretch(0)
+        sizePolicy4.setVerticalStretch(0)
+        sizePolicy4.setHeightForWidth(self.btn_login.sizePolicy().hasHeightForWidth())
+        self.btn_login.setSizePolicy(sizePolicy4)
+        self.btn_login.setIconSize(QSize(40, 32))
 
-        self.gridLayout_5.addItem(self.verticalSpacer_2, 3, 5, 1, 1)
+        self.gridLayout_5.addWidget(self.btn_login, 3, 5, 1, 1)
+
+        self.methodLabel = QLabel(self.loginPage)
+        self.methodLabel.setObjectName(u"methodLabel")
+        sizePolicy1.setHeightForWidth(self.methodLabel.sizePolicy().hasHeightForWidth())
+        self.methodLabel.setSizePolicy(sizePolicy1)
+
+        self.gridLayout_5.addWidget(self.methodLabel, 0, 0, 1, 1)
+
+        self.loginStatus = HighlightLabel(self.loginPage)
+        self.loginStatus.setObjectName(u"loginStatus")
+
+        self.gridLayout_5.addWidget(self.loginStatus, 1, 0, 1, 6)
 
         self.pageStacked.addWidget(self.loginPage)
         self.getPage = QWidget()
@@ -1102,14 +1107,12 @@ class Ui_MainWindow(object):
         self.btn_get.setText(QCoreApplication.translate("MainWindow", u"   Get", None))
         self.btn_proxy.setText(QCoreApplication.translate("MainWindow", u"   Proxy", None))
         self.btn_save.setText(QCoreApplication.translate("MainWindow", u"   Save", None))
-        self.statusHome.setText("")
         self.functionComboBox.setItemText(0, QCoreApplication.translate("MainWindow", u"POST", None))
         self.functionComboBox.setItemText(1, QCoreApplication.translate("MainWindow", u"COMMENT", None))
         self.functionComboBox.setItemText(2, QCoreApplication.translate("MainWindow", u"SPAM", None))
 
         self.postDelayLabel.setText(QCoreApplication.translate("MainWindow", u"\u0110\u1ed9 delay (s)", None))
         self.postDelayInput.setPlaceholderText(QCoreApplication.translate("MainWindow", u"gi\u1eefa 2 l\u1ea7n post", None))
-        self.btn_post.setText("")
         self.postContentCheckBox.setText(QCoreApplication.translate("MainWindow", u"Content", None))
         self.postImageCheckBox.setText(QCoreApplication.translate("MainWindow", u"Image", None))
         self.postContentInput.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Nh\u1eadp content (C\u00f3 th\u1ebf nh\u1eadp theo list - ng\u0103n c\u00e1ch nhau b\u1edfi k\u00ed t\u1ef1 \"$\")", None))
@@ -1118,7 +1121,6 @@ class Ui_MainWindow(object):
         self.commentContentCheckBox.setText(QCoreApplication.translate("MainWindow", u"Content", None))
         self.commentImageCheckBox.setText(QCoreApplication.translate("MainWindow", u"Image", None))
         self.commentContentInput.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Nh\u1eadp content (C\u00f3 th\u1ebf nh\u1eadp theo list - ng\u0103n c\u00e1ch nhau b\u1edfi k\u00ed t\u1ef1 \"$\")", None))
-        self.btn_comment.setText("")
         self.spamContentCheckBox.setText(QCoreApplication.translate("MainWindow", u"Content", None))
         self.spamImageCheckBox.setText(QCoreApplication.translate("MainWindow", u"Image", None))
         self.spamContentInput.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Nh\u1eadp content (C\u00f3 th\u1ebf nh\u1eadp theo list - ng\u0103n c\u00e1ch nhau b\u1edfi k\u00ed t\u1ef1 \"$\")", None))
@@ -1134,34 +1136,26 @@ class Ui_MainWindow(object):
         self.proxyCheckBox.setText(QCoreApplication.translate("MainWindow", u"PROXY", None))
         self.proxyInputMethodCheckBox.setText(QCoreApplication.translate("MainWindow", u"IP:PORT:USER:PASS", None))
         self.btn_ok.setText(QCoreApplication.translate("MainWindow", u"OK", None))
-        self.proxyStatus.setText("")
         self.proxyIpLabel.setText(QCoreApplication.translate("MainWindow", u"IP", None))
-        self.proxyIpInput.setText("")
         self.proxyPortLabel.setText(QCoreApplication.translate("MainWindow", u"PORT", None))
         self.proxyUserLabel.setText(QCoreApplication.translate("MainWindow", u"USER", None))
         self.proxyPassLabel.setText(QCoreApplication.translate("MainWindow", u"PASS", None))
-        self.proxyPassInput.setText("")
-        self.proxyInput.setText("")
-        self.btn_login.setText(QCoreApplication.translate("MainWindow", u"LOGIN", None))
-        self.methodLabel.setText(QCoreApplication.translate("MainWindow", u"Login method", None))
-        self.passInput.setText("")
-        self.passInput.setPlaceholderText(QCoreApplication.translate("MainWindow", u"**********", None))
-        self.userLabel.setText(QCoreApplication.translate("MainWindow", u"Username", None))
-        self.twoFACheckBox.setText(QCoreApplication.translate("MainWindow", u"2FA", None))
-        self.twoFAInput.setText("")
-        self.twoFAInput.setPlaceholderText(QCoreApplication.translate("MainWindow", u"ABXDEFGH6572PJUS9I01JKK567GHJOPO", None))
-        self.userInput.setPlaceholderText(QCoreApplication.translate("MainWindow", u"xxxxxxxxxx@gmail.com", None))
-        self.passLabel.setText(QCoreApplication.translate("MainWindow", u"Password", None))
         self.fullLoginLabel.setText(QCoreApplication.translate("MainWindow", u"USER|PASS|2FA", None))
         self.fullLoginInput.setPlaceholderText(QCoreApplication.translate("MainWindow", u"xxxxxxxxxx@gmail.com|**********|ABXDEFGH6572PJUS9I01JKK567GHJOPO", None))
         self.loginDetail.setText(QCoreApplication.translate("MainWindow", u"Detail", None))
+        self.passInput.setPlaceholderText(QCoreApplication.translate("MainWindow", u"**********", None))
+        self.userLabel.setText(QCoreApplication.translate("MainWindow", u"Username", None))
+        self.twoFACheckBox.setText(QCoreApplication.translate("MainWindow", u"2FA", None))
+        self.twoFAInput.setPlaceholderText(QCoreApplication.translate("MainWindow", u"ABXDEFGH6572PJUS9I01JKK567GHJOPO", None))
+        self.userInput.setPlaceholderText(QCoreApplication.translate("MainWindow", u"xxxxxxxxxx@gmail.com", None))
+        self.passLabel.setText(QCoreApplication.translate("MainWindow", u"Password", None))
         self.methodCookieLabel.setText(QCoreApplication.translate("MainWindow", u"Cookie", None))
         self.cookieInput.setPlaceholderText(QCoreApplication.translate("MainWindow", u"c_user=...;fr=...;sb=...;xs=...;datr=...", None))
-        self.btn_copyCookie.setText("")
         self.methodComboBox.setItemText(0, QCoreApplication.translate("MainWindow", u"Username|Password|2fa", None))
         self.methodComboBox.setItemText(1, QCoreApplication.translate("MainWindow", u"Cookie", None))
 
-        self.statusGet.setText("")
+        self.btn_login.setText(QCoreApplication.translate("MainWindow", u"LOGIN", None))
+        self.methodLabel.setText(QCoreApplication.translate("MainWindow", u"Login method", None))
         self.btn_getGroup.setText(QCoreApplication.translate("MainWindow", u"GET GROUP", None))
         self.btn_getPost.setText(QCoreApplication.translate("MainWindow", u"GET POST", None))
         self.credits.setText(QCoreApplication.translate("MainWindow", u"contact: @Giang_vps", None))

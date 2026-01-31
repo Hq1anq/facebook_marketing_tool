@@ -62,8 +62,7 @@ class Login(QRunnable):
         login_btn.click()
 
         self.driver_manager.wait_for_url_contains("") # page full loaded
-        if self.driver_manager.check_captcha():
-            return "Bị quét cần xác thực captcha, vui lòng tự đăng nhập hoặc thử lại sau"
+        time.sleep(5)
         if self.driver_manager.check_login():
             return "Đăng nhập thành công"
         else:
@@ -102,6 +101,7 @@ class Login(QRunnable):
             submit_btn.click()
             
             self.driver_manager.wait_for_url_contains("remember_browser")
+            time.sleep(5)
             if self.driver_manager.jump_to_facebook():
                 return "Đăng nhập thành công"
             else:

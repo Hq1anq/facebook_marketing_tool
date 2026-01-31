@@ -122,9 +122,6 @@ class DriverManager:
     def check_login(self) -> bool:
         self.is_login = self.friend_str in self.driver.page_source
         return self.is_login
-
-    def check_captcha(self) -> bool:
-        return "robot" in self.driver.page_source
     
     def jump_to_facebook(self) -> bool:
         self.driver.get("https://www.facebook.com/login?locale=en_US")

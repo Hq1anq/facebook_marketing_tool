@@ -18,8 +18,7 @@ from src.manager import DriverManager, DataManager
 import pyperclip, os
 
 DATA_FOLDER = "data"
-# CHROME_PATH = DATA_FOLDER + "/ChromeData"
-CHROME_PATH = "D:\\Temp\\ChromeData"
+CHROME_PATH = DATA_FOLDER + "/ChromeData"
 DATA_PATH = DATA_FOLDER + "/Data.json"
 
 class MainWindow(QMainWindow):
@@ -64,7 +63,7 @@ class MainWindow(QMainWindow):
         self.post.signals.table_status.connect(lambda row, status: self.table_widget.table.setItem(row, 3, self.table_widget.table_item(status, "center")))
         self.post.signals.finished.connect(lambda: self._on_finished_use_table("POST"))
         
-        self.login.signals.log.connect(lambda msg: self.ui.statusGet.setText(msg))
+        self.login.signals.log.connect(lambda msg: self.ui.loginStatus.setText(msg))
         self.login.signals.cookie_output.connect(lambda cookie: self.ui.cookieInput.setPlainText(cookie))
         self.login.signals.finished.connect(self._on_login_success)
         
@@ -139,16 +138,16 @@ class MainWindow(QMainWindow):
         password = self.data_manager.data["LOGIN"]["password"]
         twofa = self.data_manager.data["LOGIN"]["2fa"]
         if not (cookie or (username and password)):
-            self.ui.statusGet.setText("Thiếu thông tin đăng nhập")
+            self.ui.loginStatus.setText("Thiếu thông tin đăng nhập")
             return
         
         if not self.driver_manager.setup_driver():
-            self.ui.statusGet.setText("Xung đột! Vui lòng đóng tất cả các trình duyệt Chrome")
+            self.ui.loginStatus.setText("Xung đột! Vui lòng đóng tất cả các trình duyệt Chrome")
             return
         self.driver_manager.jump_to_facebook()
         if self.driver_manager.is_login:
             username = self.driver_manager.get_username()
-            self.ui.statusGet.setText("Bạn đã đăng nhập, profile: " + username)
+            self.ui.loginStatus.setText("Bạn đã đăng nhập, profile: " + username)
             self.updateProfileName(username)
             cookie = self.driver_manager.get_cookies()
             self.ui.cookieInput.setPlainText(cookie)
@@ -174,11 +173,11 @@ class MainWindow(QMainWindow):
     
     def handle_unLogin(self):
         self.open_login_page()
-        self.ui.statusGet.setText("Bạn chưa đăng nhập, vui lòng đăng nhập trước khi sử dụng chức năng này")
+        self.ui.loginStatus.setText("Bạn chưa đăng nhập, vui lòng đăng nhập trước khi sử dụng chức năng này")
     
     def _on_login_success(self):
         profile_name = self.driver_manager.get_username()
-        self.ui.statusGet.setText("Đăng nhập thành công, profile: " + profile_name)
+        self.ui.loginStatus.setText("Đăng nhập thành công, profile: " + profile_name)
         self.updateProfileName(profile_name)
         cookie = self.driver_manager.get_cookies()
         self.ui.cookieInput.setPlainText(cookie)
@@ -379,9 +378,11 @@ class MainWindow(QMainWindow):
             self.data_manager.save_data()
             self.ui.statusHome.setText(f"Đã lưu dữ liệu {current_function}")
             self.ui.statusGet.setText(f"Đã lưu dữ liệu {current_function}")
+            self.ui.loginStatus.setText(f"Đã lưu dữ liệu {current_function}")
         except:
             self.ui.statusHome.setText("Không thể lưu dữ liệu vào file đang mở, vui lòng đóng file " + self.data_manager.data_path.split("\\")[-1])
             self.ui.statusGet.setText("Không thể lưu dữ liệu vào file đang mở, vui lòng đóng file " + self.data_manager.data_path.split("\\")[-1])
+            self.ui.loginStatus.setText("Không thể lưu dữ liệu vào file đang mở, vui lòng đóng file " + self.data_manager.data_path.split("\\")[-1])
     
     def save_all(self):
         """Save all data regardless of current page"""
@@ -484,7 +485,7 @@ class MainWindow(QMainWindow):
         })();
         '''%self.ui.cookieInput.toPlainText()
         pyperclip.copy(consoleCode)
-        self.ui.statusGet.setText("Đã copy code cookies, paste vào console của chromeDevtool để login")
+        self.ui.loginStatus.setText("Đã copy code cookies, paste vào console của chromeDevtool để login")
 
     # PROXY
     def changeStatusProxy(self):
