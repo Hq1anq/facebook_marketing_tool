@@ -1360,7 +1360,7 @@ QComboBox { background-color: rgb(33, 37, 43) }
                   <item row="1" column="0" colspan="6">
                    <widget class="QStackedWidget" name="loginMethodStacked">
                     <property name="currentIndex">
-                     <number>1</number>
+                     <number>0</number>
                     </property>
                     <widget class="QWidget" name="useUserPass">
                      <layout class="QGridLayout" name="_5">

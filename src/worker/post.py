@@ -30,12 +30,12 @@ class Post(QRunnable):
     def run(self):
         self.driver = self.driver_manager.driver
         if not self.table_data:
-            self.signals.log.emit("Chọn ít nhất một group để đăng bài")
+            self.signals.log.emit("POST: Chọn ít nhất một group để đăng bài")
             self.signals.finished.emit()
             self.set_stop(True)
             return
         if not (self.use_content or self.use_image):
-            self.signals.log.emit("Cần tối thiểu một content/image để đăng bài")
+            self.signals.log.emit("POST: Cần tối thiểu một content/image để đăng bài")
             self.signals.finished.emit()
             self.set_stop(True)
             return

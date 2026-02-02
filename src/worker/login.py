@@ -49,14 +49,14 @@ class Login(QRunnable):
                 return "Đăng nhập thành công"
         if not (self.username and self.password):
             return "Thiếu thông tin đăng nhập"
-        email_field = self.driver_manager.wait_for_element(by=By.ID, value="email")
+        email_field = self.driver_manager.wait_for_element(by=By.NAME, value="email")
         self.driver_manager.human_type(email_field, self.username, delay=0.1)
         
-        pass_field = self.driver_manager.wait_for_element(by=By.ID, value="pass")
+        pass_field = self.driver_manager.wait_for_element(by=By.NAME, value="pass")
         self.driver_manager.human_type(pass_field, self.password, delay=0.14)
         
         time.sleep(0.8)  # Đợi một chút trước khi nhấn nút đăng nhập
-        self.driver_manager.wait_for_element(by=By.ID, value="loginbutton").click()
+        self.driver_manager.wait_for_element(by=By.XPATH, value="//div[@aria-label='Log in']").click()
         if self.driver_manager.check_login():
             return "Đăng nhập thành công"
         else:

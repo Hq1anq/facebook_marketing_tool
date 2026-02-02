@@ -4,6 +4,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
 import time
 
 class DriverManager:
@@ -27,6 +29,7 @@ class DriverManager:
             self.driver.title
             return True
         except:
+            service = Service(executable_path=ChromeDriverManager().install())
             options = Options()
             options.add_experimental_option("detach", True) # Giữ cửa sổ mở
             options.add_experimental_option("excludeSwitches", ['enable-automation'])
@@ -34,7 +37,7 @@ class DriverManager:
             options.add_argument("--disable-notifications")
             options.add_argument("--window-size=1130,500")
             try:
-                self.driver = webdriver.Chrome(options=options)
+                self.driver = webdriver.Chrome(service=service, options=options)
                 self.actions = ActionChains(self.driver)
                 self.wait20 = WebDriverWait(self.driver, 20)
                 self.wait15 = WebDriverWait(self.driver, 15)
@@ -112,7 +115,7 @@ class DriverManager:
         return self.is_login
     
     def jump_to_facebook(self) -> bool:
-        self.driver.get("https://www.facebook.com/login")
+        self.driver.get("https://www.facebook.com/login?locale=en_US")
         self.adjust_language()
         self.check_login()
         return self.is_login

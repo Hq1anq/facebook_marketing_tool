@@ -3,3 +3,7 @@ data1
 test.py
 tool_functions.py
 seleniumDebugger.py
+
+__pycache__
+.venv
+.agent
