@@ -56,13 +56,21 @@ class Login(QRunnable):
         self.driver_manager.human_type(pass_field, self.password, delay=0.14)
         
         time.sleep(0.8)  # Đợi một chút trước khi nhấn nút đăng nhập
-        self.driver_manager.wait_for_element(by=By.XPATH, value="//div[@aria-label='Log in']").click()
+        login_btn = self.driver_manager.wait_for_element(by=By.XPATH, value="//div[@aria-label='Log In']")
+        if login_btn is None:
+            return "Không tìm thấy nút đăng nhập"
+        login_btn.click()
+
+        self.driver_manager.wait_for_url_contains("") # page full loaded
+        if self.driver_manager.check_captcha():
+            return "Bị quét cần xác thực captcha, vui lòng tự đăng nhập hoặc thử lại sau"
         if self.driver_manager.check_login():
             return "Đăng nhập thành công"
         else:
             try:
                 # Chọn xác thực cách khác
-                try_another_btn = self.driver_manager.wait_for_clickable_element(By.CSS_SELECTOR, ".xjbqb8w")
+                self.driver_manager.wait_for_url_contains("two_step_verification")
+                try_another_btn = self.driver_manager.wait_for_clickable_element(By.XPATH, "//div[@role='button']")
                 if try_another_btn is None:
                     raise Exception("Không tìm thấy nút 'Thử cách khác'")
                 self.driver_manager.click_element(try_another_btn)
@@ -84,12 +92,16 @@ class Login(QRunnable):
             # Nhập code 2fa
             totp = pyotp.TOTP(self.twoFA.replace(" ", "").upper())
             code = totp.now()
-            self.driver_manager.wait_for_element(By.CSS_SELECTOR, ".xtpw4lu").send_keys(code)
-            self.driver_manager.wait_for_clickable_element(By.XPATH, "//div[@class='xod5an3 xg87l8a']//div[@role='button']").click()
+            code_input = self.driver_manager.wait_for_element(By.CSS_SELECTOR, ".xtpw4lu")
+            if code_input is None:
+                return "Không tìm thấy ô nhập mã 2FA"
+            code_input.send_keys(code)
+            submit_btn = self.driver_manager.wait_for_clickable_element(By.XPATH, "//div[@class='xod5an3 xg87l8a']//div[@role='button']")
+            if submit_btn is None:
+                return "Không tìm thấy nút xác nhận 2FA"
+            submit_btn.click()
             
-            #Chờ xác nhận (hiện dialog lưu thông tin đăng nhập)
-            self.driver_manager.wait_for_element(By.XPATH, "div[@role='dialog']")
-            
+            self.driver_manager.wait_for_url_contains("remember_browser")
             if self.driver_manager.jump_to_facebook():
                 return "Đăng nhập thành công"
             else:

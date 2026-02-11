@@ -124,7 +124,7 @@ class DriverManager:
         return self.is_login
 
     def check_captcha(self) -> bool:
-        return "captcha" in self.driver.page_source
+        return "robot" in self.driver.page_source
     
     def jump_to_facebook(self) -> bool:
         self.driver.get("https://www.facebook.com/login?locale=en_US")
@@ -216,7 +216,8 @@ class DriverManager:
     def wait_for_url_contains(self, keyword: str, timeout=20) -> bool:
         try:
             wait = WebDriverWait(self.driver, timeout)
-            wait.until(EC.url_contains(keyword))
+            if (keyword):
+                wait.until(EC.url_contains(keyword))
             # Now wait for the page to fully load
             wait.until(lambda d: d.execute_script("return document.readyState") == "complete")
             return True
