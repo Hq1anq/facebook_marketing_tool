@@ -1,5 +1,5 @@
-from PySide6.QtWidgets import QMainWindow, QPushButton, QLabel
-from PySide6.QtCore import Qt, QPropertyAnimation, QEasingCurve, QRect, QThreadPool
+from PySide6.QtWidgets import QMainWindow, QPushButton
+from PySide6.QtCore import Qt, QSize, QPropertyAnimation, QEasingCurve, QRect, QThreadPool
 from PySide6.QtGui import QShortcut, QKeySequence
 
 from src.gui.styles import MENU_SELECTED_STYLE, MENU_NONE_SECLECTED_STYLE
@@ -10,7 +10,7 @@ import src.settings as settings
 
 from .widget.ui_interface import Ui_MainWindow
 from .window_control import WindowController
-from src.gui.worker_ui import GetUI, PostUI, CommentUI, SpamUI
+from src.gui.worker_ui import GetUI, LoginUI, PostUI, CommentUI, SpamUI
 from src.worker import Post, Login, Spam, GetGroup, GetPost
 
 from src.manager import DriverManager, DataManager
@@ -18,7 +18,8 @@ from src.manager import DriverManager, DataManager
 import pyperclip, os
 
 DATA_FOLDER = "data"
-CHROME_PATH = DATA_FOLDER + "/ChromeData"
+# CHROME_PATH = DATA_FOLDER + "/ChromeData"
+CHROME_PATH = "D:\\Temp\\ChromeData"
 DATA_PATH = DATA_FOLDER + "/Data.json"
 
 class MainWindow(QMainWindow):
@@ -45,7 +46,7 @@ class MainWindow(QMainWindow):
         self.post_ui = PostUI(self.ui, self.data_manager)
         self.comment_ui = CommentUI(self.ui, self.data_manager)
         self.spam_ui = SpamUI(self.ui, self.data_manager)
-        self.get_ui = GetUI(self.ui, self.data_manager)
+        self.login_ui = LoginUI(self.ui, self.data_manager)
         self.table_widget = TableWidget(self)
         
         self.post = Post(self.driver_manager)
@@ -104,7 +105,6 @@ class MainWindow(QMainWindow):
         self.ui.btn_spam.clicked.connect(self.run_spam)
 
         # GET
-        # self.ui.btn_getReload.clicked.connect(lambda: toolFunction.LoadGet(self.ui))
         # self.ui.loginDetailCheckBox.stateChanged.connect(self.changeLoginUserPassMethod)
         # self.ui.twoFACheckBox.clicked.connect(self.changeUseOf2FA)
         # self.ui.methodComboBox.activated.connect(self.chooseLoginMethod)
@@ -133,11 +133,11 @@ class MainWindow(QMainWindow):
     def run_login(self):
         self.move(self.screen().size().width()- self.size().width(), self.screen().size().height() - self.size().height() - 50)
         
-        self.get_ui.save_data()
-        cookie = self.data_manager.data["GET"]["LOGIN"]["cookie"]
-        username = self.data_manager.data["GET"]["LOGIN"]["username"]
-        password = self.data_manager.data["GET"]["LOGIN"]["password"]
-        twofa = self.data_manager.data["GET"]["LOGIN"]["2fa"]
+        self.login_ui.save_data()
+        cookie = self.data_manager.data["LOGIN"]["cookie"]
+        username = self.data_manager.data["LOGIN"]["username"]
+        password = self.data_manager.data["LOGIN"]["password"]
+        twofa = self.data_manager.data["LOGIN"]["2fa"]
         if not (cookie or (username and password)):
             self.ui.statusGet.setText("Thiếu thông tin đăng nhập")
             return
@@ -149,21 +149,28 @@ class MainWindow(QMainWindow):
         if self.driver_manager.is_login:
             username = self.driver_manager.get_username()
             self.ui.statusGet.setText("Bạn đã đăng nhập, profile: " + username)
-            self.ui.profileName.setText(username)
+            self.updateProfileName(username)
             cookie = self.driver_manager.get_cookies()
             self.ui.cookieInput.setPlainText(cookie)
             return
 
         self.login.setup(cookie, username, password, twofa)
         QThreadPool.globalInstance().start(self.login)
+    
+    def updateProfileName(self, name):
+        if (name):
+            self.ui.profileName.setText(name)
+            self.ui.profileName.setIconSize(QSize(40, 40))
+            self.ui.profileName.setStyleSheet(None)
+        else:
+            self.ui.profileName.setText("LOGIN")
+            self.ui.profileName.setIconSize(QSize(0, 0))
+            self.ui.profileName.setStyleSheet(BUTTON_STYLE)
         
     def open_login_page(self):
         if not self.table_widget.isVisible():
             self.table_widget.hide()
-        if self.ui.pageStacked.currentWidget() != self.ui.getPage:
-            self.ui.btn_get.click()
-        self.ui.getComboBox.setCurrentIndex(1)
-        self.ui.getStacked.setCurrentWidget(self.ui.loginPage)
+        self.ui.pageStacked.setCurrentWidget(self.ui.loginPage)
     
     def handle_unLogin(self):
         self.open_login_page()
@@ -172,7 +179,7 @@ class MainWindow(QMainWindow):
     def _on_login_success(self):
         profile_name = self.driver_manager.get_username()
         self.ui.statusGet.setText("Đăng nhập thành công, profile: " + profile_name)
-        self.ui.profileName.setText(profile_name)
+        self.updateProfileName(profile_name)
         cookie = self.driver_manager.get_cookies()
         self.ui.cookieInput.setPlainText(cookie)
     
@@ -191,7 +198,7 @@ class MainWindow(QMainWindow):
             if not self.driver_manager.is_login:
                 self.handle_unLogin()
                 return
-            self.ui.profileName.setText(self.driver_manager.get_username())
+            self.updateProfileName(self.driver_manager.get_username())
             
             self.table_widget.btn_run.setText("STOP POST!")
             self.post.setup(
@@ -224,7 +231,7 @@ class MainWindow(QMainWindow):
             if not self.driver_manager.is_login:
                 self.handle_unLogin()
                 return
-            self.ui.profileName.setText(self.driver_manager.get_username())
+            self.updateProfileName(self.driver_manager.get_username())
             
             self.ui.btn_spam.setText("STOP!")
             self.spam.setup(
@@ -252,11 +259,9 @@ class MainWindow(QMainWindow):
         if not self.driver_manager.is_login:
             self.handle_unLogin()
             return
-        self.ui.profileName.setText(self.driver_manager.get_username())
+        self.updateProfileName(self.driver_manager.get_username())
         
         self.get_group.setup(self.table_widget.filterGroupCheckBox.isChecked(), filter_keys)
-        
-        self.get_ui.save_data()
         
         self.table_widget.table.setRowCount(1) # Clear table
         QThreadPool.globalInstance().start(self.get_group)
@@ -271,7 +276,7 @@ class MainWindow(QMainWindow):
         if not self.driver_manager.is_login:
             self.handle_unLogin()
             return
-        self.ui.profileName.setText(self.driver_manager.get_username())
+        self.updateProfileName(self.driver_manager.get_username())
             
     def save_group_table(self):
         """Save current table content to data_manager.data['GET']['GROUP']"""
@@ -345,7 +350,7 @@ class MainWindow(QMainWindow):
         self.post_ui.load_data()
         self.comment_ui.load_data()
         self.spam_ui.load_data()
-        self.get_ui.load_data()
+        self.login_ui.load_data()
         
         # Load images if available
         self.post_ui.load_image(use_dialog=False)
@@ -368,7 +373,7 @@ class MainWindow(QMainWindow):
         elif current_page == self.ui.getPage:
             # Save GET data
             current_function = "LOGIN" if self.ui.getStacked.currentWidget() == self.ui.loginPage else "GET DATA"
-            self.get_ui.save_data()
+            self.login_ui.save_data()
         
         try:
             self.data_manager.save_data()
@@ -383,7 +388,7 @@ class MainWindow(QMainWindow):
         self.post_ui.save_data()
         self.comment_ui.save_data()
         self.spam_ui.save_data()
-        self.get_ui.save_data()
+        self.login_ui.save_data()
         
         try:
             self.data_manager.save_data()
@@ -414,9 +419,9 @@ class MainWindow(QMainWindow):
         self.ui.functionComboBox.setCurrentText("POST")
         self.ui.homeStackedWidget.setCurrentWidget(self.ui.postPage)
         self.ui.getStacked.setCurrentWidget(self.ui.getDataPage)
-        self.ui.methodComboBox.setCurrentText("Cookie")
-        self.ui.loginDetailFrame.hide()
-        self.ui.loginMethodStacked.setCurrentWidget(self.ui.useCookie)
+        self.ui.fullLoginLabel.hide()
+        self.ui.fullLoginInput.hide()
+        self.ui.twoFAInput.hide()
         self.ui.proxyInputDetailFrame.hide()
         
     def center_table(self):

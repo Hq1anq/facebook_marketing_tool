@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'interfacedmunpP.ui'
+## Form generated from reading UI file 'interfaceYbsQsR.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.10.2
 ##
@@ -388,7 +388,7 @@ class Ui_MainWindow(object):
         self.postImageViewer.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.postImageViewerWidget = QWidget()
         self.postImageViewerWidget.setObjectName(u"postImageViewerWidget")
-        self.postImageViewerWidget.setGeometry(QRect(0, 0, 100, 30))
+        self.postImageViewerWidget.setGeometry(QRect(0, 0, 443, 340))
         self.postImageViewer.setWidget(self.postImageViewerWidget)
 
         self.gridLayout.addWidget(self.postImageViewer, 2, 0, 1, 1)
@@ -706,7 +706,7 @@ class Ui_MainWindow(object):
 
         self.gridLayout_4.addWidget(self.btn_ok, 3, 0, 1, 3, Qt.AlignmentFlag.AlignHCenter)
 
-        self.proxyStatus = HighlightLabel(self.proxyFrame)
+        self.proxyStatus = QLabel(self.proxyFrame)
         self.proxyStatus.setObjectName(u"proxyStatus")
         sizePolicy2 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Fixed)
         sizePolicy2.setHorizontalStretch(0)
@@ -775,42 +775,21 @@ class Ui_MainWindow(object):
         self.proxyLayout.addWidget(self.proxyFrame, 1, 0, 1, 1)
 
         self.pageStacked.addWidget(self.proxyPage)
-        self.getPage = QWidget()
-        self.getPage.setObjectName(u"getPage")
-        self.gridLayout_7 = QGridLayout(self.getPage)
-        self.gridLayout_7.setObjectName(u"gridLayout_7")
-        self.gridLayout_7.setHorizontalSpacing(15)
-        self.gridLayout_7.setVerticalSpacing(0)
-        self.getComboBox = QComboBox(self.getPage)
-        self.getComboBox.addItem("")
-        self.getComboBox.addItem("")
-        self.getComboBox.setObjectName(u"getComboBox")
-        sizePolicy.setHeightForWidth(self.getComboBox.sizePolicy().hasHeightForWidth())
-        self.getComboBox.setSizePolicy(sizePolicy)
-        self.getComboBox.setMinimumSize(QSize(210, 0))
-
-        self.gridLayout_7.addWidget(self.getComboBox, 1, 0, 1, 1)
-
-        self.statusGet = HighlightLabel(self.getPage)
-        self.statusGet.setObjectName(u"statusGet")
-
-        self.gridLayout_7.addWidget(self.statusGet, 4, 0, 1, 3)
-
-        self.getStacked = QStackedWidget(self.getPage)
-        self.getStacked.setObjectName(u"getStacked")
         self.loginPage = QWidget()
         self.loginPage.setObjectName(u"loginPage")
         self.gridLayout_5 = QGridLayout(self.loginPage)
         self.gridLayout_5.setObjectName(u"gridLayout_5")
         self.gridLayout_5.setContentsMargins(-1, -1, 25, -1)
-        self.methodComboBox = QComboBox(self.loginPage)
-        self.methodComboBox.addItem("")
-        self.methodComboBox.addItem("")
-        self.methodComboBox.setObjectName(u"methodComboBox")
-        sizePolicy.setHeightForWidth(self.methodComboBox.sizePolicy().hasHeightForWidth())
-        self.methodComboBox.setSizePolicy(sizePolicy)
+        self.btn_login = QPushButton(self.loginPage)
+        self.btn_login.setObjectName(u"btn_login")
+        sizePolicy3 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
+        sizePolicy3.setHorizontalStretch(0)
+        sizePolicy3.setVerticalStretch(0)
+        sizePolicy3.setHeightForWidth(self.btn_login.sizePolicy().hasHeightForWidth())
+        self.btn_login.setSizePolicy(sizePolicy3)
+        self.btn_login.setIconSize(QSize(40, 32))
 
-        self.gridLayout_5.addWidget(self.methodComboBox, 0, 1, 1, 1)
+        self.gridLayout_5.addWidget(self.btn_login, 2, 5, 1, 1)
 
         self.btn_reload_loginMethod = QPushButton(self.loginPage)
         self.btn_reload_loginMethod.setObjectName(u"btn_reload_loginMethod")
@@ -831,25 +810,43 @@ class Ui_MainWindow(object):
         self.loginMethodStacked.setObjectName(u"loginMethodStacked")
         self.useUserPass = QWidget()
         self.useUserPass.setObjectName(u"useUserPass")
+        sizePolicy4 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Minimum)
+        sizePolicy4.setHorizontalStretch(0)
+        sizePolicy4.setVerticalStretch(0)
+        sizePolicy4.setHeightForWidth(self.useUserPass.sizePolicy().hasHeightForWidth())
+        self.useUserPass.setSizePolicy(sizePolicy4)
         self._5 = QGridLayout(self.useUserPass)
         self._5.setObjectName(u"_5")
         self._5.setContentsMargins(-1, -1, 0, -1)
-        self.fullLoginInput = QLineEdit(self.useUserPass)
-        self.fullLoginInput.setObjectName(u"fullLoginInput")
-
-        self._5.addWidget(self.fullLoginInput, 1, 2, 1, 1)
-
         self.loginDetailFrame = QFrame(self.useUserPass)
         self.loginDetailFrame.setObjectName(u"loginDetailFrame")
         self.loginDetailFrame.setEnabled(True)
-        sizePolicy3 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
-        sizePolicy3.setHorizontalStretch(0)
-        sizePolicy3.setVerticalStretch(0)
-        sizePolicy3.setHeightForWidth(self.loginDetailFrame.sizePolicy().hasHeightForWidth())
-        self.loginDetailFrame.setSizePolicy(sizePolicy3)
+        self.loginDetailFrame.setMaximumSize(QSize(16777215, 16777215))
         self._21 = QGridLayout(self.loginDetailFrame)
         self._21.setObjectName(u"_21")
         self._21.setContentsMargins(25, 0, 0, -1)
+        self.passInput = QLineEdit(self.loginDetailFrame)
+        self.passInput.setObjectName(u"passInput")
+
+        self._21.addWidget(self.passInput, 1, 2, 1, 1)
+
+        self.userLabel = QLabel(self.loginDetailFrame)
+        self.userLabel.setObjectName(u"userLabel")
+
+        self._21.addWidget(self.userLabel, 0, 0, 1, 2)
+
+        self.twoFACheckBox = QCheckBox(self.loginDetailFrame)
+        self.twoFACheckBox.setObjectName(u"twoFACheckBox")
+        sizePolicy.setHeightForWidth(self.twoFACheckBox.sizePolicy().hasHeightForWidth())
+        self.twoFACheckBox.setSizePolicy(sizePolicy)
+
+        self._21.addWidget(self.twoFACheckBox, 2, 0, 1, 1)
+
+        self.twoFAInput = QLineEdit(self.loginDetailFrame)
+        self.twoFAInput.setObjectName(u"twoFAInput")
+
+        self._21.addWidget(self.twoFAInput, 2, 2, 1, 1)
+
         self.userInput = QLineEdit(self.loginDetailFrame)
         self.userInput.setObjectName(u"userInput")
 
@@ -860,39 +857,31 @@ class Ui_MainWindow(object):
 
         self._21.addWidget(self.passLabel, 1, 0, 1, 1)
 
-        self.passInput = QLineEdit(self.loginDetailFrame)
-        self.passInput.setObjectName(u"passInput")
 
-        self._21.addWidget(self.passInput, 1, 2, 1, 1)
+        self._5.addWidget(self.loginDetailFrame, 3, 0, 1, 4)
 
-        self.twoFAInput = QLineEdit(self.loginDetailFrame)
-        self.twoFAInput.setObjectName(u"twoFAInput")
+        self.frame = QFrame(self.useUserPass)
+        self.frame.setObjectName(u"frame")
+        self.formLayout_3 = QFormLayout(self.frame)
+        self.formLayout_3.setObjectName(u"formLayout_3")
+        self.fullLoginLabel = QLabel(self.frame)
+        self.fullLoginLabel.setObjectName(u"fullLoginLabel")
 
-        self._21.addWidget(self.twoFAInput, 2, 2, 1, 1)
+        self.formLayout_3.setWidget(1, QFormLayout.ItemRole.LabelRole, self.fullLoginLabel)
 
-        self.twoFACheckBox = QCheckBox(self.loginDetailFrame)
-        self.twoFACheckBox.setObjectName(u"twoFACheckBox")
-        sizePolicy.setHeightForWidth(self.twoFACheckBox.sizePolicy().hasHeightForWidth())
-        self.twoFACheckBox.setSizePolicy(sizePolicy)
-        self.twoFACheckBox.setChecked(True)
+        self.fullLoginInput = QLineEdit(self.frame)
+        self.fullLoginInput.setObjectName(u"fullLoginInput")
 
-        self._21.addWidget(self.twoFACheckBox, 2, 0, 1, 1)
+        self.formLayout_3.setWidget(1, QFormLayout.ItemRole.FieldRole, self.fullLoginInput)
 
-        self.userLabel = QLabel(self.loginDetailFrame)
-        self.userLabel.setObjectName(u"userLabel")
+        self.loginDetail = QCheckBox(self.frame)
+        self.loginDetail.setObjectName(u"loginDetail")
+        self.loginDetail.setChecked(True)
 
-        self._21.addWidget(self.userLabel, 0, 0, 1, 2)
+        self.formLayout_3.setWidget(0, QFormLayout.ItemRole.LabelRole, self.loginDetail)
 
 
-        self._5.addWidget(self.loginDetailFrame, 2, 0, 1, 4)
-
-        self.fullLoginCheckBox = QCheckBox(self.useUserPass)
-        self.fullLoginCheckBox.setObjectName(u"fullLoginCheckBox")
-        sizePolicy1.setHeightForWidth(self.fullLoginCheckBox.sizePolicy().hasHeightForWidth())
-        self.fullLoginCheckBox.setSizePolicy(sizePolicy1)
-        self.fullLoginCheckBox.setChecked(True)
-
-        self._5.addWidget(self.fullLoginCheckBox, 1, 0, 1, 1)
+        self._5.addWidget(self.frame, 2, 0, 1, 4)
 
         self.loginMethodStacked.addWidget(self.useUserPass)
         self.useCookie = QWidget()
@@ -923,18 +912,37 @@ class Ui_MainWindow(object):
 
         self.gridLayout_5.addWidget(self.loginMethodStacked, 1, 0, 1, 6)
 
-        self.btn_login = QPushButton(self.loginPage)
-        self.btn_login.setObjectName(u"btn_login")
-        sizePolicy4 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
-        sizePolicy4.setHorizontalStretch(0)
-        sizePolicy4.setVerticalStretch(0)
-        sizePolicy4.setHeightForWidth(self.btn_login.sizePolicy().hasHeightForWidth())
-        self.btn_login.setSizePolicy(sizePolicy4)
-        self.btn_login.setIconSize(QSize(40, 32))
+        self.methodComboBox = QComboBox(self.loginPage)
+        self.methodComboBox.addItem("")
+        self.methodComboBox.addItem("")
+        self.methodComboBox.setObjectName(u"methodComboBox")
+        sizePolicy.setHeightForWidth(self.methodComboBox.sizePolicy().hasHeightForWidth())
+        self.methodComboBox.setSizePolicy(sizePolicy)
 
-        self.gridLayout_5.addWidget(self.btn_login, 2, 5, 1, 1)
+        self.gridLayout_5.addWidget(self.methodComboBox, 0, 1, 1, 1)
 
-        self.getStacked.addWidget(self.loginPage)
+        self.verticalSpacer_2 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.gridLayout_5.addItem(self.verticalSpacer_2, 3, 5, 1, 1)
+
+        self.pageStacked.addWidget(self.loginPage)
+        self.getPage = QWidget()
+        self.getPage.setObjectName(u"getPage")
+        self.gridLayout_7 = QGridLayout(self.getPage)
+        self.gridLayout_7.setObjectName(u"gridLayout_7")
+        self.gridLayout_7.setHorizontalSpacing(15)
+        self.gridLayout_7.setVerticalSpacing(0)
+        self.statusGet = HighlightLabel(self.getPage)
+        self.statusGet.setObjectName(u"statusGet")
+
+        self.gridLayout_7.addWidget(self.statusGet, 3, 0, 1, 2)
+
+        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.gridLayout_7.addItem(self.verticalSpacer, 5, 0, 1, 1)
+
+        self.getStacked = QStackedWidget(self.getPage)
+        self.getStacked.setObjectName(u"getStacked")
         self.getDataPage = QWidget()
         self.getDataPage.setObjectName(u"getDataPage")
         self.gridLayout_9 = QGridLayout(self.getDataPage)
@@ -957,19 +965,7 @@ class Ui_MainWindow(object):
 
         self.getStacked.addWidget(self.getDataPage)
 
-        self.gridLayout_7.addWidget(self.getStacked, 5, 0, 1, 3)
-
-        self.btn_getReload = QPushButton(self.getPage)
-        self.btn_getReload.setObjectName(u"btn_getReload")
-        self.btn_getReload.setMaximumSize(QSize(43, 43))
-        self.btn_getReload.setIcon(icon6)
-        self.btn_getReload.setIconSize(QSize(30, 30))
-
-        self.gridLayout_7.addWidget(self.btn_getReload, 1, 1, 1, 1)
-
-        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
-
-        self.gridLayout_7.addItem(self.verticalSpacer, 6, 0, 1, 1)
+        self.gridLayout_7.addWidget(self.getStacked, 4, 0, 1, 2)
 
         self.pageStacked.addWidget(self.getPage)
 
@@ -1090,10 +1086,10 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.pageStacked.setCurrentIndex(2)
+        self.pageStacked.setCurrentIndex(0)
         self.homeStackedWidget.setCurrentIndex(0)
-        self.getStacked.setCurrentIndex(0)
         self.loginMethodStacked.setCurrentIndex(0)
+        self.getStacked.setCurrentIndex(0)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -1146,32 +1142,29 @@ class Ui_MainWindow(object):
         self.proxyPassLabel.setText(QCoreApplication.translate("MainWindow", u"PASS", None))
         self.proxyPassInput.setText("")
         self.proxyInput.setText("")
-        self.getComboBox.setItemText(0, QCoreApplication.translate("MainWindow", u"GET DATA", None))
-        self.getComboBox.setItemText(1, QCoreApplication.translate("MainWindow", u"LOGIN", None))
-
-        self.statusGet.setText("")
-        self.methodComboBox.setItemText(0, QCoreApplication.translate("MainWindow", u"Cookie", None))
-        self.methodComboBox.setItemText(1, QCoreApplication.translate("MainWindow", u"Username|Password|2fa", None))
-
+        self.btn_login.setText(QCoreApplication.translate("MainWindow", u"LOGIN", None))
         self.methodLabel.setText(QCoreApplication.translate("MainWindow", u"Login method", None))
-        self.fullLoginInput.setPlaceholderText(QCoreApplication.translate("MainWindow", u"xxxxxxxxxx@gmail.com|**********|ABXDEFGH6572PJUS9I01JKK567GHJOPO", None))
-        self.userInput.setPlaceholderText(QCoreApplication.translate("MainWindow", u"xxxxxxxxxx@gmail.com", None))
-        self.passLabel.setText(QCoreApplication.translate("MainWindow", u"Password", None))
         self.passInput.setText("")
         self.passInput.setPlaceholderText(QCoreApplication.translate("MainWindow", u"**********", None))
+        self.userLabel.setText(QCoreApplication.translate("MainWindow", u"Username", None))
+        self.twoFACheckBox.setText(QCoreApplication.translate("MainWindow", u"2FA", None))
         self.twoFAInput.setText("")
         self.twoFAInput.setPlaceholderText(QCoreApplication.translate("MainWindow", u"ABXDEFGH6572PJUS9I01JKK567GHJOPO", None))
-        self.twoFACheckBox.setText(QCoreApplication.translate("MainWindow", u"2FA", None))
-        self.userLabel.setText(QCoreApplication.translate("MainWindow", u"Username", None))
-        self.fullLoginCheckBox.setText(QCoreApplication.translate("MainWindow", u"USER|PASS|2FA", None))
+        self.userInput.setPlaceholderText(QCoreApplication.translate("MainWindow", u"xxxxxxxxxx@gmail.com", None))
+        self.passLabel.setText(QCoreApplication.translate("MainWindow", u"Password", None))
+        self.fullLoginLabel.setText(QCoreApplication.translate("MainWindow", u"USER|PASS|2FA", None))
+        self.fullLoginInput.setPlaceholderText(QCoreApplication.translate("MainWindow", u"xxxxxxxxxx@gmail.com|**********|ABXDEFGH6572PJUS9I01JKK567GHJOPO", None))
+        self.loginDetail.setText(QCoreApplication.translate("MainWindow", u"Detail", None))
         self.methodCookieLabel.setText(QCoreApplication.translate("MainWindow", u"Cookie", None))
         self.cookieInput.setPlaceholderText(QCoreApplication.translate("MainWindow", u"c_user=...;fr=...;sb=...;xs=...;datr=...", None))
         self.btn_copyCookie.setText("")
-        self.btn_login.setText(QCoreApplication.translate("MainWindow", u"LOGIN", None))
+        self.methodComboBox.setItemText(0, QCoreApplication.translate("MainWindow", u"Username|Password|2fa", None))
+        self.methodComboBox.setItemText(1, QCoreApplication.translate("MainWindow", u"Cookie", None))
+
+        self.statusGet.setText("")
         self.btn_getGroup.setText(QCoreApplication.translate("MainWindow", u"GET GROUP", None))
         self.btn_getPost.setText(QCoreApplication.translate("MainWindow", u"GET POST", None))
         self.credits.setText(QCoreApplication.translate("MainWindow", u"contact: @Giang_vps", None))
         self.title.setText(QCoreApplication.translate("MainWindow", u"Tool Facebook", None))
-        self.profileName.setText("")
     # retranslateUi
 

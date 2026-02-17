@@ -13,20 +13,18 @@ MENU_NONE_SECLECTED_STYLE = """
 
 BUTTON_STYLE = """
     QPushButton {
-        background-color: #4CAF50; /* Green */
-        border: none;
+        background-color: rgb(52, 59, 72);
+        border: 3px solid rgb(52, 59, 72);
         color: white;
-        padding: 15px 32px;
+        padding: 3px 15px;
         text-align: center;
         text-decoration: none;
-        display: inline-block;
         font-size: 16px;
         margin: 4px 2px;
-        cursor: pointer;
-        border-radius: 5px;
+        border-radius: 15px;
     }
     QPushButton:hover {
-        background-color: #45a049;
+        background-color: rgb(57, 65, 80);
     }
 """
 
