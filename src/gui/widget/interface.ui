@@ -358,9 +358,6 @@ QScrollBar::add-line:vertical:pressed, QScrollBar::sub-line:vertical:pressed {
                  <height>32</height>
                 </size>
                </property>
-               <property name="checkable">
-                <bool>true</bool>
-               </property>
               </widget>
              </item>
              <item>
@@ -757,8 +754,8 @@ QComboBox { background-color: rgb(33, 37, 43) }</string>
                          <rect>
                           <x>0</x>
                           <y>0</y>
-                          <width>21</width>
-                          <height>16</height>
+                          <width>100</width>
+                          <height>30</height>
                          </rect>
                         </property>
                        </widget>
@@ -908,8 +905,8 @@ QComboBox { background-color: rgb(33, 37, 43) }</string>
                          <rect>
                           <x>0</x>
                           <y>0</y>
-                          <width>22</width>
-                          <height>16</height>
+                          <width>100</width>
+                          <height>30</height>
                          </rect>
                         </property>
                        </widget>

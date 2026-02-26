@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'interfacevkPLlt.ui'
+## Form generated from reading UI file 'interfacewHuZFy.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.10.2
 ##
@@ -244,7 +244,6 @@ class Ui_MainWindow(object):
         icon4.addFile(u":/icons/icons/proxy.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.btn_proxy.setIcon(icon4)
         self.btn_proxy.setIconSize(QSize(32, 32))
-        self.btn_proxy.setCheckable(True)
 
         self._8.addWidget(self.btn_proxy)
 
@@ -478,7 +477,7 @@ class Ui_MainWindow(object):
         self.commentImageViewer.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.commentImageViewerWidget = QWidget()
         self.commentImageViewerWidget.setObjectName(u"commentImageViewerWidget")
-        self.commentImageViewerWidget.setGeometry(QRect(0, 0, 21, 16))
+        self.commentImageViewerWidget.setGeometry(QRect(0, 0, 100, 30))
         self.commentImageViewer.setWidget(self.commentImageViewerWidget)
 
         self.gridLayout_10.addWidget(self.commentImageViewer, 2, 0, 1, 1)
@@ -562,7 +561,7 @@ class Ui_MainWindow(object):
         self.spamImageViewer.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.spamImageViewerWidget = QWidget()
         self.spamImageViewerWidget.setObjectName(u"spamImageViewerWidget")
-        self.spamImageViewerWidget.setGeometry(QRect(0, 0, 22, 16))
+        self.spamImageViewerWidget.setGeometry(QRect(0, 0, 100, 30))
         self.spamImageViewer.setWidget(self.spamImageViewerWidget)
 
         self.gridLayout_11.addWidget(self.spamImageViewer, 2, 0, 1, 1)
