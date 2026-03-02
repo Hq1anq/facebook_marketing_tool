@@ -9,22 +9,27 @@ class HighlightLabel(QLabel):
         self.highlight_style = "color: yellow"
         self.success_style = "color: rgb(40, 167, 69)"
         self.error_style = "color: red"
+        self._timer = QTimer(self)
+        self._timer.setSingleShot(True)
+        self._timer.timeout.connect(self.resetColor)
         
     def setText(self, text: str) -> None:
         super().setText(text)
         if text:  # Only highlight if text is not empty
             self.setStyleSheet(self.highlight_style)
-            QTimer.singleShot(1000, self.resetColor)
+            self._timer.start(1000)
     
     def setSuccess(self, text: str) -> None:
         super().setText(text)
         if text:
             self.setStyleSheet(self.success_style)
+            self._timer.stop()
     
     def setError(self, text: str) -> None:
         super().setText(text)
         if text:
             self.setStyleSheet(self.error_style)
+            self._timer.stop()
     
     def resetColor(self):
         self.setStyleSheet(self.default_style)
@@ -35,12 +40,15 @@ class HighlightPlainTextEdit(QPlainTextEdit):
         self.default_palette = self.palette()
         self.default_style = self.styleSheet()
         self.highlight_style = "color: yellow;"  # Apply text color
+        self._timer = QTimer(self)
+        self._timer.setSingleShot(True)
+        self._timer.timeout.connect(self.resetColor)
         
     def setPlainText(self, text: str) -> None:
         super().setPlainText(text)
         if text:  # Only highlight if text is not empty
             self.setStyleSheet(self.highlight_style)
-            QTimer.singleShot(1000, self.resetColor)
+            self._timer.start(1000)
     
     def resetColor(self):
-        self.setStyleSheet(self.default_style)
+        self.setStyleSheet(self.default_style)

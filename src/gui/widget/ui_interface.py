@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'interfacewHuZFy.ui'
+## Form generated from reading UI file 'interfaceTuVpkV.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.10.2
 ##
@@ -194,66 +194,66 @@ class Ui_MainWindow(object):
         self._14.setContentsMargins(0, 0, 0, 0)
         self.leftMenu = QFrame(self.App)
         self.leftMenu.setObjectName(u"leftMenu")
-        self.leftMenu.setMinimumSize(QSize(60, 0))
-        self.leftMenu.setMaximumSize(QSize(60, 16777215))
+        self.leftMenu.setMinimumSize(QSize(70, 0))
+        self.leftMenu.setMaximumSize(QSize(70, 16777215))
         self._19 = QVBoxLayout(self.leftMenu)
         self._19.setSpacing(0)
         self._19.setObjectName(u"_19")
         self._19.setContentsMargins(0, 0, 0, 0)
         self.leftMenuBtn = QFrame(self.leftMenu)
         self.leftMenuBtn.setObjectName(u"leftMenuBtn")
-        self.leftMenuBtn.setMinimumSize(QSize(60, 0))
+        self.leftMenuBtn.setMinimumSize(QSize(70, 0))
         self._8 = QVBoxLayout(self.leftMenuBtn)
         self._8.setSpacing(0)
         self._8.setObjectName(u"_8")
         self._8.setContentsMargins(0, 0, 0, 0)
         self.btn_toggle = QPushButton(self.leftMenuBtn)
         self.btn_toggle.setObjectName(u"btn_toggle")
-        self.btn_toggle.setMinimumSize(QSize(60, 45))
+        self.btn_toggle.setMinimumSize(QSize(70, 55))
         icon1 = QIcon()
         icon1.addFile(u":/icons/icons/menu.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.btn_toggle.setIcon(icon1)
-        self.btn_toggle.setIconSize(QSize(32, 32))
+        self.btn_toggle.setIconSize(QSize(40, 40))
 
         self._8.addWidget(self.btn_toggle)
 
         self.btn_home = QPushButton(self.leftMenuBtn)
         self.btn_home.setObjectName(u"btn_home")
-        self.btn_home.setMinimumSize(QSize(60, 45))
+        self.btn_home.setMinimumSize(QSize(70, 55))
         icon2 = QIcon()
         icon2.addFile(u":/icons/icons/home.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.btn_home.setIcon(icon2)
-        self.btn_home.setIconSize(QSize(32, 32))
+        self.btn_home.setIconSize(QSize(40, 40))
 
         self._8.addWidget(self.btn_home)
 
         self.btn_get = QPushButton(self.leftMenuBtn)
         self.btn_get.setObjectName(u"btn_get")
-        self.btn_get.setMinimumSize(QSize(60, 45))
+        self.btn_get.setMinimumSize(QSize(70, 55))
         icon3 = QIcon()
         icon3.addFile(u":/icons/icons/recive.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.btn_get.setIcon(icon3)
-        self.btn_get.setIconSize(QSize(32, 32))
+        self.btn_get.setIconSize(QSize(40, 40))
 
         self._8.addWidget(self.btn_get)
 
         self.btn_proxy = QPushButton(self.leftMenuBtn)
         self.btn_proxy.setObjectName(u"btn_proxy")
-        self.btn_proxy.setMinimumSize(QSize(60, 45))
+        self.btn_proxy.setMinimumSize(QSize(70, 55))
         icon4 = QIcon()
         icon4.addFile(u":/icons/icons/proxy.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.btn_proxy.setIcon(icon4)
-        self.btn_proxy.setIconSize(QSize(32, 32))
+        self.btn_proxy.setIconSize(QSize(40, 40))
 
         self._8.addWidget(self.btn_proxy)
 
         self.btn_save = QPushButton(self.leftMenuBtn)
         self.btn_save.setObjectName(u"btn_save")
-        self.btn_save.setMinimumSize(QSize(60, 45))
+        self.btn_save.setMinimumSize(QSize(70, 55))
         icon5 = QIcon()
         icon5.addFile(u":/icons/icons/save.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.btn_save.setIcon(icon5)
-        self.btn_save.setIconSize(QSize(32, 32))
+        self.btn_save.setIconSize(QSize(40, 40))
 
         self._8.addWidget(self.btn_save)
 
@@ -386,7 +386,7 @@ class Ui_MainWindow(object):
         self.postImageViewer.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.postImageViewerWidget = QWidget()
         self.postImageViewerWidget.setObjectName(u"postImageViewerWidget")
-        self.postImageViewerWidget.setGeometry(QRect(0, 0, 443, 334))
+        self.postImageViewerWidget.setGeometry(QRect(0, 0, 438, 334))
         self.postImageViewer.setWidget(self.postImageViewerWidget)
 
         self.gridLayout.addWidget(self.postImageViewer, 2, 0, 1, 1)
@@ -683,6 +683,7 @@ class Ui_MainWindow(object):
         self.proxyLayout.setContentsMargins(30, -1, 30, -1)
         self.proxyLabel = QLabel(self.proxyPage)
         self.proxyLabel.setObjectName(u"proxyLabel")
+        self.proxyLabel.setStyleSheet(u"qproperty-alignment: 'AlignLeft | AlignVCenter'")
 
         self.proxyLayout.addWidget(self.proxyLabel, 0, 0, 1, 1)
 
@@ -1018,7 +1019,7 @@ class Ui_MainWindow(object):
         self._15.setContentsMargins(0, 0, 8, 0)
         self.icon = QLabel(self.contentTop)
         self.icon.setObjectName(u"icon")
-        self.icon.setMinimumSize(QSize(60, 0))
+        self.icon.setMinimumSize(QSize(70, 0))
         self.icon.setPixmap(QPixmap(u":/icons/icons/Logo.svg"))
         self.icon.setAlignment(Qt.AlignmentFlag.AlignCenter)
 

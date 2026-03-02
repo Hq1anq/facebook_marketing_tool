@@ -218,13 +218,13 @@ QScrollBar::add-line:vertical:pressed, QScrollBar::sub-line:vertical:pressed {
         <widget class="QFrame" name="leftMenu">
          <property name="minimumSize">
           <size>
-           <width>60</width>
+           <width>70</width>
            <height>0</height>
           </size>
          </property>
          <property name="maximumSize">
           <size>
-           <width>60</width>
+           <width>70</width>
            <height>16777215</height>
           </size>
          </property>
@@ -248,7 +248,7 @@ QScrollBar::add-line:vertical:pressed, QScrollBar::sub-line:vertical:pressed {
            <widget class="QFrame" name="leftMenuBtn">
             <property name="minimumSize">
              <size>
-              <width>60</width>
+              <width>70</width>
               <height>0</height>
              </size>
             </property>
@@ -272,8 +272,8 @@ QScrollBar::add-line:vertical:pressed, QScrollBar::sub-line:vertical:pressed {
               <widget class="QPushButton" name="btn_toggle">
                <property name="minimumSize">
                 <size>
-                 <width>60</width>
-                 <height>45</height>
+                 <width>70</width>
+                 <height>55</height>
                 </size>
                </property>
                <property name="text">
@@ -285,8 +285,8 @@ QScrollBar::add-line:vertical:pressed, QScrollBar::sub-line:vertical:pressed {
                </property>
                <property name="iconSize">
                 <size>
-                 <width>32</width>
-                 <height>32</height>
+                 <width>40</width>
+                 <height>40</height>
                 </size>
                </property>
               </widget>
@@ -295,8 +295,8 @@ QScrollBar::add-line:vertical:pressed, QScrollBar::sub-line:vertical:pressed {
               <widget class="QPushButton" name="btn_home">
                <property name="minimumSize">
                 <size>
-                 <width>60</width>
-                 <height>45</height>
+                 <width>70</width>
+                 <height>55</height>
                 </size>
                </property>
                <property name="text">
@@ -308,8 +308,8 @@ QScrollBar::add-line:vertical:pressed, QScrollBar::sub-line:vertical:pressed {
                </property>
                <property name="iconSize">
                 <size>
-                 <width>32</width>
-                 <height>32</height>
+                 <width>40</width>
+                 <height>40</height>
                 </size>
                </property>
               </widget>
@@ -318,8 +318,8 @@ QScrollBar::add-line:vertical:pressed, QScrollBar::sub-line:vertical:pressed {
               <widget class="QPushButton" name="btn_get">
                <property name="minimumSize">
                 <size>
-                 <width>60</width>
-                 <height>45</height>
+                 <width>70</width>
+                 <height>55</height>
                 </size>
                </property>
                <property name="text">
@@ -331,8 +331,8 @@ QScrollBar::add-line:vertical:pressed, QScrollBar::sub-line:vertical:pressed {
                </property>
                <property name="iconSize">
                 <size>
-                 <width>32</width>
-                 <height>32</height>
+                 <width>40</width>
+                 <height>40</height>
                 </size>
                </property>
               </widget>
@@ -341,8 +341,8 @@ QScrollBar::add-line:vertical:pressed, QScrollBar::sub-line:vertical:pressed {
               <widget class="QPushButton" name="btn_proxy">
                <property name="minimumSize">
                 <size>
-                 <width>60</width>
-                 <height>45</height>
+                 <width>70</width>
+                 <height>55</height>
                 </size>
                </property>
                <property name="text">
@@ -354,8 +354,8 @@ QScrollBar::add-line:vertical:pressed, QScrollBar::sub-line:vertical:pressed {
                </property>
                <property name="iconSize">
                 <size>
-                 <width>32</width>
-                 <height>32</height>
+                 <width>40</width>
+                 <height>40</height>
                 </size>
                </property>
               </widget>
@@ -364,8 +364,8 @@ QScrollBar::add-line:vertical:pressed, QScrollBar::sub-line:vertical:pressed {
               <widget class="QPushButton" name="btn_save">
                <property name="minimumSize">
                 <size>
-                 <width>60</width>
-                 <height>45</height>
+                 <width>70</width>
+                 <height>55</height>
                 </size>
                </property>
                <property name="text">
@@ -377,8 +377,8 @@ QScrollBar::add-line:vertical:pressed, QScrollBar::sub-line:vertical:pressed {
                </property>
                <property name="iconSize">
                 <size>
-                 <width>32</width>
-                 <height>32</height>
+                 <width>40</width>
+                 <height>40</height>
                 </size>
                </property>
               </widget>
@@ -594,7 +594,7 @@ QComboBox { background-color: rgb(33, 37, 43) }</string>
                          <rect>
                           <x>0</x>
                           <y>0</y>
-                          <width>443</width>
+                          <width>438</width>
                           <height>334</height>
                          </rect>
                         </property>
@@ -1114,6 +1114,9 @@ QComboBox { background-color: rgb(33, 37, 43) }</string>
               </property>
               <item row="0" column="0">
                <widget class="QLabel" name="proxyLabel">
+                <property name="styleSheet">
+                 <string notr="true">qproperty-alignment: 'AlignLeft | AlignVCenter'</string>
+                </property>
                 <property name="text">
                  <string>PROXY</string>
                 </property>
@@ -1706,7 +1709,7 @@ QComboBox { background-color: rgb(33, 37, 43) }</string>
            <widget class="QLabel" name="icon">
             <property name="minimumSize">
              <size>
-              <width>60</width>
+              <width>70</width>
               <height>0</height>
              </size>
             </property>
