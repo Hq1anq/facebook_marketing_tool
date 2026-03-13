@@ -230,7 +230,9 @@ class MainWindow(QMainWindow):
             self.spam.setup(
                 self.ui.spamContentCheckBox.isChecked(),
                 self.ui.spamImageCheckBox.isChecked(),
-                self.ui.spamSpamListFilter.isChecked()
+                self.ui.spamSpamListFilter.isChecked(),
+                spam_data["image"],
+                spam_data["content"]
             )
             self.spam.set_stop(False)  # Tell Spam to keep running
             QThreadPool.globalInstance().start(self.spam)
