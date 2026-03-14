@@ -105,9 +105,7 @@ class Spam(QRunnable):
                         
                         time.sleep(random.randint(self.spam_delay[0], self.spam_delay[len(self.spam_delay) - 1]))
                         
-                        close_btn = self.driver_manager.wait10.until(
-                            EC.element_to_be_clickable((By.XPATH, f"//div[@aria-label='{self.driver_manager.close_post}']"))
-                        )
+                        close_btn = self.driver_manager.wait_for_clickable_element(By.XPATH, f"//div[@aria-label='{self.driver_manager.close_post}']")
                         self.driver_manager.click_element(close_btn)
                         
                         if "Không thể đăng bình luận" in self.driver.page_source:

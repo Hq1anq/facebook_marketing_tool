@@ -66,16 +66,12 @@ class Post(QRunnable):
                 self.signals.log.emit("POST: Đang đăng bài...")
                 self.driver_manager.handle_chat_close()
                 # Vào "Bạn viết gì đi..."
-                create_post_btn = self.driver_manager.wait10.until(
-                    EC.element_to_be_clickable((By.CSS_SELECTOR, ".xkjl1po > .x1lliihq"))
-                )
+                create_post_btn = self.driver_manager.wait_for_clickable_element(By.CSS_SELECTOR, ".xkjl1po > .x1lliihq")
                 self.driver_manager.click_element(create_post_btn)
                 if self.use_content: # Paste content
                     content = random.choice(self.list_content)
                     pyperclip.copy(content)
-                    content_area = self.driver_manager.wait10.until(
-                        EC.element_to_be_clickable((By.CSS_SELECTOR, ".\\_1mf"))
-                    )
+                    content_area = self.driver_manager.wait_for_clickable_element(By.CSS_SELECTOR, ".\\_1mf")
                     self.driver_manager.click_element(content_area)
                     # content_area.send_keys(Keys.CONTROL, "v")
                     self.driver_manager.actions.key_down(Keys.CONTROL).send_keys('v').key_up(Keys.CONTROL).perform()
@@ -83,9 +79,7 @@ class Post(QRunnable):
                 # Thêm ảnh
                 if self.use_image:
                     image = random.choice(self.list_image)
-                    # add_image_btn = self.driver_manager.wait10.until(
-                    #     EC.element_to_be_clickable((By.XPATH, f"//div[@aria-label='{self.driver_manager.add_image}']"))
-                    # )
+                    # add_image_btn = self.driver_manager.wait_for_clickable_element(By.XPATH, f"//div[@aria-label='{self.driver_manager.add_image}']")
                     # self.driver_manager.click_element(add_image_btn)
                     self.driver.find_element(By.XPATH,"//input[@accept='image/*,image/heif,image/heic,video/*,video/mp4,video/x-m4v,video/x-matroska,.mkv']").send_keys(image)
                 time.sleep(1)

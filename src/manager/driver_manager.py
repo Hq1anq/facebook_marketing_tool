@@ -5,6 +5,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.service import Service
+from selenium.common.exceptions import TimeoutException, NoSuchElementException, WebDriverException
 from webdriver_manager.chrome import ChromeDriverManager
 import time
 
@@ -12,6 +13,7 @@ class DriverManager:
     def __init__(self, chrome_path: str):
         self.driver = None
         self.chrome_path = chrome_path
+        self.is_login = False
         self.language = "vi"
         self.friend_str = "Bạn bè"
         self.message_str = "Nhắn tin"
@@ -25,27 +27,27 @@ class DriverManager:
         self.error_message = ["Bạn hiện không xem được nội dung này", "Trang này không hiển thị"]
 
     def setup_driver(self) -> bool:
-        try:
-            self.driver.title
-            return True
-        except:
-            service = Service(executable_path=ChromeDriverManager().install())
-            options = Options()
-            options.add_experimental_option("detach", True) # Giữ cửa sổ mở
-            options.add_experimental_option("excludeSwitches", ['enable-automation'])
-            options.add_argument("user-data-dir=" + self.chrome_path) # Chỉ định profile cho browser
-            options.add_argument("--disable-notifications")
-            options.add_argument("--window-size=1130,500")
+        # Check if driver already exists and is still alive
+        if self.driver is not None:
             try:
-                self.driver = webdriver.Chrome(service=service, options=options)
-                self.actions = ActionChains(self.driver)
-                self.wait20 = WebDriverWait(self.driver, 20)
-                self.wait15 = WebDriverWait(self.driver, 15)
-                self.wait10 = WebDriverWait(self.driver, 10)
-                self.wait5 = WebDriverWait(self.driver, 5)
-            except:
-                return False
-            return True
+                self.driver.title
+                return True
+            except WebDriverException:
+                pass  # Driver exists but session is dead, re-create it
+
+        service = Service(executable_path=ChromeDriverManager().install())
+        options = Options()
+        options.add_experimental_option("detach", True) # Giữ cửa sổ mở
+        options.add_experimental_option("excludeSwitches", ['enable-automation'])
+        options.add_argument("user-data-dir=" + self.chrome_path) # Chỉ định profile cho browser
+        options.add_argument("--disable-notifications")
+        options.add_argument("--window-size=1130,800")
+        try:
+            self.driver = webdriver.Chrome(service=service, options=options)
+            self.actions = ActionChains(self.driver)
+        except Exception:
+            return False
+        return True
 
     def adjust_language(self):
         self.language = self.driver.find_element(By.XPATH, "//html").get_attribute('lang')
@@ -95,24 +97,34 @@ class DriverManager:
             self.driver.get(url)
     
     def get_username(self):
-        self.get("https://www.facebook.com/me")
-        profile_name = self.driver.find_element(By.XPATH,
-            "//div[@class='x78zum5 xdt5ytf x1wsgfga x9otpla']//h1"
-        ).text.strip()
-        return profile_name
+        try:
+            self.get("https://www.facebook.com/me")
+            profile_name = self.driver.find_element(By.XPATH,
+                "//div[@class='x78zum5 xdt5ytf x1wsgfga x9otpla']//h1"
+            ).text.strip()
+            return profile_name
+        except (NoSuchElementException, Exception) as e:
+            print(f"Error getting username: {e}")
+            return None
 
     def get_userID(self):
-        script_text = self.driver.find_element(
-            By.CSS_SELECTOR, "head > script#__eqmc"
-        ).get_attribute("innerHTML")
+        try:
+            script_text = self.driver.find_element(
+                By.CSS_SELECTOR, "head > script#__eqmc"
+            ).get_attribute("innerHTML")
 
-        user_id = script_text.split("__user=")[1].split("&")[0]
-        
-        return user_id
+            user_id = script_text.split("__user=")[1].split("&")[0]
+            return user_id
+        except (NoSuchElementException, IndexError, Exception) as e:
+            print(f"Error getting userID: {e}")
+            return None
     
     def check_login(self) -> bool:
         self.is_login = self.friend_str in self.driver.page_source
         return self.is_login
+
+    def check_captcha(self) -> bool:
+        return "captcha" in self.driver.page_source
     
     def jump_to_facebook(self) -> bool:
         self.driver.get("https://www.facebook.com/login?locale=en_US")
@@ -122,13 +134,27 @@ class DriverManager:
     
     def get_cookies(self):
         if self.is_login:
-            return "c_user=%s; fr=%s; sb=%s; xs=%s; datr=%s"%(
-                self.driver.get_cookie("c_user")["value"],
-                self.driver.get_cookie("fr")["value"],
-                self.driver.get_cookie("sb")["value"],
-                self.driver.get_cookie("xs")["value"],
-                self.driver.get_cookie("datr")["value"]
-            )
+            try:
+                c_user = self.driver.get_cookie("c_user")
+                fr = self.driver.get_cookie("fr")
+                sb = self.driver.get_cookie("sb")
+                xs = self.driver.get_cookie("xs")
+                datr = self.driver.get_cookie("datr")
+                
+                if not all([c_user, fr, sb, xs, datr]):
+                    print("Warning: One or more cookies are missing")
+                    return None
+                
+                return "c_user=%s; fr=%s; sb=%s; xs=%s; datr=%s"%(
+                    c_user["value"],
+                    fr["value"],
+                    sb["value"],
+                    xs["value"],
+                    datr["value"]
+                )
+            except (TypeError, KeyError) as e:
+                print(f"Error getting cookies: {e}")
+                return None
         else:
             return None
     
@@ -153,7 +179,7 @@ class DriverManager:
                 WebDriverWait(self.driver, timeout).until(
                     lambda d: d.execute_script("return document.body.scrollHeight") > last_height
                 )
-            except:
+            except TimeoutException:
                 print(f"[Scroll {i+1}] No new content loaded after scrolling.")
                 break  # Stop if no new content is loaded (e.g., reached end of page)
     
@@ -167,23 +193,36 @@ class DriverManager:
                 WebDriverWait(self.driver, timeout).until(
                     lambda d: d.execute_script("return document.body.scrollHeight") > last_height
                 )
-            except:
+            except TimeoutException:
                 print(f"[Scroll {i+1}] No more new content.")
                 break
     
-    def wait_for_element(self, by, value):
+    def wait_for_element(self, by, value, timeout=15):
         try:
-            return self.wait15.until(EC.presence_of_element_located((by, value)))
-        except Exception as e:
+            wait = WebDriverWait(self.driver, timeout)
+            return wait.until(EC.presence_of_element_located((by, value)))
+        except TimeoutException as e:
             print(f"Error waiting for element: {e}")
             return None
     
-    def wait_for_clickable_element(self, by, value):
+    def wait_for_clickable_element(self, by, value, timeout=10):
         try:
-            return self.wait10.until(EC.element_to_be_clickable((by, value)))
-        except Exception as e:
+            wait = WebDriverWait(self.driver, timeout)
+            return wait.until(EC.element_to_be_clickable((by, value)))
+        except TimeoutException as e:
             print(f"Error waiting for clickable element: {e}")
             return None
+    
+    def wait_for_url_contains(self, keyword: str, timeout=20) -> bool:
+        try:
+            wait = WebDriverWait(self.driver, timeout)
+            wait.until(EC.url_contains(keyword))
+            # Now wait for the page to fully load
+            wait.until(lambda d: d.execute_script("return document.readyState") == "complete")
+            return True
+        except TimeoutException:
+            print(f"Timeout waiting for URL to contain '{keyword}'")
+            return False
         
     def click_element(self, element):
         self.actions.click(element).perform()
