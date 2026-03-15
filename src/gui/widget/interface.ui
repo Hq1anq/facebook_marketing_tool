@@ -40,7 +40,7 @@ QWidget{
 	color: rgb(221, 221, 221);
 	font: 10pt &quot;Segoe UI&quot; }
 QLabel, QPushButton, QLineEdit, QComboBox, QCheckBox, QTextEdit, QPlainTextEdit {
-	font-size: 20px }
+	font-size: 20pt }
 QPushButton {font-weight: bold}
 QComboBox{
 	border-radius: 5px;
@@ -82,14 +82,14 @@ QTableWidget {
 	padding: 5px;
 	gridline-color: rgb(44, 49, 58);
 	border-bottom: 1px solid rgb(44, 49, 60);
-	font-size: 10px }
+	font-size: 10pt }
 QTableWidget::item{ border-color: rgb(44, 49, 60) }
 QTableWidget::item:selected{ background-color: rgb(189, 147, 249) }
 QHeaderView { qproperty-defaultAlignment: AlignCenter }
 QHeaderView::section{
 	background-color: rgb(33, 37, 43);
 	border: 1px solid rgb(44, 49, 60);
-	font-size: 15px }
+	font-size: 15pt }
 QScrollBar:horizontal {
 	border: none;
 	background: rgb(52, 59, 72);
@@ -175,7 +175,7 @@ QScrollBar::add-line:vertical:pressed, QScrollBar::sub-line:vertical:pressed {
      <widget class="QWidget" name="App" native="true">
       <property name="styleSheet">
        <string notr="true">#App { background-color: #2C313A }
-#title {font-size: 20px; font-weight: bold}
+#title {font-size: 20pt; font-weight: bold}
 #leftMenu {background-color: rgb(33, 37, 43); border: none }
 	#leftMenuBtn .QPushButton {
 		padding-left: 14px;
@@ -190,9 +190,9 @@ QScrollBar::add-line:vertical:pressed, QScrollBar::sub-line:vertical:pressed {
 	#btn_proxy { padding-top: 5px; padding-bottom: 5px }
 #contentTop { background-color: rgb(33, 37, 43) }
 #bottomBar QPushButton {
-	font-size: 11px; color: rgb(113, 126, 149);
+	font-size: 11pt; color: rgb(113, 126, 149);
 	padding-left: 2px; padding-bottom: 2px }
-#profileName { font-size: 15px }</string>
+#profileName { font-size: 15pt }</string>
       </property>
       <layout class="QGridLayout" name="_14">
        <property name="leftMargin">
@@ -1411,14 +1411,6 @@ QComboBox { background-color: rgb(33, 37, 43) }
                          </item>
                          <item row="1" column="2">
                           <widget class="QLineEdit" name="passInput">
-                           <property name="font">
-                            <font>
-                             <family>Segoe UI</family>
-                             <pointsize>-1</pointsize>
-                             <italic>false</italic>
-                             <bold>false</bold>
-                            </font>
-                           </property>
                            <property name="text">
                             <string/>
                            </property>
@@ -1455,14 +1447,6 @@ QComboBox { background-color: rgb(33, 37, 43) }
                          </item>
                          <item row="0" column="0" colspan="2">
                           <widget class="QLabel" name="userLabel">
-                           <property name="font">
-                            <font>
-                             <family>Segoe UI</family>
-                             <pointsize>-1</pointsize>
-                             <italic>false</italic>
-                             <bold>false</bold>
-                            </font>
-                           </property>
                            <property name="text">
                             <string>Username</string>
                            </property>
@@ -1739,29 +1723,13 @@ QComboBox { background-color: rgb(33, 37, 43) }
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
-            <property name="font">
-             <font>
-              <family>Segoe UI</family>
-              <pointsize>-1</pointsize>
-              <italic>false</italic>
-              <bold>true</bold>
-             </font>
-            </property>
             <property name="text">
-             <string>Tools Facebook</string>
+             <string>Tool Facebook</string>
             </property>
            </widget>
           </item>
           <item>
            <widget class="QPushButton" name="profileName">
-            <property name="font">
-             <font>
-              <family>Segoe UI</family>
-              <pointsize>-1</pointsize>
-              <italic>false</italic>
-              <bold>true</bold>
-             </font>
-            </property>
             <property name="text">
              <string/>
             </property>
@@ -1797,14 +1765,6 @@ QComboBox { background-color: rgb(33, 37, 43) }
              </property>
              <item>
               <widget class="QPushButton" name="minimizeBtn">
-               <property name="font">
-                <font>
-                 <family>Segoe UI</family>
-                 <pointsize>-1</pointsize>
-                 <italic>false</italic>
-                 <bold>true</bold>
-                </font>
-               </property>
                <property name="icon">
                 <iconset resource="../../../resources/resources.qrc">
                  <normaloff>:/icons/icons/minimize.svg</normaloff>:/icons/icons/minimize.svg</iconset>

@@ -42,7 +42,7 @@ class Login(QRunnable):
         if self.cookie != "":
             self.driver_manager.add_cookie(self.cookie)
             self.driver.refresh()
-            self.driver_manager.wait_for_element(By.ID, "facebook")
+            self.driver_manager.wait_for_url_contains("") # full loaded
             if not self.driver_manager.check_login():
                 self.signals.log.emit("Sai cookie đăng nhập, đang thử cách khác...")
             else:

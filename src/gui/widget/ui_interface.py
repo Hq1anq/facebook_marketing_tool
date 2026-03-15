@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'interfaceyUQOiE.ui'
+## Form generated from reading UI file 'interfacedmunpP.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.8.2
+## Created by: Qt User Interface Compiler version 6.10.2
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
 
 from PySide6.QtCore import QCoreApplication, QMetaObject, QRect, QSize, Qt
-from PySide6.QtGui import QCursor, QFont, QIcon, QPixmap
+from PySide6.QtGui import QCursor, QIcon, QPixmap
 from PySide6.QtWidgets import (QCheckBox, QComboBox, QFormLayout, QFrame,
     QGridLayout, QHBoxLayout, QLabel, QLineEdit, QSpacerItem, QPlainTextEdit,
     QPushButton, QScrollArea, QSizePolicy, QStackedWidget, QVBoxLayout, QWidget)
@@ -41,7 +41,7 @@ class Ui_MainWindow(object):
 "	color: rgb(221, 221, 221);\n"
 "	font: 10pt \"Segoe UI\" }\n"
 "QLabel, QPushButton, QLineEdit, QComboBox, QCheckBox, QTextEdit, QPlainTextEdit {\n"
-"	font-size: 20px }\n"
+"	font-size: 20pt }\n"
 "QPushButton {font-weight: bold}\n"
 "QComboBox{\n"
 "	border-radius: 5px;\n"
@@ -84,7 +84,7 @@ class Ui_MainWindow(object):
 "	padding: 5px;\n"
 "	gridline-color: rgb(44, 49, 58);\n"
 "	border-bottom: 1px solid rgb(44, 49, 60);\n"
-"	font-size: 10px }\n"
+"	font-size: 10pt }\n"
 "QTableWidget::item{ border-color: rgb(44, 49, 60) }\n"
 "QTable"
                         "Widget::item:selected{ background-color: rgb(189, 147, 249) }\n"
@@ -92,7 +92,7 @@ class Ui_MainWindow(object):
 "QHeaderView::section{\n"
 "	background-color: rgb(33, 37, 43);\n"
 "	border: 1px solid rgb(44, 49, 60);\n"
-"	font-size: 15px }\n"
+"	font-size: 15pt }\n"
 "QScrollBar:horizontal {\n"
 "	border: none;\n"
 "	background: rgb(52, 59, 72);\n"
@@ -168,7 +168,7 @@ class Ui_MainWindow(object):
         self.App = QWidget(self.styleSheet)
         self.App.setObjectName(u"App")
         self.App.setStyleSheet(u"#App { background-color: #2C313A }\n"
-"#title {font-size: 20px; font-weight: bold}\n"
+"#title {font-size: 20pt; font-weight: bold}\n"
 "#leftMenu {background-color: rgb(33, 37, 43); border: none }\n"
 "	#leftMenuBtn .QPushButton {\n"
 "		padding-left: 14px;\n"
@@ -183,9 +183,9 @@ class Ui_MainWindow(object):
 "	#btn_proxy { padding-top: 5px; padding-bottom: 5px }\n"
 "#contentTop { background-color: rgb(33, 37, 43) }\n"
 "#bottomBar QPushButton {\n"
-"	font-size: 11px; color: rgb(113, 126, 149);\n"
+"	font-size: 11pt; color: rgb(113, 126, 149);\n"
 "	padding-left: 2px; padding-bottom: 2px }\n"
-"#profileName { font-size: 15px }")
+"#profileName { font-size: 15pt }")
         self._14 = QGridLayout(self.App)
         self._14.setObjectName(u"_14")
         self._14.setHorizontalSpacing(0)
@@ -362,7 +362,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout.addWidget(self.postDelayInput)
 
 
-        self.formLayout_2.setWidget(0, QFormLayout.LabelRole, self.postDelay)
+        self.formLayout_2.setWidget(0, QFormLayout.ItemRole.LabelRole, self.postDelay)
 
         self.btn_post = QPushButton(self.postPage)
         self.btn_post.setObjectName(u"btn_post")
@@ -373,7 +373,7 @@ class Ui_MainWindow(object):
         self.btn_post.setIcon(icon7)
         self.btn_post.setIconSize(QSize(50, 40))
 
-        self.formLayout_2.setWidget(0, QFormLayout.FieldRole, self.btn_post)
+        self.formLayout_2.setWidget(0, QFormLayout.ItemRole.FieldRole, self.btn_post)
 
         self.postInputImageContent = QFrame(self.postPage)
         self.postInputImageContent.setObjectName(u"postInputImageContent")
@@ -437,7 +437,7 @@ class Ui_MainWindow(object):
         self.gridLayout.addWidget(self.postContentInput, 2, 2, 1, 1)
 
 
-        self.formLayout_2.setWidget(1, QFormLayout.SpanningRole, self.postInputImageContent)
+        self.formLayout_2.setWidget(1, QFormLayout.ItemRole.SpanningRole, self.postInputImageContent)
 
         self.homeStackedWidget.addWidget(self.postPage)
         self.commentPage = QWidget()
@@ -464,7 +464,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_2.addWidget(self.commentDelayInput)
 
 
-        self.formLayout.setWidget(0, QFormLayout.LabelRole, self.commentDelay)
+        self.formLayout.setWidget(0, QFormLayout.ItemRole.LabelRole, self.commentDelay)
 
         self.commentInputImageContent = QFrame(self.commentPage)
         self.commentInputImageContent.setObjectName(u"commentInputImageContent")
@@ -526,7 +526,7 @@ class Ui_MainWindow(object):
         self.gridLayout_10.addWidget(self.commentContentInput, 2, 2, 1, 1)
 
 
-        self.formLayout.setWidget(1, QFormLayout.SpanningRole, self.commentInputImageContent)
+        self.formLayout.setWidget(1, QFormLayout.ItemRole.SpanningRole, self.commentInputImageContent)
 
         self.btn_comment = QPushButton(self.commentPage)
         self.btn_comment.setObjectName(u"btn_comment")
@@ -538,7 +538,7 @@ class Ui_MainWindow(object):
         self.btn_comment.setIcon(icon9)
         self.btn_comment.setIconSize(QSize(50, 50))
 
-        self.formLayout.setWidget(0, QFormLayout.FieldRole, self.btn_comment)
+        self.formLayout.setWidget(0, QFormLayout.ItemRole.FieldRole, self.btn_comment)
 
         self.homeStackedWidget.addWidget(self.commentPage)
         self.spamPage = QWidget()
@@ -862,11 +862,6 @@ class Ui_MainWindow(object):
 
         self.passInput = QLineEdit(self.loginDetailFrame)
         self.passInput.setObjectName(u"passInput")
-        font = QFont()
-        font.setFamilies([u"Segoe UI"])
-        font.setBold(False)
-        font.setItalic(False)
-        self.passInput.setFont(font)
 
         self._21.addWidget(self.passInput, 1, 2, 1, 1)
 
@@ -885,7 +880,6 @@ class Ui_MainWindow(object):
 
         self.userLabel = QLabel(self.loginDetailFrame)
         self.userLabel.setObjectName(u"userLabel")
-        self.userLabel.setFont(font)
 
         self._21.addWidget(self.userLabel, 0, 0, 1, 2)
 
@@ -1033,17 +1027,11 @@ class Ui_MainWindow(object):
         sizePolicy5.setVerticalStretch(0)
         sizePolicy5.setHeightForWidth(self.title.sizePolicy().hasHeightForWidth())
         self.title.setSizePolicy(sizePolicy5)
-        font1 = QFont()
-        font1.setFamilies([u"Segoe UI"])
-        font1.setBold(True)
-        font1.setItalic(False)
-        self.title.setFont(font1)
 
         self._15.addWidget(self.title)
 
         self.profileName = QPushButton(self.contentTop)
         self.profileName.setObjectName(u"profileName")
-        self.profileName.setFont(font1)
         icon12 = QIcon()
         icon12.addFile(u":/icons/icons/account.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.profileName.setIcon(icon12)
@@ -1059,7 +1047,6 @@ class Ui_MainWindow(object):
         self._16.setContentsMargins(0, 0, 0, 0)
         self.minimizeBtn = QPushButton(self.navigationBar)
         self.minimizeBtn.setObjectName(u"minimizeBtn")
-        self.minimizeBtn.setFont(font1)
         icon13 = QIcon()
         icon13.addFile(u":/icons/icons/minimize.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.minimizeBtn.setIcon(icon13)
@@ -1106,7 +1093,7 @@ class Ui_MainWindow(object):
         self.pageStacked.setCurrentIndex(2)
         self.homeStackedWidget.setCurrentIndex(0)
         self.getStacked.setCurrentIndex(0)
-        self.loginMethodStacked.setCurrentIndex(1)
+        self.loginMethodStacked.setCurrentIndex(0)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -1184,7 +1171,7 @@ class Ui_MainWindow(object):
         self.btn_getGroup.setText(QCoreApplication.translate("MainWindow", u"GET GROUP", None))
         self.btn_getPost.setText(QCoreApplication.translate("MainWindow", u"GET POST", None))
         self.credits.setText(QCoreApplication.translate("MainWindow", u"contact: @Giang_vps", None))
-        self.title.setText(QCoreApplication.translate("MainWindow", u"Tools Facebook", None))
+        self.title.setText(QCoreApplication.translate("MainWindow", u"Tool Facebook", None))
         self.profileName.setText("")
     # retranslateUi
 
