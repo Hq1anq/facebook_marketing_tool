@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'interfaceSRUXbX.ui'
+## Form generated from reading UI file 'interfaceUgBbBv.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.10.2
 ##
@@ -185,7 +185,8 @@ class Ui_MainWindow(object):
 "#bottomBar QPushButton {\n"
 "	font-size: 11pt; color: rgb(113, 126, 149);\n"
 "	padding-left: 2px; padding-bottom: 2px }\n"
-"#profileName { font-size: 15pt }")
+"#profileName { font-size: 15pt }\n"
+"#status { margin: 0px 20; }")
         self._14 = QGridLayout(self.App)
         self._14.setObjectName(u"_14")
         self._14.setHorizontalSpacing(0)
@@ -240,10 +241,9 @@ class Ui_MainWindow(object):
         self.btn_proxy.setObjectName(u"btn_proxy")
         self.btn_proxy.setMinimumSize(QSize(60, 45))
         icon4 = QIcon()
-        icon4.addFile(u":/icons/icons/proxyUnCheckBox.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        icon4.addFile(u":/icons/icons/proxyCheckBox.svg", QSize(), QIcon.Mode.Normal, QIcon.State.On)
+        icon4.addFile(u":/icons/icons/proxy.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.btn_proxy.setIcon(icon4)
-        self.btn_proxy.setIconSize(QSize(32, 55))
+        self.btn_proxy.setIconSize(QSize(32, 32))
         self.btn_proxy.setCheckable(True)
 
         self._8.addWidget(self.btn_proxy)
@@ -299,8 +299,7 @@ class Ui_MainWindow(object):
 " 	selection-color: rgb(40, 44, 52) }\n"
 "QLineEdit:hover, QTextEdit:hover, QPlainTextEdit:hover { border: 2px solid rgb(64, 71, 88) }\n"
 "QLineEdit:focus,  QTextEdit:focus, QPlainTextEdit:hover { border: 2px solid rgb(91, 101, 124) }\n"
-"QComboBox { background-color: rgb(33, 37, 43) }\n"
-"#btn_ok { padding: 30px; border-radius: 20px }")
+"QComboBox { background-color: rgb(33, 37, 43) }")
         self.homePage = QWidget()
         self.homePage.setObjectName(u"homePage")
         self.gridLayout_8 = QGridLayout(self.homePage)
@@ -479,7 +478,7 @@ class Ui_MainWindow(object):
         self.commentImageViewer.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.commentImageViewerWidget = QWidget()
         self.commentImageViewerWidget.setObjectName(u"commentImageViewerWidget")
-        self.commentImageViewerWidget.setGeometry(QRect(0, 0, 100, 30))
+        self.commentImageViewerWidget.setGeometry(QRect(0, 0, 21, 16))
         self.commentImageViewer.setWidget(self.commentImageViewerWidget)
 
         self.gridLayout_10.addWidget(self.commentImageViewer, 2, 0, 1, 1)
@@ -563,7 +562,7 @@ class Ui_MainWindow(object):
         self.spamImageViewer.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.spamImageViewerWidget = QWidget()
         self.spamImageViewerWidget.setObjectName(u"spamImageViewerWidget")
-        self.spamImageViewerWidget.setGeometry(QRect(0, 0, 100, 30))
+        self.spamImageViewerWidget.setGeometry(QRect(0, 0, 22, 16))
         self.spamImageViewer.setWidget(self.spamImageViewerWidget)
 
         self.gridLayout_11.addWidget(self.spamImageViewer, 2, 0, 1, 1)
@@ -683,21 +682,21 @@ class Ui_MainWindow(object):
         self.proxyLayout = QGridLayout(self.proxyPage)
         self.proxyLayout.setObjectName(u"proxyLayout")
         self.proxyLayout.setContentsMargins(30, -1, 30, -1)
+        self.proxyCheckBox = QCheckBox(self.proxyPage)
+        self.proxyCheckBox.setObjectName(u"proxyCheckBox")
+
+        self.proxyLayout.addWidget(self.proxyCheckBox, 0, 0, 1, 1)
+
         self.proxyFrame = QFrame(self.proxyPage)
         self.proxyFrame.setObjectName(u"proxyFrame")
         self.proxyFrame.setFrameShape(QFrame.Shape.StyledPanel)
         self.proxyFrame.setFrameShadow(QFrame.Shadow.Raised)
         self.gridLayout_4 = QGridLayout(self.proxyFrame)
         self.gridLayout_4.setObjectName(u"gridLayout_4")
-        self.fullProxyLabel = QLabel(self.proxyFrame)
-        self.fullProxyLabel.setObjectName(u"fullProxyLabel")
+        self.proxyInput = QLineEdit(self.proxyFrame)
+        self.proxyInput.setObjectName(u"proxyInput")
 
-        self.gridLayout_4.addWidget(self.fullProxyLabel, 1, 0, 1, 1)
-
-        self.btn_ok = QPushButton(self.proxyFrame)
-        self.btn_ok.setObjectName(u"btn_ok")
-
-        self.gridLayout_4.addWidget(self.btn_ok, 3, 0, 1, 3, Qt.AlignmentFlag.AlignHCenter)
+        self.gridLayout_4.addWidget(self.proxyInput, 1, 1, 1, 1)
 
         self.proxyInputDetailFrame = QFrame(self.proxyFrame)
         self.proxyInputDetailFrame.setObjectName(u"proxyInputDetailFrame")
@@ -761,23 +760,44 @@ class Ui_MainWindow(object):
 
         self.gridLayout_4.addWidget(self.proxyInputDetailFrame, 2, 0, 1, 3)
 
-        self.proxyInput = QLineEdit(self.proxyFrame)
-        self.proxyInput.setObjectName(u"proxyInput")
+        self.fullProxyLabel = QLabel(self.proxyFrame)
+        self.fullProxyLabel.setObjectName(u"fullProxyLabel")
 
-        self.gridLayout_4.addWidget(self.proxyInput, 1, 1, 1, 1)
+        self.gridLayout_4.addWidget(self.fullProxyLabel, 1, 0, 1, 1)
 
         self.proxyDetailCheckbox = QCheckBox(self.proxyFrame)
         self.proxyDetailCheckbox.setObjectName(u"proxyDetailCheckbox")
 
         self.gridLayout_4.addWidget(self.proxyDetailCheckbox, 0, 0, 1, 1)
 
+        self.horizontalLayout_4 = QHBoxLayout()
+        self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
+        self.horizontalLayout_4.setContentsMargins(-1, 10, -1, -1)
+        self.checkProxyBtn = QPushButton(self.proxyFrame)
+        self.checkProxyBtn.setObjectName(u"checkProxyBtn")
+        self.checkProxyBtn.setMaximumSize(QSize(250, 16777215))
+        icon10 = QIcon()
+        icon10.addFile(u":/icons/icons/search.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.checkProxyBtn.setIcon(icon10)
+        self.checkProxyBtn.setIconSize(QSize(32, 32))
+
+        self.horizontalLayout_4.addWidget(self.checkProxyBtn)
+
+        self.addProxyBtn = QPushButton(self.proxyFrame)
+        self.addProxyBtn.setObjectName(u"addProxyBtn")
+        self.addProxyBtn.setMaximumSize(QSize(250, 16777215))
+        icon11 = QIcon()
+        icon11.addFile(u":/icons/icons/play.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.addProxyBtn.setIcon(icon11)
+        self.addProxyBtn.setIconSize(QSize(32, 32))
+
+        self.horizontalLayout_4.addWidget(self.addProxyBtn)
+
+
+        self.gridLayout_4.addLayout(self.horizontalLayout_4, 4, 0, 1, 3)
+
 
         self.proxyLayout.addWidget(self.proxyFrame, 1, 0, 1, 1)
-
-        self.proxyCheckBox = QCheckBox(self.proxyPage)
-        self.proxyCheckBox.setObjectName(u"proxyCheckBox")
-
-        self.proxyLayout.addWidget(self.proxyCheckBox, 0, 0, 1, 1)
 
         self.verticalSpacer_3 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
@@ -911,9 +931,9 @@ class Ui_MainWindow(object):
         self.btn_copyCookie = QPushButton(self.useCookie)
         self.btn_copyCookie.setObjectName(u"btn_copyCookie")
         self.btn_copyCookie.setMaximumSize(QSize(50, 16777215))
-        icon10 = QIcon()
-        icon10.addFile(u":/icons/icons/copy.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.btn_copyCookie.setIcon(icon10)
+        icon12 = QIcon()
+        icon12.addFile(u":/icons/icons/copy.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.btn_copyCookie.setIcon(icon12)
         self.btn_copyCookie.setIconSize(QSize(40, 32))
 
         self._22.addWidget(self.btn_copyCookie)
@@ -971,9 +991,9 @@ class Ui_MainWindow(object):
         self._31.setContentsMargins(0, 0, 0, 0)
         self.credits = QPushButton(self.bottomBar)
         self.credits.setObjectName(u"credits")
-        icon11 = QIcon()
-        icon11.addFile(u":/icons/icons/tele.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.credits.setIcon(icon11)
+        icon13 = QIcon()
+        icon13.addFile(u":/icons/icons/tele.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.credits.setIcon(icon13)
 
         self._31.addWidget(self.credits, 0, Qt.AlignmentFlag.AlignLeft)
 
@@ -1017,9 +1037,9 @@ class Ui_MainWindow(object):
 
         self.profileName = QPushButton(self.contentTop)
         self.profileName.setObjectName(u"profileName")
-        icon12 = QIcon()
-        icon12.addFile(u":/icons/icons/account.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.profileName.setIcon(icon12)
+        icon14 = QIcon()
+        icon14.addFile(u":/icons/icons/account.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.profileName.setIcon(icon14)
         self.profileName.setIconSize(QSize(40, 40))
 
         self._15.addWidget(self.profileName)
@@ -1032,19 +1052,19 @@ class Ui_MainWindow(object):
         self._16.setContentsMargins(20, 0, 0, 0)
         self.minimizeBtn = QPushButton(self.navigationBar)
         self.minimizeBtn.setObjectName(u"minimizeBtn")
-        icon13 = QIcon()
-        icon13.addFile(u":/icons/icons/minimize.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.minimizeBtn.setIcon(icon13)
+        icon15 = QIcon()
+        icon15.addFile(u":/icons/icons/minimize.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.minimizeBtn.setIcon(icon15)
         self.minimizeBtn.setIconSize(QSize(20, 20))
 
         self._16.addWidget(self.minimizeBtn)
 
         self.changeWindowBtn = QPushButton(self.navigationBar)
         self.changeWindowBtn.setObjectName(u"changeWindowBtn")
-        icon14 = QIcon()
-        icon14.addFile(u":/icons/icons/maximize.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        icon14.addFile(u":/icons/icons/restore.svg", QSize(), QIcon.Mode.Normal, QIcon.State.On)
-        self.changeWindowBtn.setIcon(icon14)
+        icon16 = QIcon()
+        icon16.addFile(u":/icons/icons/maximize.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        icon16.addFile(u":/icons/icons/restore.svg", QSize(), QIcon.Mode.Normal, QIcon.State.On)
+        self.changeWindowBtn.setIcon(icon16)
         self.changeWindowBtn.setIconSize(QSize(20, 20))
         self.changeWindowBtn.setCheckable(True)
 
@@ -1052,9 +1072,9 @@ class Ui_MainWindow(object):
 
         self.closeBtn = QPushButton(self.navigationBar)
         self.closeBtn.setObjectName(u"closeBtn")
-        icon15 = QIcon()
-        icon15.addFile(u":/icons/icons/close.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.closeBtn.setIcon(icon15)
+        icon17 = QIcon()
+        icon17.addFile(u":/icons/icons/close.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.closeBtn.setIcon(icon17)
         self.closeBtn.setIconSize(QSize(20, 20))
 
         self._16.addWidget(self.closeBtn)
@@ -1116,14 +1136,15 @@ class Ui_MainWindow(object):
         self.btn_spam.setText(QCoreApplication.translate("MainWindow", u"SPAM!", None))
         self.spamListFilter.setPlaceholderText(QCoreApplication.translate("MainWindow", u"list t\u1eeb kh\u00f3a (ng\u0103n c\u00e1ch b\u1eddi k\u00ed t\u1ef1 \",\")", None))
         self.spamSpamListFilter.setText(QCoreApplication.translate("MainWindow", u"L\u1ecdc t\u1eeb kh\u00f3a", None))
-        self.fullProxyLabel.setText(QCoreApplication.translate("MainWindow", u"IP:PORT:USER:PASS", None))
-        self.btn_ok.setText(QCoreApplication.translate("MainWindow", u"OK", None))
+        self.proxyCheckBox.setText(QCoreApplication.translate("MainWindow", u"PROXY", None))
         self.proxyIpLabel.setText(QCoreApplication.translate("MainWindow", u"IP", None))
         self.proxyPortLabel.setText(QCoreApplication.translate("MainWindow", u"PORT", None))
         self.proxyUserLabel.setText(QCoreApplication.translate("MainWindow", u"USER", None))
         self.proxyPassLabel.setText(QCoreApplication.translate("MainWindow", u"PASS", None))
+        self.fullProxyLabel.setText(QCoreApplication.translate("MainWindow", u"IP:PORT:USER:PASS", None))
         self.proxyDetailCheckbox.setText(QCoreApplication.translate("MainWindow", u"Detail", None))
-        self.proxyCheckBox.setText(QCoreApplication.translate("MainWindow", u"PROXY", None))
+        self.checkProxyBtn.setText(QCoreApplication.translate("MainWindow", u"  Check Proxy", None))
+        self.addProxyBtn.setText(QCoreApplication.translate("MainWindow", u"  Add Proxy", None))
         self.methodLabel.setText(QCoreApplication.translate("MainWindow", u"Login method", None))
         self.btn_login.setText(QCoreApplication.translate("MainWindow", u"LOGIN", None))
         self.methodComboBox.setItemText(0, QCoreApplication.translate("MainWindow", u"Username|Password|2fa", None))

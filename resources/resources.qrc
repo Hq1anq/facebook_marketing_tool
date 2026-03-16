@@ -1,5 +1,10 @@
 <RCC>
   <qresource prefix="icons">
+    <file>icons/search.svg</file>
+    <file>icons/play.svg</file>
+    <file>icons/pause.svg</file>
+    <file>icons/proxyOK.svg</file>
+    <file>icons/proxyERR.svg</file>
     <file>icons/addGroup.svg</file>
     <file>icons/account.svg</file>
     <file>icons/arrowDown.svg</file>
@@ -17,9 +22,6 @@
     <file>icons/openedFile.svg</file>
     <file>icons/post.svg</file>
     <file>icons/proxy.svg</file>
-    <file>icons/proxyCheckBox.svg</file>
-    <file>icons/proxyNoneCheckBox.svg</file>
-    <file>icons/proxyUnCheckBox.svg</file>
     <file>icons/recive.svg</file>
     <file>icons/restore.svg</file>
     <file>icons/save.svg</file>
