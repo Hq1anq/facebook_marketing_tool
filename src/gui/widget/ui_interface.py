@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'interfaceUgBbBv.ui'
+## Form generated from reading UI file 'interfacevkPLlt.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.10.2
 ##
@@ -682,10 +682,10 @@ class Ui_MainWindow(object):
         self.proxyLayout = QGridLayout(self.proxyPage)
         self.proxyLayout.setObjectName(u"proxyLayout")
         self.proxyLayout.setContentsMargins(30, -1, 30, -1)
-        self.proxyCheckBox = QCheckBox(self.proxyPage)
-        self.proxyCheckBox.setObjectName(u"proxyCheckBox")
+        self.proxyLabel = QLabel(self.proxyPage)
+        self.proxyLabel.setObjectName(u"proxyLabel")
 
-        self.proxyLayout.addWidget(self.proxyCheckBox, 0, 0, 1, 1)
+        self.proxyLayout.addWidget(self.proxyLabel, 0, 0, 1, 1)
 
         self.proxyFrame = QFrame(self.proxyPage)
         self.proxyFrame.setObjectName(u"proxyFrame")
@@ -1136,7 +1136,7 @@ class Ui_MainWindow(object):
         self.btn_spam.setText(QCoreApplication.translate("MainWindow", u"SPAM!", None))
         self.spamListFilter.setPlaceholderText(QCoreApplication.translate("MainWindow", u"list t\u1eeb kh\u00f3a (ng\u0103n c\u00e1ch b\u1eddi k\u00ed t\u1ef1 \",\")", None))
         self.spamSpamListFilter.setText(QCoreApplication.translate("MainWindow", u"L\u1ecdc t\u1eeb kh\u00f3a", None))
-        self.proxyCheckBox.setText(QCoreApplication.translate("MainWindow", u"PROXY", None))
+        self.proxyLabel.setText(QCoreApplication.translate("MainWindow", u"PROXY", None))
         self.proxyIpLabel.setText(QCoreApplication.translate("MainWindow", u"IP", None))
         self.proxyPortLabel.setText(QCoreApplication.translate("MainWindow", u"PORT", None))
         self.proxyUserLabel.setText(QCoreApplication.translate("MainWindow", u"USER", None))

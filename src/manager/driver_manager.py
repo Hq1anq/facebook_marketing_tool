@@ -1,4 +1,4 @@
-from selenium import webdriver
+from seleniumwire import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
@@ -13,6 +13,7 @@ class DriverManager:
     def __init__(self, chrome_path: str):
         self.driver = None
         self.chrome_path = chrome_path
+        self.proxy_config = None
         self.is_login = False
         self.language = "vi"
         self.friend_str = "Bạn bè"
@@ -43,10 +44,24 @@ class DriverManager:
         options.add_argument("--disable-notifications")
         options.add_argument("--window-size=1130,800")
         try:
-            self.driver = webdriver.Chrome(service=service, options=options)
+            if self.proxy_config:
+                self.driver = webdriver.Chrome(service=service, options=options, seleniumwire_options=self.proxy_config)
+            else:
+                self.driver = webdriver.Chrome(service=service, options=options)
             self.actions = ActionChains(self.driver)
         except Exception:
             return False
+        return True
+    
+    def set_proxy(self, proxy_dict):
+        self.proxy_config = proxy_dict
+        if self.driver is not None:
+            try:
+                # Dynamically set proxy for seleniumwire
+                self.driver.proxy = proxy_dict.get('proxy', {}) if proxy_dict else {}
+            except Exception as e:
+                print(f"Lỗi khi set proxy dynamically: {e}")
+                return False
         return True
 
     def adjust_language(self):

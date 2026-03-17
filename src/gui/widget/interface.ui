@@ -1116,7 +1116,7 @@ QComboBox { background-color: rgb(33, 37, 43) }</string>
                <number>30</number>
               </property>
               <item row="0" column="0">
-               <widget class="QCheckBox" name="proxyCheckBox">
+               <widget class="QLabel" name="proxyLabel">
                 <property name="text">
                  <string>PROXY</string>
                 </property>

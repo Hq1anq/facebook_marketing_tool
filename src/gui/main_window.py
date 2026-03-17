@@ -46,7 +46,7 @@ class MainWindow(QMainWindow):
         self.comment_ui = CommentUI(self.ui, self.data_manager)
         self.spam_ui = SpamUI(self.ui, self.data_manager)
         self.login_ui = LoginUI(self.ui, self.data_manager)
-        self.proxy_ui = ProxyUI(self.ui, self.data_manager)
+        self.proxy_ui = ProxyUI(self.ui, self.data_manager, self.driver_manager)
         self.table_widget = TableWidget(self)
         
         self.post = Post(self.driver_manager)
@@ -374,7 +374,7 @@ class MainWindow(QMainWindow):
             self.login_ui.save_data()
         elif current_page == self.ui.proxyPage:
             current_function = "PROXY"
-            self.proxy_ui.save_data*()
+            self.proxy_ui.save_data()
         
         try:
             self.data_manager.save_data()

@@ -1,28 +1,68 @@
-from PySide6.QtCore import Qt, QSize
+from PySide6.QtCore import Qt, QSize, QThreadPool, QTimer
+from PySide6.QtWidgets import QLabel
 
 import src.settings as settings
-from src.manager import DataManager
+from src.manager import DataManager, DriverManager
 from src.gui.widget.ui_interface import Ui_MainWindow
+from src.worker import ProxyTestWorker
+import time
 
 class ProxyUI:
-    def __init__(self, ui: Ui_MainWindow, data_manager: DataManager):
+    def __init__(self, ui: Ui_MainWindow, data_manager: DataManager, driver_manager: DriverManager):
         self.ui = ui
         self.data_manager = data_manager
+        self.driver_manager = driver_manager
+        
+        # Instantiate worker
+        self.proxy_worker = ProxyTestWorker()
+        self.proxy_worker.signals.result.connect(self.on_proxy_tested)
+        self.proxy_worker.signals.error.connect(lambda error_msg: self.ui.status.setError(error_msg))
+        self.proxy_worker.signals.message.connect(lambda msg: self.ui.status.setText(msg))
+        
+        def on_finished():
+            self.ui.addProxyBtn.setEnabled(True)
+            self.ui.checkProxyBtn.setEnabled(True)
+            
+        self.proxy_worker.signals.finished.connect(on_finished)
         
         self.setup_connections()
 
     def setup_connections(self):
-        self.ui.btn_proxy.clicked.connect(self.changeStatusProxy)
-        self.ui.proxyCheckBox.clicked.connect(lambda: self.ui.btn_proxy.click())
         self.ui.proxyDetailCheckbox.stateChanged.connect(self.changeProxyInputMethod)
+        self.ui.checkProxyBtn.clicked.connect(self.check_proxy)
+        # self.ui.addProxyBtn.clicked.connect(self.apply_proxy)
     
-    def changeStatusProxy(self):
-        if self.ui.btn_proxy.isChecked():
-            self.ui.proxyCheckBox.setCheckState(Qt.CheckState.Checked)
-            self.ui.proxyFrame.show()
-        else:
-            self.ui.proxyCheckBox.setCheckState(Qt.CheckState.Unchecked)
-            self.ui.proxyFrame.hide()
+    def check_proxy(self):
+        try:
+            self.save_data()
+        except SyntaxError as e:
+            self.on_proxy_error(str(e))
+            return
+        ip = self.data_manager.data["PROXY"]["ip"]
+        port = self.data_manager.data["PROXY"]["port"]
+        username = self.data_manager.data["PROXY"]["username"]
+        password = self.data_manager.data["PROXY"]["password"]
+
+        if not ip or not port:
+            self.ui.status.setText("Vui lòng nhập đầy đủ IP và Port proxy")
+            self.ui.status.setStyleSheet("color: red;")
+            # Clear proxy from runtime if fields are empty
+            self.driver_manager.set_proxy({})
+            return
+
+        self.ui.status.setText("Đang kiểm tra proxy (Socks5/HTTP)...")
+        self.ui.addProxyBtn.setEnabled(False)
+        self.ui.checkProxyBtn.setEnabled(False)
+
+        self.proxy_worker.setup(ip, port, username, password)
+        self.proxy_worker.run()
+
+    def on_proxy_tested(self, sw_options, protocol):
+        self.ui.status.setSuccess(f"Proxy {protocol} đang hoạt động")
+        self.driver_manager.set_proxy(sw_options)
+        
+    def on_proxy_error(self, err_msg):
+        self.ui.status.setError(err_msg)
     
     def changeProxyInputMethod(self, state):
         if Qt.CheckState(state) == Qt.CheckState.Checked:
@@ -62,7 +102,7 @@ class ProxyUI:
                 case 2:
                     ip, port = info
                 case _:
-                    raise Exception("Không thể lưu do sai định dạng Proxy")
+                    raise SyntaxError("Sai định dạng Proxy")
 
         self.data_manager.data["PROXY"]["ip"] = ip
         self.data_manager.data["PROXY"]["port"] = port

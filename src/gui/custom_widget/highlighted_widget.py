@@ -6,13 +6,25 @@ class HighlightLabel(QLabel):
         super().__init__(parent)
         self.default_palette = self.palette()
         self.default_style = self.styleSheet()
-        self.highlight_style = "color: yellow;"  # Apply text color
+        self.highlight_style = "color: yellow"
+        self.success_style = "color: rgb(40, 167, 69)"
+        self.error_style = "color: red"
         
     def setText(self, text: str) -> None:
         super().setText(text)
         if text:  # Only highlight if text is not empty
             self.setStyleSheet(self.highlight_style)
             QTimer.singleShot(1000, self.resetColor)
+    
+    def setSuccess(self, text: str) -> None:
+        super().setText(text)
+        if text:
+            self.setStyleSheet(self.success_style)
+    
+    def setError(self, text: str) -> None:
+        super().setText(text)
+        if text:
+            self.setStyleSheet(self.error_style)
     
     def resetColor(self):
         self.setStyleSheet(self.default_style)
