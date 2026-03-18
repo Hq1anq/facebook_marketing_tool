@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'interfacewnCAwG.ui'
+## Form generated from reading UI file 'interfaceSRUXbX.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.10.2
 ##
@@ -271,6 +271,11 @@ class Ui_MainWindow(object):
         self.vboxLayout = QVBoxLayout(self.pageContainer)
         self.vboxLayout.setObjectName(u"vboxLayout")
         self.vboxLayout.setContentsMargins(0, -1, 0, 0)
+        self.status = HighlightLabel(self.pageContainer)
+        self.status.setObjectName(u"status")
+
+        self.vboxLayout.addWidget(self.status)
+
         self.pageStacked = QStackedWidget(self.pageContainer)
         self.pageStacked.setObjectName(u"pageStacked")
         self.pageStacked.setStyleSheet(u"QPushButton {\n"
@@ -295,18 +300,13 @@ class Ui_MainWindow(object):
 "QLineEdit:hover, QTextEdit:hover, QPlainTextEdit:hover { border: 2px solid rgb(64, 71, 88) }\n"
 "QLineEdit:focus,  QTextEdit:focus, QPlainTextEdit:hover { border: 2px solid rgb(91, 101, 124) }\n"
 "QComboBox { background-color: rgb(33, 37, 43) }\n"
-"#btn_ok { padding: 30px }")
+"#btn_ok { padding: 30px; border-radius: 20px }")
         self.homePage = QWidget()
         self.homePage.setObjectName(u"homePage")
         self.gridLayout_8 = QGridLayout(self.homePage)
         self.gridLayout_8.setObjectName(u"gridLayout_8")
         self.gridLayout_8.setHorizontalSpacing(15)
         self.gridLayout_8.setVerticalSpacing(0)
-        self.statusHome = HighlightLabel(self.homePage)
-        self.statusHome.setObjectName(u"statusHome")
-
-        self.gridLayout_8.addWidget(self.statusHome, 1, 0, 1, 3)
-
         self.functionComboBox = QComboBox(self.homePage)
         self.functionComboBox.addItem("")
         self.functionComboBox.addItem("")
@@ -388,7 +388,7 @@ class Ui_MainWindow(object):
         self.postImageViewer.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.postImageViewerWidget = QWidget()
         self.postImageViewerWidget.setObjectName(u"postImageViewerWidget")
-        self.postImageViewerWidget.setGeometry(QRect(0, 0, 443, 340))
+        self.postImageViewerWidget.setGeometry(QRect(0, 0, 443, 334))
         self.postImageViewer.setWidget(self.postImageViewerWidget)
 
         self.gridLayout.addWidget(self.postImageViewer, 2, 0, 1, 1)
@@ -675,104 +675,113 @@ class Ui_MainWindow(object):
 
         self.homeStackedWidget.addWidget(self.spamPage)
 
-        self.gridLayout_8.addWidget(self.homeStackedWidget, 2, 0, 1, 3)
+        self.gridLayout_8.addWidget(self.homeStackedWidget, 1, 0, 1, 3)
 
         self.pageStacked.addWidget(self.homePage)
         self.proxyPage = QWidget()
         self.proxyPage.setObjectName(u"proxyPage")
         self.proxyLayout = QGridLayout(self.proxyPage)
         self.proxyLayout.setObjectName(u"proxyLayout")
-        self.proxyLayout.setVerticalSpacing(20)
-        self.proxyLayout.setContentsMargins(-1, -1, -1, 100)
-        self.proxyCheckBox = QCheckBox(self.proxyPage)
-        self.proxyCheckBox.setObjectName(u"proxyCheckBox")
-
-        self.proxyLayout.addWidget(self.proxyCheckBox, 0, 0, 1, 1)
-
+        self.proxyLayout.setContentsMargins(30, -1, 30, -1)
         self.proxyFrame = QFrame(self.proxyPage)
         self.proxyFrame.setObjectName(u"proxyFrame")
         self.proxyFrame.setFrameShape(QFrame.Shape.StyledPanel)
         self.proxyFrame.setFrameShadow(QFrame.Shadow.Raised)
         self.gridLayout_4 = QGridLayout(self.proxyFrame)
         self.gridLayout_4.setObjectName(u"gridLayout_4")
-        self.proxyInputMethodCheckBox = QCheckBox(self.proxyFrame)
-        self.proxyInputMethodCheckBox.setObjectName(u"proxyInputMethodCheckBox")
-        self.proxyInputMethodCheckBox.setChecked(True)
+        self.fullProxyLabel = QLabel(self.proxyFrame)
+        self.fullProxyLabel.setObjectName(u"fullProxyLabel")
 
-        self.gridLayout_4.addWidget(self.proxyInputMethodCheckBox, 1, 0, 1, 1)
+        self.gridLayout_4.addWidget(self.fullProxyLabel, 1, 0, 1, 1)
 
         self.btn_ok = QPushButton(self.proxyFrame)
         self.btn_ok.setObjectName(u"btn_ok")
 
         self.gridLayout_4.addWidget(self.btn_ok, 3, 0, 1, 3, Qt.AlignmentFlag.AlignHCenter)
 
-        self.proxyStatus = QLabel(self.proxyFrame)
-        self.proxyStatus.setObjectName(u"proxyStatus")
-        sizePolicy2 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Fixed)
-        sizePolicy2.setHorizontalStretch(0)
-        sizePolicy2.setVerticalStretch(0)
-        sizePolicy2.setHeightForWidth(self.proxyStatus.sizePolicy().hasHeightForWidth())
-        self.proxyStatus.setSizePolicy(sizePolicy2)
-
-        self.gridLayout_4.addWidget(self.proxyStatus, 0, 0, 1, 3)
-
         self.proxyInputDetailFrame = QFrame(self.proxyFrame)
         self.proxyInputDetailFrame.setObjectName(u"proxyInputDetailFrame")
-        self.proxyInputDetailFrame.setMaximumSize(QSize(350, 16777215))
-        self._3 = QGridLayout(self.proxyInputDetailFrame)
-        self._3.setObjectName(u"_3")
-        self._3.setContentsMargins(50, -1, -1, -1)
+        self.proxyInputDetailFrame.setStyleSheet(u"QLabel { qproperty-alignment: 'AlignRight | AlignVCenter' }")
+        self.gridLayout_6 = QGridLayout(self.proxyInputDetailFrame)
+        self.gridLayout_6.setObjectName(u"gridLayout_6")
+        self.gridLayout_6.setHorizontalSpacing(12)
+        self.gridLayout_6.setContentsMargins(-1, -1, 6, -1)
         self.proxyIpLabel = QLabel(self.proxyInputDetailFrame)
         self.proxyIpLabel.setObjectName(u"proxyIpLabel")
+        sizePolicy1.setHeightForWidth(self.proxyIpLabel.sizePolicy().hasHeightForWidth())
+        self.proxyIpLabel.setSizePolicy(sizePolicy1)
+        self.proxyIpLabel.setMinimumSize(QSize(70, 0))
 
-        self._3.addWidget(self.proxyIpLabel, 0, 0, 1, 1)
+        self.gridLayout_6.addWidget(self.proxyIpLabel, 0, 0, 1, 1)
 
         self.proxyIpInput = QLineEdit(self.proxyInputDetailFrame)
         self.proxyIpInput.setObjectName(u"proxyIpInput")
 
-        self._3.addWidget(self.proxyIpInput, 0, 1, 1, 1)
+        self.gridLayout_6.addWidget(self.proxyIpInput, 0, 1, 1, 1)
 
         self.proxyPortLabel = QLabel(self.proxyInputDetailFrame)
         self.proxyPortLabel.setObjectName(u"proxyPortLabel")
+        sizePolicy1.setHeightForWidth(self.proxyPortLabel.sizePolicy().hasHeightForWidth())
+        self.proxyPortLabel.setSizePolicy(sizePolicy1)
+        self.proxyPortLabel.setMinimumSize(QSize(100, 0))
 
-        self._3.addWidget(self.proxyPortLabel, 1, 0, 1, 1)
+        self.gridLayout_6.addWidget(self.proxyPortLabel, 0, 2, 1, 1)
 
         self.proxyPortInput = QLineEdit(self.proxyInputDetailFrame)
         self.proxyPortInput.setObjectName(u"proxyPortInput")
 
-        self._3.addWidget(self.proxyPortInput, 1, 1, 1, 1)
+        self.gridLayout_6.addWidget(self.proxyPortInput, 0, 3, 1, 1)
 
         self.proxyUserLabel = QLabel(self.proxyInputDetailFrame)
         self.proxyUserLabel.setObjectName(u"proxyUserLabel")
+        sizePolicy1.setHeightForWidth(self.proxyUserLabel.sizePolicy().hasHeightForWidth())
+        self.proxyUserLabel.setSizePolicy(sizePolicy1)
+        self.proxyUserLabel.setMinimumSize(QSize(70, 0))
 
-        self._3.addWidget(self.proxyUserLabel, 2, 0, 1, 1)
+        self.gridLayout_6.addWidget(self.proxyUserLabel, 1, 0, 1, 1)
 
         self.proxyUserInput = QLineEdit(self.proxyInputDetailFrame)
         self.proxyUserInput.setObjectName(u"proxyUserInput")
 
-        self._3.addWidget(self.proxyUserInput, 2, 1, 1, 1)
+        self.gridLayout_6.addWidget(self.proxyUserInput, 1, 1, 1, 1)
 
         self.proxyPassLabel = QLabel(self.proxyInputDetailFrame)
         self.proxyPassLabel.setObjectName(u"proxyPassLabel")
+        sizePolicy1.setHeightForWidth(self.proxyPassLabel.sizePolicy().hasHeightForWidth())
+        self.proxyPassLabel.setSizePolicy(sizePolicy1)
+        self.proxyPassLabel.setMinimumSize(QSize(100, 0))
 
-        self._3.addWidget(self.proxyPassLabel, 3, 0, 1, 1)
+        self.gridLayout_6.addWidget(self.proxyPassLabel, 1, 2, 1, 1)
 
         self.proxyPassInput = QLineEdit(self.proxyInputDetailFrame)
         self.proxyPassInput.setObjectName(u"proxyPassInput")
 
-        self._3.addWidget(self.proxyPassInput, 3, 1, 1, 1)
+        self.gridLayout_6.addWidget(self.proxyPassInput, 1, 3, 1, 1)
 
 
         self.gridLayout_4.addWidget(self.proxyInputDetailFrame, 2, 0, 1, 3)
 
         self.proxyInput = QLineEdit(self.proxyFrame)
         self.proxyInput.setObjectName(u"proxyInput")
-        self.proxyInput.setMaximumSize(QSize(450, 16777215))
 
         self.gridLayout_4.addWidget(self.proxyInput, 1, 1, 1, 1)
 
+        self.proxyDetailCheckbox = QCheckBox(self.proxyFrame)
+        self.proxyDetailCheckbox.setObjectName(u"proxyDetailCheckbox")
+
+        self.gridLayout_4.addWidget(self.proxyDetailCheckbox, 0, 0, 1, 1)
+
 
         self.proxyLayout.addWidget(self.proxyFrame, 1, 0, 1, 1)
+
+        self.proxyCheckBox = QCheckBox(self.proxyPage)
+        self.proxyCheckBox.setObjectName(u"proxyCheckBox")
+
+        self.proxyLayout.addWidget(self.proxyCheckBox, 0, 0, 1, 1)
+
+        self.verticalSpacer_3 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.proxyLayout.addItem(self.verticalSpacer_3, 2, 0, 1, 1)
 
         self.pageStacked.addWidget(self.proxyPage)
         self.loginPage = QWidget()
@@ -780,13 +789,32 @@ class Ui_MainWindow(object):
         self.gridLayout_5 = QGridLayout(self.loginPage)
         self.gridLayout_5.setObjectName(u"gridLayout_5")
         self.gridLayout_5.setContentsMargins(-1, -1, 25, -1)
-        self.btn_reload_loginMethod = QPushButton(self.loginPage)
-        self.btn_reload_loginMethod.setObjectName(u"btn_reload_loginMethod")
-        self.btn_reload_loginMethod.setMaximumSize(QSize(43, 43))
-        self.btn_reload_loginMethod.setIcon(icon6)
-        self.btn_reload_loginMethod.setIconSize(QSize(30, 30))
+        self.methodLabel = QLabel(self.loginPage)
+        self.methodLabel.setObjectName(u"methodLabel")
+        sizePolicy1.setHeightForWidth(self.methodLabel.sizePolicy().hasHeightForWidth())
+        self.methodLabel.setSizePolicy(sizePolicy1)
 
-        self.gridLayout_5.addWidget(self.btn_reload_loginMethod, 0, 2, 1, 1)
+        self.gridLayout_5.addWidget(self.methodLabel, 0, 0, 1, 1)
+
+        self.btn_login = QPushButton(self.loginPage)
+        self.btn_login.setObjectName(u"btn_login")
+        sizePolicy2 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
+        sizePolicy2.setHorizontalStretch(0)
+        sizePolicy2.setVerticalStretch(0)
+        sizePolicy2.setHeightForWidth(self.btn_login.sizePolicy().hasHeightForWidth())
+        self.btn_login.setSizePolicy(sizePolicy2)
+        self.btn_login.setIconSize(QSize(40, 32))
+
+        self.gridLayout_5.addWidget(self.btn_login, 2, 3, 1, 1)
+
+        self.methodComboBox = QComboBox(self.loginPage)
+        self.methodComboBox.addItem("")
+        self.methodComboBox.addItem("")
+        self.methodComboBox.setObjectName(u"methodComboBox")
+        sizePolicy.setHeightForWidth(self.methodComboBox.sizePolicy().hasHeightForWidth())
+        self.methodComboBox.setSizePolicy(sizePolicy)
+
+        self.gridLayout_5.addWidget(self.methodComboBox, 0, 1, 1, 1)
 
         self.loginMethodStacked = QStackedWidget(self.loginPage)
         self.loginMethodStacked.setObjectName(u"loginMethodStacked")
@@ -892,85 +920,41 @@ class Ui_MainWindow(object):
 
         self.loginMethodStacked.addWidget(self.useCookie)
 
-        self.gridLayout_5.addWidget(self.loginMethodStacked, 2, 0, 1, 6)
+        self.gridLayout_5.addWidget(self.loginMethodStacked, 1, 0, 1, 4)
 
         self.verticalSpacer_2 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
-        self.gridLayout_5.addItem(self.verticalSpacer_2, 4, 5, 1, 1)
+        self.gridLayout_5.addItem(self.verticalSpacer_2, 3, 3, 1, 1)
 
-        self.methodComboBox = QComboBox(self.loginPage)
-        self.methodComboBox.addItem("")
-        self.methodComboBox.addItem("")
-        self.methodComboBox.setObjectName(u"methodComboBox")
-        sizePolicy.setHeightForWidth(self.methodComboBox.sizePolicy().hasHeightForWidth())
-        self.methodComboBox.setSizePolicy(sizePolicy)
+        self.btn_reload_loginMethod = QPushButton(self.loginPage)
+        self.btn_reload_loginMethod.setObjectName(u"btn_reload_loginMethod")
+        self.btn_reload_loginMethod.setMaximumSize(QSize(43, 43))
+        self.btn_reload_loginMethod.setIcon(icon6)
+        self.btn_reload_loginMethod.setIconSize(QSize(30, 30))
 
-        self.gridLayout_5.addWidget(self.methodComboBox, 0, 1, 1, 1)
-
-        self.btn_login = QPushButton(self.loginPage)
-        self.btn_login.setObjectName(u"btn_login")
-        sizePolicy4 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
-        sizePolicy4.setHorizontalStretch(0)
-        sizePolicy4.setVerticalStretch(0)
-        sizePolicy4.setHeightForWidth(self.btn_login.sizePolicy().hasHeightForWidth())
-        self.btn_login.setSizePolicy(sizePolicy4)
-        self.btn_login.setIconSize(QSize(40, 32))
-
-        self.gridLayout_5.addWidget(self.btn_login, 3, 5, 1, 1)
-
-        self.methodLabel = QLabel(self.loginPage)
-        self.methodLabel.setObjectName(u"methodLabel")
-        sizePolicy1.setHeightForWidth(self.methodLabel.sizePolicy().hasHeightForWidth())
-        self.methodLabel.setSizePolicy(sizePolicy1)
-
-        self.gridLayout_5.addWidget(self.methodLabel, 0, 0, 1, 1)
-
-        self.loginStatus = HighlightLabel(self.loginPage)
-        self.loginStatus.setObjectName(u"loginStatus")
-
-        self.gridLayout_5.addWidget(self.loginStatus, 1, 0, 1, 6)
+        self.gridLayout_5.addWidget(self.btn_reload_loginMethod, 0, 2, 1, 1)
 
         self.pageStacked.addWidget(self.loginPage)
         self.getPage = QWidget()
         self.getPage.setObjectName(u"getPage")
-        self.gridLayout_7 = QGridLayout(self.getPage)
-        self.gridLayout_7.setObjectName(u"gridLayout_7")
-        self.gridLayout_7.setHorizontalSpacing(15)
-        self.gridLayout_7.setVerticalSpacing(0)
-        self.statusGet = HighlightLabel(self.getPage)
-        self.statusGet.setObjectName(u"statusGet")
-
-        self.gridLayout_7.addWidget(self.statusGet, 3, 0, 1, 2)
-
-        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
-
-        self.gridLayout_7.addItem(self.verticalSpacer, 5, 0, 1, 1)
-
-        self.getStacked = QStackedWidget(self.getPage)
-        self.getStacked.setObjectName(u"getStacked")
-        self.getDataPage = QWidget()
-        self.getDataPage.setObjectName(u"getDataPage")
-        self.gridLayout_9 = QGridLayout(self.getDataPage)
-        self.gridLayout_9.setObjectName(u"gridLayout_9")
-        self.btn_getGroup = QPushButton(self.getDataPage)
+        self.getPage.setMaximumSize(QSize(16777215, 200))
+        self.horizontalLayout_3 = QHBoxLayout(self.getPage)
+        self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
+        self.btn_getGroup = QPushButton(self.getPage)
         self.btn_getGroup.setObjectName(u"btn_getGroup")
         sizePolicy.setHeightForWidth(self.btn_getGroup.sizePolicy().hasHeightForWidth())
         self.btn_getGroup.setSizePolicy(sizePolicy)
         self.btn_getGroup.setStyleSheet(u"")
 
-        self.gridLayout_9.addWidget(self.btn_getGroup, 2, 0, 1, 1)
+        self.horizontalLayout_3.addWidget(self.btn_getGroup)
 
-        self.btn_getPost = QPushButton(self.getDataPage)
+        self.btn_getPost = QPushButton(self.getPage)
         self.btn_getPost.setObjectName(u"btn_getPost")
         sizePolicy.setHeightForWidth(self.btn_getPost.sizePolicy().hasHeightForWidth())
         self.btn_getPost.setSizePolicy(sizePolicy)
         self.btn_getPost.setStyleSheet(u"")
 
-        self.gridLayout_9.addWidget(self.btn_getPost, 2, 1, 1, 1)
-
-        self.getStacked.addWidget(self.getDataPage)
-
-        self.gridLayout_7.addWidget(self.getStacked, 4, 0, 1, 2)
+        self.horizontalLayout_3.addWidget(self.btn_getPost)
 
         self.pageStacked.addWidget(self.getPage)
 
@@ -1023,11 +1007,11 @@ class Ui_MainWindow(object):
 
         self.title = QLabel(self.contentTop)
         self.title.setObjectName(u"title")
-        sizePolicy5 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)
-        sizePolicy5.setHorizontalStretch(0)
-        sizePolicy5.setVerticalStretch(0)
-        sizePolicy5.setHeightForWidth(self.title.sizePolicy().hasHeightForWidth())
-        self.title.setSizePolicy(sizePolicy5)
+        sizePolicy4 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)
+        sizePolicy4.setHorizontalStretch(0)
+        sizePolicy4.setVerticalStretch(0)
+        sizePolicy4.setHeightForWidth(self.title.sizePolicy().hasHeightForWidth())
+        self.title.setSizePolicy(sizePolicy4)
 
         self._15.addWidget(self.title)
 
@@ -1045,7 +1029,7 @@ class Ui_MainWindow(object):
         self._16 = QHBoxLayout(self.navigationBar)
         self._16.setSpacing(0)
         self._16.setObjectName(u"_16")
-        self._16.setContentsMargins(0, 0, 0, 0)
+        self._16.setContentsMargins(20, 0, 0, 0)
         self.minimizeBtn = QPushButton(self.navigationBar)
         self.minimizeBtn.setObjectName(u"minimizeBtn")
         icon13 = QIcon()
@@ -1094,7 +1078,6 @@ class Ui_MainWindow(object):
         self.pageStacked.setCurrentIndex(0)
         self.homeStackedWidget.setCurrentIndex(0)
         self.loginMethodStacked.setCurrentIndex(0)
-        self.getStacked.setCurrentIndex(0)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -1133,13 +1116,19 @@ class Ui_MainWindow(object):
         self.btn_spam.setText(QCoreApplication.translate("MainWindow", u"SPAM!", None))
         self.spamListFilter.setPlaceholderText(QCoreApplication.translate("MainWindow", u"list t\u1eeb kh\u00f3a (ng\u0103n c\u00e1ch b\u1eddi k\u00ed t\u1ef1 \",\")", None))
         self.spamSpamListFilter.setText(QCoreApplication.translate("MainWindow", u"L\u1ecdc t\u1eeb kh\u00f3a", None))
-        self.proxyCheckBox.setText(QCoreApplication.translate("MainWindow", u"PROXY", None))
-        self.proxyInputMethodCheckBox.setText(QCoreApplication.translate("MainWindow", u"IP:PORT:USER:PASS", None))
+        self.fullProxyLabel.setText(QCoreApplication.translate("MainWindow", u"IP:PORT:USER:PASS", None))
         self.btn_ok.setText(QCoreApplication.translate("MainWindow", u"OK", None))
         self.proxyIpLabel.setText(QCoreApplication.translate("MainWindow", u"IP", None))
         self.proxyPortLabel.setText(QCoreApplication.translate("MainWindow", u"PORT", None))
         self.proxyUserLabel.setText(QCoreApplication.translate("MainWindow", u"USER", None))
         self.proxyPassLabel.setText(QCoreApplication.translate("MainWindow", u"PASS", None))
+        self.proxyDetailCheckbox.setText(QCoreApplication.translate("MainWindow", u"Detail", None))
+        self.proxyCheckBox.setText(QCoreApplication.translate("MainWindow", u"PROXY", None))
+        self.methodLabel.setText(QCoreApplication.translate("MainWindow", u"Login method", None))
+        self.btn_login.setText(QCoreApplication.translate("MainWindow", u"LOGIN", None))
+        self.methodComboBox.setItemText(0, QCoreApplication.translate("MainWindow", u"Username|Password|2fa", None))
+        self.methodComboBox.setItemText(1, QCoreApplication.translate("MainWindow", u"Cookie", None))
+
         self.fullLoginLabel.setText(QCoreApplication.translate("MainWindow", u"USER|PASS|2FA", None))
         self.fullLoginInput.setPlaceholderText(QCoreApplication.translate("MainWindow", u"xxxxxxxxxx@gmail.com|**********|ABXDEFGH6572PJUS9I01JKK567GHJOPO", None))
         self.loginDetail.setText(QCoreApplication.translate("MainWindow", u"Detail", None))
@@ -1151,11 +1140,6 @@ class Ui_MainWindow(object):
         self.passLabel.setText(QCoreApplication.translate("MainWindow", u"Password", None))
         self.methodCookieLabel.setText(QCoreApplication.translate("MainWindow", u"Cookie", None))
         self.cookieInput.setPlaceholderText(QCoreApplication.translate("MainWindow", u"c_user=...;fr=...;sb=...;xs=...;datr=...", None))
-        self.methodComboBox.setItemText(0, QCoreApplication.translate("MainWindow", u"Username|Password|2fa", None))
-        self.methodComboBox.setItemText(1, QCoreApplication.translate("MainWindow", u"Cookie", None))
-
-        self.btn_login.setText(QCoreApplication.translate("MainWindow", u"LOGIN", None))
-        self.methodLabel.setText(QCoreApplication.translate("MainWindow", u"Login method", None))
         self.btn_getGroup.setText(QCoreApplication.translate("MainWindow", u"GET GROUP", None))
         self.btn_getPost.setText(QCoreApplication.translate("MainWindow", u"GET POST", None))
         self.credits.setText(QCoreApplication.translate("MainWindow", u"contact: @Giang_vps", None))

@@ -10,7 +10,7 @@ import src.settings as settings
 
 from .widget.ui_interface import Ui_MainWindow
 from .window_control import WindowController
-from src.gui.worker_ui import GetUI, LoginUI, PostUI, CommentUI, SpamUI
+from src.gui.worker_ui import GetUI, LoginUI, PostUI, CommentUI, SpamUI, ProxyUI
 from src.worker import Post, Login, Spam, GetGroup, GetPost
 
 from src.manager import DriverManager, DataManager
@@ -46,6 +46,7 @@ class MainWindow(QMainWindow):
         self.comment_ui = CommentUI(self.ui, self.data_manager)
         self.spam_ui = SpamUI(self.ui, self.data_manager)
         self.login_ui = LoginUI(self.ui, self.data_manager)
+        self.proxy_ui = ProxyUI(self.ui, self.data_manager)
         self.table_widget = TableWidget(self)
         
         self.post = Post(self.driver_manager)
@@ -63,7 +64,7 @@ class MainWindow(QMainWindow):
         self.post.signals.table_status.connect(lambda row, status: self.table_widget.table.setItem(row, 3, self.table_widget.table_item(status, "center")))
         self.post.signals.finished.connect(lambda: self._on_finished_use_table("POST"))
         
-        self.login.signals.log.connect(lambda msg: self.ui.loginStatus.setText(msg))
+        self.login.signals.log.connect(lambda msg: self.ui.status.setText(msg))
         self.login.signals.cookie_output.connect(lambda cookie: self.ui.cookieInput.setPlainText(cookie))
         self.login.signals.finished.connect(self._on_login_success)
         
@@ -71,7 +72,7 @@ class MainWindow(QMainWindow):
         self.get_group.signals.add_row.connect(lambda link, name: self.table_widget.add_row(link, name))
         self.get_group.signals.finished.connect(self.table_widget.adjust_column_width)
         
-        self.spam.signals.log.connect(lambda msg: self.ui.statusHome.setText(msg))
+        self.spam.signals.log.connect(lambda msg: self.ui.status.setText(msg))
         self.spam.signals.finished.connect(lambda: self.ui.btn_spam.setText("SPAM!"))
         
         self.load()
@@ -115,11 +116,6 @@ class MainWindow(QMainWindow):
         self.ui.btn_getPost.clicked.connect(self.open_table)
 
         self.ui.btn_login.clicked.connect(self.run_login)
-
-        # PROXY
-        self.ui.proxyCheckBox.clicked.connect(self.changeStatusProxy)
-        self.ui.btn_proxy.clicked.connect(self.changeStatusProxy)
-        self.ui.proxyInputMethodCheckBox.stateChanged.connect(self.changeProxyInputMethod)
         
         # self.table_widget.resize(self.width() - self.ui.leftMenu.width() // 2, self.height() - self.ui.contentTop.height() - self.ui.bottomBar.height())
         # self.table_widget.move(self.ui.leftMenu.width() // 4, self.ui.contentTop.height() - 10)
@@ -138,16 +134,16 @@ class MainWindow(QMainWindow):
         password = self.data_manager.data["LOGIN"]["password"]
         twofa = self.data_manager.data["LOGIN"]["2fa"]
         if not (cookie or (username and password)):
-            self.ui.loginStatus.setText("Thiếu thông tin đăng nhập")
+            self.ui.status.setText("Thiếu thông tin đăng nhập")
             return
         
         if not self.driver_manager.setup_driver():
-            self.ui.loginStatus.setText("Xung đột! Vui lòng đóng tất cả các trình duyệt Chrome")
+            self.ui.status.setText("Xung đột! Vui lòng đóng tất cả các trình duyệt Chrome")
             return
         self.driver_manager.jump_to_facebook()
         if self.driver_manager.is_login:
             username = self.driver_manager.get_username()
-            self.ui.loginStatus.setText("Bạn đã đăng nhập, profile: " + username)
+            self.ui.status.setText("Bạn đã đăng nhập, profile: " + username)
             self.updateProfileName(username)
             cookie = self.driver_manager.get_cookies()
             self.ui.cookieInput.setPlainText(cookie)
@@ -173,11 +169,11 @@ class MainWindow(QMainWindow):
     
     def handle_unLogin(self):
         self.open_login_page()
-        self.ui.loginStatus.setText("Bạn chưa đăng nhập, vui lòng đăng nhập trước khi sử dụng chức năng này")
+        self.ui.status.setText("Bạn chưa đăng nhập, vui lòng đăng nhập trước khi sử dụng chức năng này")
     
     def _on_login_success(self):
         profile_name = self.driver_manager.get_username()
-        self.ui.loginStatus.setText("Đăng nhập thành công, profile: " + profile_name)
+        self.ui.status.setText("Đăng nhập thành công, profile: " + profile_name)
         self.updateProfileName(profile_name)
         cookie = self.driver_manager.get_cookies()
         self.ui.cookieInput.setPlainText(cookie)
@@ -188,7 +184,7 @@ class MainWindow(QMainWindow):
             self.post_ui.save_data()
             post_data = self.data_manager.data["POST"]
             if not (post_data["image"] or post_data["content"]):
-                self.ui.statusHome.setText("POST: Thiếu thông tin để đăng bài")
+                self.ui.status.setText("POST: Thiếu thông tin để đăng bài")
                 return
             if not self.driver_manager.setup_driver():
                 self.table_widget.statusTable.setText("Xung đột! Vui lòng đóng tất cả các trình duyệt Chrome")
@@ -221,10 +217,10 @@ class MainWindow(QMainWindow):
             self.spam_ui.save_data()
             spam_data = self.data_manager.data["SPAM"]
             if not (spam_data["image"] or spam_data["content"]):
-                self.ui.statusHome.setText("SPAM: Thiếu thông tin để đi spam")
+                self.ui.status.setText("SPAM: Thiếu thông tin để đi spam")
                 return
             if not self.driver_manager.setup_driver():
-                self.ui.statusHome.setText("Xung đột! Vui lòng đóng tất cả các trình duyệt Chrome")
+                self.ui.status.setText("Xung đột! Vui lòng đóng tất cả các trình duyệt Chrome")
                 return
             self.driver_manager.jump_to_facebook()
             if not self.driver_manager.is_login:
@@ -243,7 +239,7 @@ class MainWindow(QMainWindow):
             self.spam.set_stop(False)  # Tell Spam to keep running
             QThreadPool.globalInstance().start(self.spam)
         else:
-            self.ui.statusHome.setText("SPAM: Đã tạm dừng")
+            self.ui.status.setText("SPAM: Đã tạm dừng")
             self.ui.btn_spam.setText("CONTINUE")
             self.spam.set_stop(True)  # Tell Spam to pause
     
@@ -252,7 +248,7 @@ class MainWindow(QMainWindow):
         filter_keys = [keyword.strip() for keyword in self.table_widget.filterGroupInput.text().split(",") if keyword.strip()]
         
         if not self.driver_manager.setup_driver():
-            self.ui.statusGet.setText("Xung đột! Vui lòng đóng tất cả các trình duyệt Chrome")
+            self.ui.status.setText("Xung đột! Vui lòng đóng tất cả các trình duyệt Chrome")
             return
         self.driver_manager.jump_to_facebook()
         if not self.driver_manager.is_login:
@@ -269,7 +265,7 @@ class MainWindow(QMainWindow):
         self.move(self.screen().size().width() - self.size().width(), self.screen().size().height() - self.size().height() - 50)
         
         if not self.driver_manager.setup_driver():
-            self.ui.statusGet.setText("Xung đột! Vui lòng đóng tất cả các trình duyệt Chrome")
+            self.ui.status.setText("Xung đột! Vui lòng đóng tất cả các trình duyệt Chrome")
             return
         self.driver_manager.jump_to_facebook()
         if not self.driver_manager.is_login:
@@ -350,6 +346,7 @@ class MainWindow(QMainWindow):
         self.comment_ui.load_data()
         self.spam_ui.load_data()
         self.login_ui.load_data()
+        self.proxy_ui.load_data()
         
         # Load images if available
         self.post_ui.load_image(use_dialog=False)
@@ -371,18 +368,19 @@ class MainWindow(QMainWindow):
                 self.spam_ui.save_data()
         elif current_page == self.ui.getPage:
             # Save GET data
-            current_function = "LOGIN" if self.ui.getStacked.currentWidget() == self.ui.loginPage else "GET DATA"
+            current_function = "GET DATA"
+        elif current_page == self.ui.loginPage:
+            current_function = "LOGIN"
             self.login_ui.save_data()
+        elif current_page == self.ui.proxyPage:
+            current_function = "PROXY"
+            self.proxy_ui.save_data*()
         
         try:
             self.data_manager.save_data()
-            self.ui.statusHome.setText(f"Đã lưu dữ liệu {current_function}")
-            self.ui.statusGet.setText(f"Đã lưu dữ liệu {current_function}")
-            self.ui.loginStatus.setText(f"Đã lưu dữ liệu {current_function}")
+            self.ui.status.setText(f"Đã lưu dữ liệu {current_function}")
         except:
-            self.ui.statusHome.setText("Không thể lưu dữ liệu vào file đang mở, vui lòng đóng file " + self.data_manager.data_path.split("\\")[-1])
-            self.ui.statusGet.setText("Không thể lưu dữ liệu vào file đang mở, vui lòng đóng file " + self.data_manager.data_path.split("\\")[-1])
-            self.ui.loginStatus.setText("Không thể lưu dữ liệu vào file đang mở, vui lòng đóng file " + self.data_manager.data_path.split("\\")[-1])
+            self.ui.status.setText("Không thể lưu dữ liệu vào file đang mở, vui lòng đóng file " + self.data_manager.data_path.split("\\")[-1])
     
     def save_all(self):
         """Save all data regardless of current page"""
@@ -390,12 +388,13 @@ class MainWindow(QMainWindow):
         self.comment_ui.save_data()
         self.spam_ui.save_data()
         self.login_ui.save_data()
+        self.proxy_ui.save_data()
         
         try:
             self.data_manager.save_data()
-            self.ui.statusHome.setText("Đã lưu toàn bộ dữ liệu tool vào file " + self.data_manager.data_path.split("\\")[-1])
+            self.ui.status.setText("Đã lưu toàn bộ dữ liệu tool vào file " + self.data_manager.data_path.split("\\")[-1])
         except:
-            self.ui.statusHome.setText("Không thể lưu dữ liệu vào file đang mở, vui lòng đóng file " + self.data_manager.data_path.split("\\")[-1])
+            self.ui.status.setText("Không thể lưu dữ liệu vào file đang mở, vui lòng đóng file " + self.data_manager.data_path.split("\\")[-1])
         
     def mousePressEvent(self, event):
         self.window_controller.handle_mouse_press(event)
@@ -419,7 +418,6 @@ class MainWindow(QMainWindow):
         self.ui.btn_spamImageFromFile.hide()
         self.ui.functionComboBox.setCurrentText("POST")
         self.ui.homeStackedWidget.setCurrentWidget(self.ui.postPage)
-        self.ui.getStacked.setCurrentWidget(self.ui.getDataPage)
         self.ui.fullLoginLabel.hide()
         self.ui.fullLoginInput.hide()
         self.ui.twoFAInput.hide()
@@ -485,21 +483,4 @@ class MainWindow(QMainWindow):
         })();
         '''%self.ui.cookieInput.toPlainText()
         pyperclip.copy(consoleCode)
-        self.ui.loginStatus.setText("Đã copy code cookies, paste vào console của chromeDevtool để login")
-
-    # PROXY
-    def changeStatusProxy(self):
-        if self.ui.btn_proxy.isChecked():
-            self.ui.proxyCheckBox.setCheckState(Qt.CheckState.Checked)
-            self.ui.proxyFrame.show()
-        else:
-            self.ui.proxyCheckBox.setCheckState(Qt.CheckState.Unchecked)
-            self.ui.proxyFrame.hide()
-
-    def changeProxyInputMethod(self, state):
-        if Qt.CheckState(state) == Qt.CheckState.Checked:
-            self.ui.proxyInputDetailFrame.hide()
-            self.ui.proxyInput.show()
-        else:
-            self.ui.proxyInputDetailFrame.show()
-            self.ui.proxyInput.hide()
+        self.ui.status.setText("Đã copy code cookies, paste vào console của chromeDevtool để login")

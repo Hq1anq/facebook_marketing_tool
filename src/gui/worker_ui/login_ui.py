@@ -87,23 +87,22 @@ class LoginUI:
                 self.ui.fullLoginInput.setText(username+"|"+password)
     
     def save_data(self):
-        if self.ui.getStacked.currentWidget() == self.ui.loginPage:
-            username, password, twoFA = "", "", ""
-            if self.ui.loginDetail.isChecked():
-                info = self.ui.fullLoginInput.text().split("|")
-                if len(info) >= 2:
-                    username = info[0]
-                    password = info[1]
-                if len(info) == 3:
-                    twoFA = info[2].replace(" ", "")
-            else:
-                username = self.ui.userInput.text()
-                password = self.ui.passInput.text()
-                twoFA = self.ui.twoFAInput.text()
-            cookie = self.ui.cookieInput.toPlainText()
-            self.data_manager.data["LOGIN"]["username"] = username
-            self.data_manager.data["LOGIN"]["password"] = password
-            self.data_manager.data["LOGIN"]["2fa"] = twoFA
-            self.data_manager.data["LOGIN"]["cookie"] = cookie
+        username, password, twoFA = "", "", ""
+        if self.ui.loginDetail.isChecked():
+            info = self.ui.fullLoginInput.text().split("|")
+            if len(info) >= 2:
+                username = info[0]
+                password = info[1]
+            if len(info) == 3:
+                twoFA = info[2].replace(" ", "")
+        else:
+            username = self.ui.userInput.text()
+            password = self.ui.passInput.text()
+            twoFA = self.ui.twoFAInput.text()
+        cookie = self.ui.cookieInput.toPlainText()
+        self.data_manager.data["LOGIN"]["username"] = username
+        self.data_manager.data["LOGIN"]["password"] = password
+        self.data_manager.data["LOGIN"]["2fa"] = twoFA
+        self.data_manager.data["LOGIN"]["cookie"] = cookie
         if self.ui.profileName.text() != "":
             self.data_manager.data["LOGIN"]["profile name"] = self.ui.profileName.text()

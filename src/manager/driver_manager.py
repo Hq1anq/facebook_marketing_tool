@@ -38,7 +38,7 @@ class DriverManager:
         service = Service(executable_path=ChromeDriverManager().install())
         options = Options()
         options.add_experimental_option("detach", True) # Giữ cửa sổ mở
-        options.add_experimental_option("excludeSwitches", ['enable-automation'])
+        options.add_experimental_option('excludeSwitches', ['load-extension', 'enable-automation'])
         options.add_argument("user-data-dir=" + self.chrome_path) # Chỉ định profile cho browser
         options.add_argument("--disable-notifications")
         options.add_argument("--window-size=1130,800")

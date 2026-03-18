@@ -4,14 +4,14 @@ import os
 class DataManager:
     
     DEFAULT_DATA = {
+        "LOGIN": {
+            "cookie": "",
+            "username": "xxxxxxxxxx@gmail.com", 
+            "password": "**********",
+            "2fa": "ABXDEFGH6572PJUS9I01JKK567GHJOPO",
+            "profile name": ""
+        },
         "GET": {
-            "LOGIN": {
-                "cookie": "",
-                "username": "xxxxxxxxxx@gmail.com", 
-                "password": "**********",
-                "2fa": "ABXDEFGH6572PJUS9I01JKK567GHJOPO",
-                "profile name": ""
-            },
             "GROUP": [
                 {
                     "link group": "https://www.facebook.com/groups/345983411894599/",
@@ -25,7 +25,7 @@ class DataManager:
                     "name group": "VPS Giá Tốt - VPS/RDP Cheap",
                     "status": ""
                 }
-            ],
+            ]
         },
         "POST": {
             "image": [
@@ -144,6 +144,12 @@ Hạ tầng hiện đại, nguồn cung mới, hiệu suất tối ưu.
                 "need vps",
                 "need proxy"
             ]
+        },
+        "PROXY": {
+            "ip": "",
+            "port": "",
+            "username": "",
+            "password": ""
         }
     }
     

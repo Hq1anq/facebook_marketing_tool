@@ -3,3 +3,4 @@ from .login_ui import LoginUI
 from .post_ui import PostUI
 from .comment_ui import CommentUI
 from .spam_ui import SpamUI
+from .proxy_ui import ProxyUI
