@@ -15,7 +15,7 @@ from src.worker import Post, Login, Spam, GetGroup, GetPost
 
 from src.manager import DriverManager, DataManager
 
-import pyperclip, os
+import os
 
 DATA_FOLDER = "data"
 CHROME_PATH = DATA_FOLDER + "/ChromeData"
@@ -42,16 +42,16 @@ class MainWindow(QMainWindow):
         self.data_manager.load_data()
         self.driver_manager = DriverManager(CHROME_PATH if ":" in CHROME_PATH else os.path.join(os.getcwd(), CHROME_PATH))
         
+        self.table_widget = TableWidget(self)
+
         self.post_ui = PostUI(self.ui, self.data_manager)
         self.comment_ui = CommentUI(self.ui, self.data_manager)
         self.spam_ui = SpamUI(self.ui, self.data_manager)
+        self.get_ui = GetUI(self.move_window_to_corner, self.handle_unLogin, self.table_widget, self.ui, self.data_manager, self.driver_manager)
         self.login_ui = LoginUI(self.move_window_to_corner, self.ui, self.data_manager, self.driver_manager)
         self.proxy_ui = ProxyUI(self.move_window_to_corner, self.ui, self.data_manager, self.driver_manager)
-        self.table_widget = TableWidget(self)
         
         self.post = Post(self.driver_manager)
-        self.get_group = GetGroup(self.driver_manager, self.data_manager)
-        self.get_post = GetPost(self.driver_manager, self.data_manager)
         self.spam = Spam(self.driver_manager, self.data_manager)
         
         self.post.setAutoDelete(False)
@@ -61,10 +61,6 @@ class MainWindow(QMainWindow):
         self.post.signals.log.connect(lambda msg: self.table_widget.statusTable.setText(msg))
         self.post.signals.table_status.connect(lambda row, status: self.table_widget.table.setItem(row, 3, self.table_widget.table_item(status, "center")))
         self.post.signals.finished.connect(lambda: self._on_finished_use_table("POST"))
-        
-        self.get_group.signals.log.connect(lambda msg: self.table_widget.statusTable.setText(msg))
-        self.get_group.signals.add_row.connect(lambda link, name: self.table_widget.add_row(link, name))
-        self.get_group.signals.finished.connect(self.table_widget.adjust_column_width)
         
         self.spam.signals.log.connect(self.ui.status.setText)
         self.spam.signals.finished.connect(lambda: self.ui.btn_spam.setText("SPAM!"))
@@ -98,16 +94,10 @@ class MainWindow(QMainWindow):
         self.table_widget.tableExport.clicked.connect(self.save_in_table)
         self.ui.btn_spam.clicked.connect(self.run_spam)
 
-        # GET
-        # self.ui.loginDetailCheckBox.stateChanged.connect(self.changeLoginUserPassMethod)
-        # self.ui.twoFACheckBox.clicked.connect(self.changeUseOf2FA)
-        # self.ui.methodComboBox.activated.connect(self.chooseLoginMethod)
-        self.ui.btn_copyCookie.clicked.connect(self.copy_cookies)
-        
-        self.ui.btn_post.clicked.connect(self.open_table)
-        self.ui.btn_comment.clicked.connect(self.open_table)
         self.ui.btn_getGroup.clicked.connect(self.open_table)
         self.ui.btn_getPost.clicked.connect(self.open_table)
+        self.ui.btn_post.clicked.connect(self.open_table)
+        self.ui.btn_comment.clicked.connect(self.open_table)
         
         # self.table_widget.resize(self.width() - self.ui.leftMenu.width() // 2, self.height() - self.ui.contentTop.height() - self.ui.bottomBar.height())
         # self.table_widget.move(self.ui.leftMenu.width() // 4, self.ui.contentTop.height() - 10)
@@ -190,67 +180,11 @@ class MainWindow(QMainWindow):
             self.ui.btn_spam.setText("CONTINUE")
             self.spam.set_stop(True)  # Tell Spam to pause
     
-    def run_getGroup(self):
-        self.move_window_to_corner()
-        filter_keys = [keyword.strip() for keyword in self.table_widget.filterGroupInput.text().split(",") if keyword.strip()]
-        
-        if not self.driver_manager.setup_driver():
-            self.ui.status.setError("Xung đột! Vui lòng đóng tất cả các trình duyệt Chrome")
-            return
-        if not self.driver_manager.check_login():
-            self.handle_unLogin()
-            return
-        
-        self.get_group.setup(self.table_widget.filterGroupCheckBox.isChecked(), filter_keys)
-        
-        self.table_widget.table.setRowCount(1) # Clear table
-        QThreadPool.globalInstance().start(self.get_group)
-    
-    def run_getPost(self):
-        self.move_window_to_corner()
-        
-        if not self.driver_manager.setup_driver():
-            self.ui.status.setError("Xung đột! Vui lòng đóng tất cả các trình duyệt Chrome")
-            return
-        if not self.driver_manager.check_login():
-            self.handle_unLogin()
-            return
-
-    def save_group_table(self):
-        """Save current table content to data_manager.data['GET']['GROUP']"""
-        group_list = []
-        for row in range(1, self.table_widget.table.rowCount()): # except filter row
-            link_group = self.table_widget.table.item(row, 0).text() if self.table_widget.table.item(row, 0) else ""
-            link_post = self.table_widget.table.item(row, 1).text() if self.table_widget.table.item(row, 1) else ""
-            name_group = self.table_widget.table.item(row, 2).text() if self.table_widget.table.item(row, 2) else ""
-            status = self.table_widget.table.item(row, 3).text() if self.table_widget.table.item(row, 3) else ""
-
-            group_data = {
-                "link group": link_group,
-                "link post": link_post,
-                "name group": name_group,
-                "status": status
-            }
-            group_list.append(group_data)
-
-        # Save to data manager
-        self.data_manager.data["GET"]["GROUP"] = group_list
-        success = self.data_manager.save_data()
-        
-        if success:
-            self.table_widget.statusTable.setText("Đã lưu dữ liệu bảng vào " + self.data_manager.data_path)
-        else:
-            self.table_widget.statusTable.setText("Lỗi: không thể lưu dữ liệu")
-    
     def run_in_table(self):
         if "POST" in self.table_widget.btn_run.text():
             self.run_post()
         if "COMMENT" in self.table_widget.btn_run.text():
             self.run_comment()
-        if self.table_widget.btn_run.text() == "GET GROUP":
-            self.run_getGroup()
-        if self.table_widget.btn_run.text() == "GET POST":
-            self.run_getPost()
     
     def open_table(self):
         if not self.table_widget.isVisible():
@@ -273,7 +207,7 @@ class MainWindow(QMainWindow):
     
     def save_in_table(self):
         if self.table_widget.btn_run.text() == "GET GROUP" or "POST" in self.table_widget.btn_run.text():
-            self.save_group_table()
+            self.get_ui.save_group_table()
             
     def _on_finished_use_table(self, func: str):
         self.table_widget.btn_run.setText(func)
@@ -367,9 +301,9 @@ class MainWindow(QMainWindow):
         self.ui.proxyInputDetailFrame.hide()
         
     def center_table(self):
-        self.table_frame_width = self.width()
-        self.table_frame_height = self.height() - self.ui.contentTop.height() - self.ui.bottomBar.height() + 18
-        self.table_widget.setGeometry(QRect(0, self.ui.contentTop.height() - 10 - 9, self.table_frame_width, self.table_frame_height))
+        table_frame_width = self.width()
+        table_frame_height = self.height() - self.ui.contentTop.height() - self.ui.bottomBar.height() + 18
+        self.table_widget.setGeometry(QRect(0, self.ui.contentTop.height() - 10 - 9, table_frame_width, table_frame_height))
 
     def toggleMenu(self):
         if self.ui.leftMenu.width() == settings.SIDE_MENU_WIDTH:
@@ -408,22 +342,3 @@ class MainWindow(QMainWindow):
             self.ui.homeStackedWidget.setCurrentWidget(self.ui.commentPage)
         elif currentFunc == "SPAM":
             self.ui.homeStackedWidget.setCurrentWidget(self.ui.spamPage)
-            
-    def copy_cookies(self):
-        consoleCode = '''
-        void (function () {
-            function setCookie(t) {
-                var list = t.split("; ");
-                console.log(list);
-                for (var i = list.length - 1; i >= 0; i--) {
-                    var cname = list[i].split("=")[0];
-                    var cvalue = list[i].split("=")[1];
-                    document.cookie = cname + "=" + cvalue;
-                }
-            }
-            setCookie("%s");
-            location.href = "https://facebook.com";
-        })();
-        '''%self.ui.cookieInput.toPlainText()
-        pyperclip.copy(consoleCode)
-        self.ui.status.setSuccess("Đã copy code cookies, paste vào console của chromeDevtool để login")

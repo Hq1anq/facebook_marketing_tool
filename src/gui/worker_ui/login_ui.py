@@ -5,6 +5,7 @@ from src.manager import DataManager, DriverManager
 from src.gui.widget.ui_interface import Ui_MainWindow
 from src.worker import Login
 from src.gui.styles import BUTTON_STYLE
+import pyperclip
 
 class LoginUI:
     def __init__(self, before_run, ui: Ui_MainWindow, data_manager: DataManager, driver_manager: DriverManager):
@@ -26,13 +27,13 @@ class LoginUI:
         
         self.ui.btn_reload_loginMethod.clicked.connect(self.load_data)
         self.ui.btn_login.clicked.connect(self.run_login)
+        self.ui.btn_copyCookie.clicked.connect(self.copy_cookies)
 
         self.ui.methodComboBox.activated.connect(self.toggle_login_method)
         self.ui.loginDetail.stateChanged.connect(self.toggle_login_detail)
         self.ui.twoFACheckBox.stateChanged.connect(self.toggle_use_2fa)
     
-    def on_login_success(self):
-        profile_name = self.driver_manager.get_username()
+    def on_login_success(self, profile_name):
         self.ui.status.setSuccess("Đăng nhập thành công, profile: " + profile_name)
         self.updateProfileName(profile_name)
         cookie = self.worker.get_cookie()
@@ -58,13 +59,18 @@ class LoginUI:
         username = self.data_manager.data["LOGIN"]["username"]
         password = self.data_manager.data["LOGIN"]["password"]
         twofa = self.data_manager.data["LOGIN"]["2fa"]
-        if not (cookie or (username and password)):
+
+        type_login = "cookie" if self.ui.loginMethodStacked.currentWidget() == self.ui.useCookie else "username"
+        if type_login == "cookie" and cookie == "":
+            self.ui.status.setError("Thiếu cookie")
+            return
+        elif type_login == "username" and (not (username and password)):
             self.ui.status.setError("Thiếu thông tin đăng nhập")
             return
 
         self.before_run()
         self.ui.status.setLoading("Đang đăng nhập...")
-        self.worker.setup(cookie, username, password, twofa)
+        self.worker.setup(cookie, username, password, twofa, type_login)
         QThreadPool.globalInstance().start(self.worker)
     
     def toggle_login_method(self):
@@ -155,3 +161,22 @@ class LoginUI:
         self.data_manager.data["LOGIN"]["cookie"] = cookie
         if self.ui.profileName.text() != "":
             self.data_manager.data["LOGIN"]["profile name"] = self.ui.profileName.text()
+    
+    def copy_cookies(self):
+        consoleCode = '''
+        void (function () {
+            function setCookie(t) {
+                var list = t.split("; ");
+                console.log(list);
+                for (var i = list.length - 1; i >= 0; i--) {
+                    var cname = list[i].split("=")[0];
+                    var cvalue = list[i].split("=")[1];
+                    document.cookie = cname + "=" + cvalue;
+                }
+            }
+            setCookie("%s");
+            location.href = "https://facebook.com";
+        })();
+        '''%self.ui.cookieInput.toPlainText()
+        pyperclip.copy(consoleCode)
+        self.ui.status.setSuccess("Đã copy code cookies, paste vào console của chromeDevtool để login")

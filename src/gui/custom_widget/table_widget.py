@@ -256,6 +256,7 @@ class TableWidget(QFrame, Ui_tableWidget):
 
     def animated_close(self):
         """Animate widget shrinking and then close"""
+        self.statusTable.setText("")
         self.hide()
         return
         self.animation.setStartValue(self.geometry())  # Start at current size

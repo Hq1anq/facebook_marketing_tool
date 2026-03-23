@@ -87,28 +87,25 @@ class HighlightLabel(QLabel):
             return super().paintEvent(event)
 
         painter = QPainter(self)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
 
         # draw spinner
-        size = 34
-        margin = 6
+        margin = 4
+        size = self.height() - (margin * 2)
+        
+        # Center horizontally if no text, otherwise fixed margin
+        icon_x = margin
 
         painter.save()
-        painter.translate(margin + size / 2, self.height() / 2)
+        painter.translate(icon_x + size / 2, self.height() / 2)
         painter.rotate(self._angle)
-        painter.translate(-size / 2, -size / 2)
-
-        self.renderer.render(painter, 
-            QRectF(0, 0, size, size)
-        )
-
+        # Render centered at translated origin
+        self.renderer.render(painter, QRectF(-size / 2, -size / 2, size, size))
         painter.restore()
 
-        # draw text (dịch sang phải để chừa chỗ icon)
+        # draw text (offset to the right of the icon)
         painter.drawText(
-            margin * 2 + size,
-            0,
-            self.width(),
-            self.height(),
+            self.rect().adjusted(icon_x + size + margin, 0, 0, 0),
             self.alignment(),
             self.text()
         )

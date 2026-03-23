@@ -1,4 +1,5 @@
 from selenium.webdriver.common.by import By
+from selenium.common.exceptions import NoSuchElementException
 from PySide6.QtCore import QRunnable, QObject, Signal, Slot
 
 import json, pyotp, time
@@ -9,7 +10,7 @@ class Signals(QObject):
     loading = Signal(str)
     error = Signal(str)
     cookie_output = Signal(str)
-    finished = Signal()
+    finished = Signal(str)
 class Login(QRunnable):
         
     def __init__(self, driver_manager: DriverManager):
@@ -17,11 +18,12 @@ class Login(QRunnable):
         self.driver_manager = driver_manager
         self.signals = Signals()
     
-    def setup(self, cookie: str, username: str, password: str, twofa: str):
+    def setup(self, cookie: str, username: str, password: str, twofa: str, type_login: str):
         self.cookie = cookie
         self.username = username
         self.password = password
         self.twoFA = twofa
+        self.type_login = type_login
         
     @Slot()
     def run(self):
@@ -29,7 +31,8 @@ class Login(QRunnable):
             self.signals.error.emit("Xung đột! Vui lòng đóng tất cả các trình duyệt Chrome")
             return
         if self.driver_manager.check_login():
-            self.signals.finished.emit()
+            profile_name = self.get_profile_name()
+            self.signals.finished.emit(profile_name)
             return
             
         self.driver = self.driver_manager.driver
@@ -37,26 +40,26 @@ class Login(QRunnable):
         self.driver.set_window_position(0, 0)
         login_status = self.login()
         if login_status == "Đăng nhập thành công":
-            self.signals.finished.emit()
+            profile_name = self.get_profile_name()
+            self.signals.finished.emit(profile_name)
         else:
             self.signals.error.emit(login_status)
     
     def login(self) -> str:
-        if self.cookie != "":
+        self.driver_manager.jump_to_facebook()
+        if self.driver_manager.check_login():
+            return "Đăng nhập thành công"
+        if self.type_login == "cookie":
             self.cookie = self.format_cookie(self.cookie)
-            self.driver.get("https://www.facebook.com")
             self.add_cookie(self.cookie)
             self.driver.refresh()
             self.driver_manager.wait_for_url_contains("") # full loaded
             if not self.driver_manager.check_login():
-                self.signals.loading.emit("Sai cookie đăng nhập, đang thử cách khác...")
+                return "Sai cookie đăng nhập, hãy thử cách khác..."
             else:
                 return "Đăng nhập thành công"
-        if not (self.username and self.password):
-            return "Thiếu thông tin đăng nhập"
-        
-        self.driver_manager.jump_to_facebook()
-        
+
+        self.driver_manager.get("https://www.facebook.com/login?locale=en_US")
         email_field = self.driver_manager.wait_for_element(by=By.NAME, value="email")
         self.driver_manager.human_type(email_field, self.username, delay=0.1)
         
@@ -114,6 +117,15 @@ class Login(QRunnable):
                 return "Đăng nhập thành công"
             else:
                 return "Đăng nhập thất bại, sai mã 2fa"
+
+    def get_profile_name(self):
+        try:
+            self.driver_manager.get("https://www.facebook.com/me")
+            profile_name = self.driver_manager.wait_for_element(By.XPATH, "//div[@class='x78zum5 xdt5ytf x1wsgfga x9otpla']//h1").text.strip()
+            return profile_name
+        except (NoSuchElementException, Exception) as e:
+            print(f"Error getting username: {e}")
+            return None
     
     def format_cookie(self, cookie_string: str) -> str:
         """

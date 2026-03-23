@@ -161,7 +161,7 @@ class DriverManager(QObject):
         return self.friend_str in self.driver.page_source
     
     def jump_to_facebook(self) -> bool:
-        self.driver.get("https://www.facebook.com/login?locale=en_US")
+        self.driver.get("https://www.facebook.com")
         self.adjust_language()
         return self.check_login()
 
