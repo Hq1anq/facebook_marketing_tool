@@ -1,6 +1,5 @@
-from PySide6.QtCore import Qt, QThreadPool
+from PySide6.QtCore import QThreadPool
 
-import src.settings as settings
 from src.manager import DataManager, DriverManager
 from src.gui.widget.ui_interface import Ui_MainWindow
 from src.gui.custom_widget.table_widget import TableWidget
@@ -23,12 +22,30 @@ class GetUI:
         self.setup_connections()
     
     def setup_connections(self):
-        self.get_group.signals.add_row.connect(lambda link, name: self.table_widget.add_row(link, name))
+        # Get Group
+        self.get_group.signals.add_row.connect(
+            lambda g, n: self.table_widget.add_row(link_group=g, name=n)
+        )
         self.get_group.signals.success.connect(self.table_widget.statusTable.setSuccess)
+        self.get_group.signals.error.connect(self.ui.status.setError)
+        self.get_group.signals.unlogin.connect(self.on_unlogin_detected)
         self.get_group.signals.finished.connect(self.table_widget.adjust_column_width)
+
+        # Get Post
+        self.get_post.signals.add_row.connect(
+            lambda lg, lp, n: self.table_widget.add_row(link_group=lg, link_post=lp, name=n)
+        )
+        self.get_post.signals.success.connect(self.table_widget.statusTable.setSuccess)
+        self.get_post.signals.error.connect(self.ui.status.setError)
+        self.get_post.signals.unlogin.connect(self.on_unlogin_detected)
+        self.get_post.signals.finished.connect(self.table_widget.adjust_column_width)
 
         self.table_widget.btn_run.clicked.connect(self.on_table_btn_run_clicked)
         self.table_widget.tableExport.clicked.connect(self.on_table_export_clicked)
+
+    def on_unlogin_detected(self):
+        self.table_widget.hide()
+        self.handle_unlogin()
 
     def on_table_btn_run_clicked(self):
         if self.table_widget.btn_run.text() == "GET GROUP":
@@ -42,34 +59,29 @@ class GetUI:
 
     def run_getGroup(self):
         self.before_run()
-        
-        if not self.driver_manager.setup_driver():
-            self.ui.status.setError("Xung đột! Vui lòng đóng tất cả các trình duyệt Chrome")
-            return
-        self.driver_manager.jump_to_facebook()
-        if not self.driver_manager.check_login():
-            self.table_widget.hide()
-            self.handle_unlogin()
-            return
+        self.table_widget.statusTable.setLoading("Đang lấy link group...")
         
         filter_keys = [keyword.strip() for keyword in self.table_widget.filterGroupInput.text().split(",") if keyword.strip()]
         self.get_group.setup(self.table_widget.filterGroupCheckBox.isChecked(), filter_keys)
         
         self.table_widget.table.setRowCount(1) # Clear table
-        self.table_widget.statusTable.setLoading("Đang lấy link group...")
         QThreadPool.globalInstance().start(self.get_group)
 
     def run_getPost(self):
         self.before_run()
-        
-        if not self.driver_manager.setup_driver():
-            self.ui.status.setError("Xung đột! Vui lòng đóng tất cả các trình duyệt Chrome")
+
+        selected_groups = self.table_widget.get_selected()
+        if not selected_groups:
+            self.ui.status.setError("Vui lòng chọn ít nhất một group trong bảng")
             return
-        self.driver_manager.jump_to_facebook()
-        if not self.driver_manager.check_login():
-            self.table_widget.hide()
-            self.handle_unlogin()
-            return
+
+        self.table_widget.statusTable.setLoading("Đang lấy link post...")
+
+        filter_keys = [keyword.strip() for keyword in self.table_widget.filterGroupInput.text().split(",") if keyword.strip()]
+        self.get_post.setup(self.table_widget.filterGroupCheckBox.isChecked(), filter_keys, selected_groups)
+
+        self.table_widget.table.setRowCount(1) # Clear table
+        QThreadPool.globalInstance().start(self.get_post)
 
     def save_group_table(self):
         """Save current table content to data_manager.data['GET']['GROUP']"""

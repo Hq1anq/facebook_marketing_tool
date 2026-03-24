@@ -7,6 +7,8 @@ class GetGroup(QRunnable):
     class Signals(QObject):
         add_row = Signal(str, str)
         success = Signal(str)
+        error = Signal(str)
+        unlogin = Signal()
         finished = Signal()
         
     def __init__(self, driver_manager: DriverManager, data_manager: DataManager):
@@ -17,6 +19,17 @@ class GetGroup(QRunnable):
 
     @Slot()
     def run(self):
+        if not self.driver_manager.setup_driver():
+            self.signals.error.emit("Xung đột! Vui lòng đóng tất cả các trình duyệt Chrome")
+            self.signals.finished.emit()
+            return
+            
+        self.driver_manager.jump_to_facebook()
+        if not self.driver_manager.check_login():
+            self.signals.unlogin.emit()
+            self.signals.finished.emit()
+            return
+
         self.driver = self.driver_manager.driver
         self.driver.set_window_size(800, 700)
         self.driver.set_window_position(0, 0)
@@ -26,17 +39,23 @@ class GetGroup(QRunnable):
         self.driver.get("https://www.facebook.com/groups/joins")
         self.driver_manager.handle_chat_close()
         self.driver_manager.scroll_to_bottom()
-        list_group = self.driver.find_elements(By.XPATH, f"//a[@class='x1i10hfl xjbqb8w x1ejq31n x18oe1m7 x1sy0etr xstzfhl x972fbf x10w94by x1qhh985 x14e42zd x9f619 x1ypdohk xt0psk2 xe8uvvx xdj266r x14z9mp xat24cr x1lziwak xexx8yu xyri2b x18d9i69 x1c1uobl x16tdsg8 x1hl2dhg xggy1nq x1a2a7pz x1heor9g xkrqix3 x1sur9pj x1pd3egz']")
+        list_group = self.driver.find_elements(By.XPATH, f"//a[@aria-label='{self.driver_manager.view_group}']")
         if self.use_filter and self.filter_keys:
             for group in list_group:
-                name = group.text
+                name = group.find_element(
+                    By.XPATH,
+                    "../../div[1]/div[2]//a"
+                ).text.strip()
                 if any(keyword in name.lower() for keyword in self.filter_keys):
                     link = group.get_attribute("href")
                     self.signals.add_row.emit(link, name)
         else:
             for group in list_group:
                 link = group.get_attribute("href")
-                name = group.text
+                name = group.find_element(
+                    By.XPATH,
+                    "../../div[1]/div[2]//a"
+                ).text.strip()
                 self.signals.add_row.emit(link, name)
         self.signals.success.emit("Đã lấy thông tin các group")
         self.signals.finished.emit()

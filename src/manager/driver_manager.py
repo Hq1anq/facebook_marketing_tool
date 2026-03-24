@@ -23,6 +23,7 @@ class DriverManager(QObject):
         self.proxy_config = None
         self.language = "vi"
         self.friend_str = "Bạn bè"
+        self.view_group = "Xem nhóm"
         self.message_str = "Nhắn tin"
         self.post = "Đăng"
         self.comment_aria = "Viết bình luận"
@@ -110,6 +111,7 @@ class DriverManager(QObject):
             self.close_chat_str = "Đóng đoạn chat"
             self.close_post = "Đóng"
             self.friend_str = "Bạn bè"
+            self.view_group = "Xem nhóm"
             self.error_message = ["Bạn hiện không xem được nội dung này", "Trang này không hiển thị"]
         else:
             self.message_str = "Message"
@@ -121,6 +123,7 @@ class DriverManager(QObject):
             self.close_chat_str = "Close chat"
             self.close_post = "Close"
             self.friend_str = "Friends"
+            self.view_group = "View group"
             self.error_message = ["This content isn't available right now", "This Page Isn't Available"]
     
     def handle_chat_close(self):
