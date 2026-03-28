@@ -1,5 +1,5 @@
 from PySide6.QtWidgets import QMainWindow, QPushButton
-from PySide6.QtCore import Qt, QSize, QPropertyAnimation, QEasingCurve, QRect, QThreadPool
+from PySide6.QtCore import Qt, QPropertyAnimation, QEasingCurve, QRect, QThreadPool
 from PySide6.QtGui import QShortcut, QKeySequence
 
 from src.gui.styles import MENU_SELECTED_STYLE, MENU_NONE_SECLECTED_STYLE
@@ -11,7 +11,7 @@ import src.settings as settings
 from .widget.ui_interface import Ui_MainWindow
 from .window_control import WindowController
 from src.gui.worker_ui import GetUI, LoginUI, PostUI, CommentUI, SpamUI, ProxyUI
-from src.worker import Post, Login, Spam, GetGroup, GetPost
+from src.worker import Post, Spam
 
 from src.manager import DriverManager, DataManager
 
@@ -44,10 +44,10 @@ class MainWindow(QMainWindow):
         
         self.table_widget = TableWidget(self)
 
-        self.post_ui = PostUI(self.ui, self.data_manager)
-        self.comment_ui = CommentUI(self.ui, self.data_manager)
         self.spam_ui = SpamUI(self.ui, self.data_manager)
         self.get_ui = GetUI(self.move_window_to_corner, self.handle_unLogin, self.table_widget, self.ui, self.data_manager, self.driver_manager)
+        self.post_ui = PostUI(self.move_window_to_corner, self.handle_unLogin, self.table_widget, self.ui, self.data_manager, self.driver_manager)
+        self.comment_ui = CommentUI(self.move_window_to_corner, self.handle_unLogin, self.table_widget, self.ui, self.data_manager, self.driver_manager)
         self.login_ui = LoginUI(self.move_window_to_corner, self.ui, self.data_manager, self.driver_manager)
         self.proxy_ui = ProxyUI(self.move_window_to_corner, self.ui, self.data_manager, self.driver_manager)
         
@@ -58,10 +58,6 @@ class MainWindow(QMainWindow):
         self.spam.setAutoDelete(False)
     
         # Connect signal update ui
-        self.post.signals.log.connect(lambda msg: self.table_widget.statusTable.setText(msg))
-        self.post.signals.table_status.connect(lambda row, status: self.table_widget.table.setItem(row, 3, self.table_widget.table_item(status, "center")))
-        self.post.signals.finished.connect(lambda: self._on_finished_use_table("POST"))
-        
         self.spam.signals.log.connect(self.ui.status.setText)
         self.spam.signals.finished.connect(lambda: self.ui.btn_spam.setText("SPAM!"))
         
@@ -119,37 +115,6 @@ class MainWindow(QMainWindow):
         self.open_login_page()
         self.ui.status.setText("Bạn chưa đăng nhập, vui lòng đăng nhập trước khi sử dụng chức năng này")
     
-    def run_post(self):
-        self.move_window_to_corner()
-        if self.table_widget.btn_run.text() != "STOP POST!":
-            self.post_ui.save_data()
-            post_data = self.data_manager.data["POST"]
-            if not (post_data["image"] or post_data["content"]):
-                self.ui.status.setError("POST: Thiếu thông tin để đăng bài")
-                return
-            if not self.driver_manager.setup_driver():
-                self.table_widget.statusTable.setError("Xung đột! Vui lòng đóng tất cả các trình duyệt Chrome")
-                return
-            if not self.driver_manager.check_login():
-                self.handle_unLogin()
-                return
-            
-            self.table_widget.btn_run.setText("STOP POST!")
-            self.post.setup(
-                self.table_widget.get_selected(),
-                self.ui.postContentCheckBox.isChecked(),
-                self.ui.postImageCheckBox.isChecked(),
-                post_data["image"],
-                post_data["content"],
-                self.data_manager.data["POST"]["delay"] or self.data_manager.DEFAULT_DATA["POST"]["delay"]
-            )
-            self.post.set_stop(False)  # Tell Spam to keep running
-            QThreadPool.globalInstance().start(self.post)
-        else:
-            self.table_widget.statusTable.setText("POST: Đã tạm dừng")
-            self.table_widget.btn_run.setText("POST")
-            self.post.set_stop(True)
-    
     def run_spam(self):
         self.move_window_to_corner()
         if self.ui.btn_spam.text() != "STOP!":
@@ -190,9 +155,7 @@ class MainWindow(QMainWindow):
         if not self.table_widget.isVisible():
             self.center_table()  # Position it first
             self.table_widget.show()
-        self.table_widget.load_group_table(self.data_manager.data)
-        # self.table_widget.table.setSpan(2, 1, 2, 1)  # Start at (0,1), span 2 rows, 1 column
-        # self.table_widget.table.setItem(2, 1, QTableWidgetItem("Merged"))
+            
         sender = self.sender()
         if sender == self.ui.btn_post:
             self.post_ui.save_data()
@@ -203,10 +166,14 @@ class MainWindow(QMainWindow):
             self.table_widget.setup("GET GROUP")
         elif sender == self.ui.btn_getPost:
             self.table_widget.setup("GET POST")
+            
+        self.table_widget.load_table_data(self.data_manager.data["TABLE"])
+        # self.table_widget.table.setSpan(2, 1, 2, 1)  # Start at (0,1), span 2 rows, 1 column
+        # self.table_widget.table.setItem(2, 1, QTableWidgetItem("Merged"))
         self.table_widget.adjust_column_width()
     
     def save_in_table(self):
-        if self.table_widget.btn_run.text() == "GET GROUP" or "POST" in self.table_widget.btn_run.text():
+        if "GET" in self.table_widget.btn_run.text() or "POST" in self.table_widget.btn_run.text() or "COMMENT" in self.table_widget.btn_run.text():
             self.get_ui.save_group_table()
             
     def _on_finished_use_table(self, func: str):
@@ -215,7 +182,7 @@ class MainWindow(QMainWindow):
         self.save_in_table()
     
     def run_comment(self):
-        self.move_window_to_corner()
+        self.comment_ui.run_comment()
     
     def load(self):
         """Load initial settings and data"""

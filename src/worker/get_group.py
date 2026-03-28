@@ -1,20 +1,19 @@
 from selenium.webdriver.common.by import By
 from PySide6.QtCore import QRunnable, Signal, Slot, QObject
 
-from src.manager import DriverManager, DataManager
+from src.manager import DriverManager
 
 class GetGroup(QRunnable):
     class Signals(QObject):
-        add_row = Signal(str, str)
+        add_row = Signal(str, str, str, str, str)
         success = Signal(str)
         error = Signal(str)
         unlogin = Signal()
         finished = Signal()
         
-    def __init__(self, driver_manager: DriverManager, data_manager: DataManager):
+    def __init__(self, driver_manager: DriverManager):
         super().__init__()
         self.driver_manager = driver_manager
-        self.data_manager = data_manager
         self.signals = self.Signals()
 
     @Slot()
@@ -48,7 +47,7 @@ class GetGroup(QRunnable):
                 ).text.strip()
                 if any(keyword in name.lower() for keyword in self.filter_keys):
                     link = group.get_attribute("href")
-                    self.signals.add_row.emit(link, name)
+                    self.signals.add_row.emit(link, name, "", "", "")
         else:
             for group in list_group:
                 link = group.get_attribute("href")
@@ -56,7 +55,7 @@ class GetGroup(QRunnable):
                     By.XPATH,
                     "../../div[1]/div[2]//a"
                 ).text.strip()
-                self.signals.add_row.emit(link, name)
+                self.signals.add_row.emit(link, name, "", "", "")
         self.signals.success.emit("Đã lấy thông tin các group")
         self.signals.finished.emit()
     

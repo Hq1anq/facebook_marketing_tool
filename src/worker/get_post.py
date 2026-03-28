@@ -1,21 +1,20 @@
 from selenium.webdriver.common.by import By
 from PySide6.QtCore import QRunnable, Signal, Slot, QObject
 
-from src.manager import DriverManager, DataManager
+from src.manager import DriverManager
 
 class GetPost(QRunnable):
     class Signals(QObject):
         log = Signal(str)
-        add_row = Signal(str, str, str)
+        add_row = Signal(str, str, str, str, str)
         success = Signal(str)
         error = Signal(str)
         unlogin = Signal()
         finished = Signal()
         
-    def __init__(self, driver_manager: DriverManager, data_manager: DataManager):
+    def __init__(self, driver_manager: DriverManager):
         super().__init__()
         self.driver_manager = driver_manager
-        self.data_manager = data_manager
         self.signals = self.Signals()
 
     @Slot()
@@ -41,7 +40,7 @@ class GetPost(QRunnable):
         self.driver_manager.handle_chat_close()
         
         for group in self.group_list:
-            link_group = group.get("link", "")
+            link_group = group.get("link group", "")
             name_group = group.get("name group", "")
             
             if not link_group:
@@ -62,7 +61,7 @@ class GetPost(QRunnable):
                     post_links.add(clean_link)
             
             for link in post_links:
-                self.signals.add_row.emit(link_group, link, name_group)
+                self.signals.add_row.emit(link_group, name_group, link, "", "")
                     
         self.signals.success.emit("Đã lấy thông tin các post")
         self.signals.finished.emit()

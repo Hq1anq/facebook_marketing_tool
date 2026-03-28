@@ -21,6 +21,8 @@ class TableWidget(QFrame, Ui_tableWidget):
         self.animation = QPropertyAnimation(self, b"geometry")
         self.animation.setDuration(TIME_ANIMATION)  # Duration in milliseconds
         
+        self.table.setColumnCount(5)
+        self.table.setHorizontalHeaderLabels(["LINK GROUP", "NAME GROUP", "LINK POST", "CONTENT", "STATUS"])
         self.setup_filter_row()
         
         # Remove style of item in table for not overwite when setting background
@@ -46,7 +48,7 @@ class TableWidget(QFrame, Ui_tableWidget):
             }
             """)
         
-        self.table.setItemDelegateForColumn(3, StatusChipDelegate())
+        self.table.setItemDelegateForColumn(4, StatusChipDelegate())
         
         self._highlighted_rows = set()
         self.visible_index = None
@@ -63,22 +65,23 @@ class TableWidget(QFrame, Ui_tableWidget):
         
         self.adjust_column_width()
         
+        self.current_mode = "POST" # Default
+        
     def adjust_column_width(self):
         # Temporarily hide filter row
         self.table.setRowHidden(0, True)
         header = self.table.horizontalHeader()
 
-        # Set columns 2, 3 to ResizeToContents (fixed, minimum size)
-        for i in range(2, 4):
+        # Columns that stretch: 0, 2, 3 (LINKS, CONTENT)
+        # Columns to ResizeToContents: 1, 4 (NAME GROUP, STATUS)
+        for i in range(self.table.columnCount()):
             if not self.table.isColumnHidden(i):
-                header.setSectionResizeMode(i, QHeaderView.ResizeMode.Interactive)
-                self.table.resizeColumnToContents(i)
-                self.table.setColumnWidth(i, self.table.columnWidth(i) + 10)  # Add extra width
-
-        # Set columns 0, 1 to Stretch if visible
-        for i in range(2):
-            if not self.table.isColumnHidden(i):
-                header.setSectionResizeMode(i, QHeaderView.ResizeMode.Stretch)
+                if i in [1, 4]:
+                    header.setSectionResizeMode(i, QHeaderView.ResizeMode.Interactive)
+                    self.table.resizeColumnToContents(i)
+                    self.table.setColumnWidth(i, self.table.columnWidth(i) + 10)  # Add extra width
+                else:
+                    header.setSectionResizeMode(i, QHeaderView.ResizeMode.Stretch)
             else:
                 header.setSectionResizeMode(i, QHeaderView.ResizeMode.Fixed)
         
@@ -98,21 +101,55 @@ class TableWidget(QFrame, Ui_tableWidget):
             self.table.setCellWidget(0, col, edit)
             self.filter_edits.append(edit)
     
-    def load_group_table(self, data: dict):
-        """Load group data from data_manager and render to table"""
-        self.table.setRowCount(1)  # Clear current content
-        for group in data.get("GET", {}).get("GROUP", []):
-            row_position = self.table.rowCount()
-            self.table.insertRow(row_position)
-            self.table.setItem(row_position, 0, self.table_item(group.get("link group", "")))
-            self.table.setItem(row_position, 1, self.table_item(group.get("link post", "")))
-            self.table.setItem(row_position, 2, self.table_item(group.get("name group", "")))
+    def load_table_data(self, data_list: list):
+        """Load group/post data and render to table"""
+        self.table.setRowCount(1)  # Clear current content keeping filter row
+        
+        # Clear existing spans
+        self.table.clearSpans()
+        
+        for group in data_list:
+            posts = group.get("posts", [])
             
-            # Hide original status text
-            status_item = self.table_item(group.get("status", ""), "center", QColor(40, 44, 52))
-            self.table.setItem(row_position, 3, status_item)
+            # Special logic for GET GROUP: Always one row per group
+            if self.current_mode == "GET GROUP":
+                self.add_row(
+                    link_group=group.get("link group", ""),
+                    name_group=group.get("name group", "")
+                )
+                continue
+
+            # If no posts yet, display group as single row
+            if not posts:
+                self.add_row(
+                    link_group=group.get("link group", ""),
+                    name_group=group.get("name group", "")
+                )
+                continue
                 
-            self.table.setVerticalHeaderItem(row_position, QTableWidgetItem(str(row_position)))
+            start_row = self.table.rowCount()
+            row_count = len(posts)
+            
+            for post in posts:
+                # Select status based on current mode
+                if self.current_mode == "COMMENT":
+                    status = post.get("status_comment", "")
+                else:
+                    status = post.get("status_post", "")
+                    
+                self.add_row(
+                    link_group=group.get("link group", ""),
+                    name_group=group.get("name group", ""),
+                    link_post=post.get("link post", ""),
+                    content=post.get("content", ""),
+                    status=status
+                )
+                
+            # Merge group info if there are multiple posts
+            if row_count > 1:
+                self.table.setSpan(start_row, 0, row_count, 1) # Merge Link Group
+                self.table.setSpan(start_row, 1, row_count, 1) # Merge Group Name
+    
     
     def filter_table(self):
         self.visible_index = 1
@@ -169,20 +206,22 @@ class TableWidget(QFrame, Ui_tableWidget):
         self._highlighted_rows = selected_rows
         self.countRows.setText(f"Selected: {len(selected_rows)}     Total rows: {self.visible_index if self.visible_index else self.table.rowCount()}")
     
-    def add_row(self, link_group: str = "", link_post: str = "", name: str = "", status: str = ""):
+    def add_row(self, link_group: str = "", name_group: str = "", link_post: str = "", content: str = "", status: str = ""):
         row_position = self.table.rowCount()
         self.table.insertRow(row_position)
         self.table.setItem(row_position, 0, self.table_item(link_group))
-        self.table.setItem(row_position, 1, self.table_item(link_post))
-        self.table.setItem(row_position, 2, self.table_item(name))
+        self.table.setItem(row_position, 1, self.table_item(name_group))
+        self.table.setItem(row_position, 2, self.table_item(link_post))
+        self.table.setItem(row_position, 3, self.table_item(content))
         
         # Hide original status text by setting its color to background color
         status_item = self.table_item(status, "center", QColor(40, 44, 52))
-        self.table.setItem(row_position, 3, status_item)
+        self.table.setItem(row_position, 4, status_item)
         
         self.table.setVerticalHeaderItem(row_position, QTableWidgetItem(str(row_position)))
     
     def setup(self, func: str):
+        self.current_mode = func
         # Reset visibility before applying specific mode settings
         for i in range(self.table.columnCount()):
             self.table.setColumnHidden(i, False)
@@ -196,7 +235,9 @@ class TableWidget(QFrame, Ui_tableWidget):
                 self.fromLabel.setText("Từ group")
                 self.toLabel.setText("đến group")
                 self.listLabel.setText("List group")
-                self.table.setColumnHidden(1, True) # Hide link post
+                self.table.setColumnHidden(0, True) # Hide link group
+                # table shows: NAME GROUP | LINK POST | CONTENT | STATUS
+
             case "COMMENT":
                 self.btn_run.setText("COMMENT")
                 self.fromToFrame.show()
@@ -206,12 +247,19 @@ class TableWidget(QFrame, Ui_tableWidget):
                 self.toLabel.setText("đến post")
                 self.listLabel.setText("ListPost")
                 self.table.setColumnHidden(0, True) # Hide link group
+                self.table.setColumnHidden(2, True) # Hide link post
+                # table shows: NAME GROUP | LINK POST | CONTENT | STATUS
+
             case "GET GROUP":
                 self.btn_run.setText("GET GROUP")
                 self.fromToFrame.hide()
                 self.latestPost.hide()
                 self.filterGroup.show()
-                self.table.setColumnHidden(1, True) # Hide link post
+                self.table.setColumnHidden(2, True) # Hide link post
+                self.table.setColumnHidden(3, True) # Hide content
+                self.table.setColumnHidden(4, True) # Hide status
+                # table shows: LINK GROUP | NAME GROUP
+
             case "GET POST":
                 self.btn_run.setText("GET POST")
                 self.fromToFrame.show()
@@ -221,15 +269,21 @@ class TableWidget(QFrame, Ui_tableWidget):
                 self.toLabel.setText("đến group")
                 self.listLabel.setText("List group")
                 self.table.setColumnHidden(0, True) # Hide link group
+                self.table.setColumnHidden(4, True) # Hide status
+                # table shows: NAME GROUP | LINK POST | CONTENT
         
         self.adjust_column_width()
                 
     def table_item(self, text: str, align: str = "left", color: QColor = None):
         item = QTableWidgetItem(text)
+        # Always center vertically
         if align == "left":
-            item.setTextAlignment(Qt.AlignmentFlag.AlignLeft)
-        if align == "center":
+            item.setTextAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter)
+        elif align == "center":
             item.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
+        else:
+            item.setTextAlignment(Qt.AlignmentFlag.AlignVCenter)
+            
         if color:
             item.setForeground(color)
         return item
@@ -239,23 +293,28 @@ class TableWidget(QFrame, Ui_tableWidget):
         if not selected_rows: return []
         if (self.btn_run.text() in ["POST", "STOP POST!", "GET POST"]):
             col = 0 # Group
-        else: col = 1 # Post
+        else: col = 2 # Post
         self.table.clearSelection()
         selected_items = []
-        # Chọn lại các ô
         for row in selected_rows:
             self.table.item(row, col).setSelected(True)
-            selected_items.append({
+                    
+            item_data = {
                 "row": row,
-                "link": self.table.item(row, col).text().strip(),
-                "name group": self.table.item(row, 2).text().lower()
-            })
+                "link group": self.table.item(row, 0).text().strip() if self.table.item(row, 0) else "",
+                "name group": self.table.item(row, 1).text().strip() if self.table.item(row, 1) else "",
+                "link post": self.table.item(row, 2).text().strip() if self.table.item(row, 2) else "",
+                "content": self.table.item(row, 3).text().strip() if self.table.item(row, 3) else "",
+                "type_status": "status_post" if self.current_mode != "COMMENT" else "status_comment",
+                "status": self.table.item(row, 4).text().strip() if self.table.item(row, 4) else ""
+            }
+            selected_items.append(item_data)
         return selected_items
     
     def add_empty_row(self):
         new_row_idx = self.table.rowCount()
         self.table.insertRow(new_row_idx)
-        for i in range(4):
+        for i in range(5):
             self.table.setItem(new_row_idx, i, self.table_item(""))
 
     def delete_row(self):
@@ -283,17 +342,6 @@ class TableWidget(QFrame, Ui_tableWidget):
         self.statusTable.setText("")
         self.hide()
         return
-        self.animation.setStartValue(self.geometry())  # Start at current size
-
-        # Shrink towards the center
-        center_x = self.x() + self.width() // 2
-        center_y = self.y() + self.height() // 2
-        self.animation.setEndValue(QRect(center_x, center_y, 0, 0))
-        # animation.setEasingCurve(QEasingCurve.InOutQuart)
-
-        self.setGraphicsEffect(None)
-        self.animation.start()
-        self.animation.finished.connect(self.hide)  # Hide after animation ends
 
 class StatusChipDelegate(QStyledItemDelegate):
     def paint(self, painter: QPainter, option: QStyleOptionViewItem, index: QModelIndex):

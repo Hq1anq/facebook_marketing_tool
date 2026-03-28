@@ -55,10 +55,10 @@ class LoginUI:
         except SyntaxError as e:
             self.ui.status.setError(str(e))
             return
-        cookie = self.data_manager.data["LOGIN"]["cookie"]
-        username = self.data_manager.data["LOGIN"]["username"]
-        password = self.data_manager.data["LOGIN"]["password"]
-        twofa = self.data_manager.data["LOGIN"]["2fa"]
+        cookie = self.data_manager.data["ACCOUNT"]["LOGIN"]["cookie"]
+        username = self.data_manager.data["ACCOUNT"]["LOGIN"]["username"]
+        password = self.data_manager.data["ACCOUNT"]["LOGIN"]["password"]
+        twofa = self.data_manager.data["ACCOUNT"]["LOGIN"]["2fa"]
 
         type_login = "cookie" if self.ui.loginMethodStacked.currentWidget() == self.ui.useCookie else "username"
         if type_login == "cookie" and cookie == "":
@@ -116,11 +116,11 @@ class LoginUI:
             self.ui.fullLoginInput.setText(self.ui.userInput.text()+"|"+self.ui.passInput.text())
 
     def load_data(self):
-        cookie = self.data_manager.data["LOGIN"]["cookie"]
-        username = self.data_manager.data["LOGIN"]["username"]
-        password = self.data_manager.data["LOGIN"]["password"]
-        twoFA = self.data_manager.data["LOGIN"]["2fa"]
-        profile_name = self.data_manager.data["LOGIN"]["profile name"]
+        cookie = self.data_manager.data["ACCOUNT"]["LOGIN"]["cookie"]
+        username = self.data_manager.data["ACCOUNT"]["LOGIN"]["username"]
+        password = self.data_manager.data["ACCOUNT"]["LOGIN"]["password"]
+        twoFA = self.data_manager.data["ACCOUNT"]["LOGIN"]["2fa"]
+        profile_name = self.data_manager.data["ACCOUNT"]["LOGIN"]["profile name"]
         self.ui.cookieInput.setPlainText(cookie)
         self.ui.userInput.setText(username)
         self.ui.passInput.setText(password)
@@ -155,12 +155,12 @@ class LoginUI:
             if len(info) < 2:
                 raise SyntaxError("Sai định dạng dữ liệu login")
         cookie = self.ui.cookieInput.toPlainText()
-        self.data_manager.data["LOGIN"]["username"] = username
-        self.data_manager.data["LOGIN"]["password"] = password
-        self.data_manager.data["LOGIN"]["2fa"] = twoFA
-        self.data_manager.data["LOGIN"]["cookie"] = cookie
+        self.data_manager.data["ACCOUNT"]["LOGIN"]["username"] = username
+        self.data_manager.data["ACCOUNT"]["LOGIN"]["password"] = password
+        self.data_manager.data["ACCOUNT"]["LOGIN"]["2fa"] = twoFA
+        self.data_manager.data["ACCOUNT"]["LOGIN"]["cookie"] = cookie
         if self.ui.profileName.text() != "":
-            self.data_manager.data["LOGIN"]["profile name"] = self.ui.profileName.text()
+            self.data_manager.data["ACCOUNT"]["LOGIN"]["profile name"] = self.ui.profileName.text()
     
     def copy_cookies(self):
         consoleCode = '''

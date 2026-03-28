@@ -2,7 +2,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
-import time, random, pickle, pyperclip, os
+import time, random, pyperclip, os
 from PySide6.QtCore import QRunnable, Signal, Slot, QObject
 
 from src.manager import DriverManager, DataManager
@@ -37,11 +37,6 @@ class Spam(QRunnable):
         self.spam()
             
     def spam(self, spam_limit = 100):
-        commented_path = os.path.join(self.data_manager.folder_path, "commented.pkl")
-        if os.path.exists(commented_path):
-            with open(commented_path, "rb") as file:
-                commented_id = pickle.load(file)
-        else: commented_id = set()
         countSpam = 0
         countReload = 0
         while not self._stop:
@@ -53,7 +48,7 @@ class Spam(QRunnable):
                 feed_links = self.driver.find_elements(By.XPATH,"//div[@class='x6prxxf xk50ysn xvq8zen']/span[1]/span[1]/a[1]")
                 for feed_link in feed_links:
                     postID = feed_link.get_attribute("href").split("permalinks=")[1].split("&__")[0]
-                    if (postID in commented_id): # Check xem post đã được comment hay chưa
+                    if self.data_manager.is_in_history(postID): # Check xem post đã được comment hay chưa
                         continue
                     group_name = feed_link.text.lower()
                     if ("vps" not in group_name) and ("proxy" not in group_name): # Check điều kiện group
@@ -112,18 +107,13 @@ class Spam(QRunnable):
                             self.signals.finished.emit()
                             self.signals.log.emit("SPAM: Đã bị chặn comment, hãy nghỉ ngơi")
                             self._stop = True
-                            
-                            with open(commented_path, "wb") as file: # Lưu lại ID những post đã comment
-                                pickle.dump(commented_id, file)
                             return
-                        commented_id.add(postID)
+                        self.data_manager.add_to_history(postID)
                         countSpam += 1
-                        if len(commented_id) == int(self.post_number):
+                        if len(self.data_manager.history) == int(self.post_number):
                             break
                     except:
                         pass
-                with open(commented_path, "wb") as file: # Lưu lại ID những post đã comment
-                    pickle.dump(commented_id, file)
             if countSpam >= spam_limit:
                 self.signals.finished.emit()
                 self.signals.log.emit("SPAM: Đã spam " + str(countSpam) + " posts! Hãy nghỉ ngơi")

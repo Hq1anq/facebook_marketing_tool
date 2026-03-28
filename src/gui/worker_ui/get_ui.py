@@ -14,9 +14,9 @@ class GetUI:
         self.driver_manager = driver_manager
         self.table_widget = table_widget
 
-        self.get_group = GetGroup(self.driver_manager, self.data_manager)
+        self.get_group = GetGroup(self.driver_manager)
         self.get_group.setAutoDelete(False)
-        self.get_post = GetPost(self.driver_manager, self.data_manager)
+        self.get_post = GetPost(self.driver_manager)
         self.get_post.setAutoDelete(False)
 
         self.setup_connections()
@@ -24,7 +24,7 @@ class GetUI:
     def setup_connections(self):
         # Get Group
         self.get_group.signals.add_row.connect(
-            lambda g, n: self.table_widget.add_row(link_group=g, name=n)
+            lambda lg, ng, lp, c, s: self.table_widget.add_row(link_group=lg, name_group=ng, link_post=lp, content=c, status=s)
         )
         self.get_group.signals.success.connect(self.table_widget.statusTable.setSuccess)
         self.get_group.signals.error.connect(self.ui.status.setError)
@@ -33,7 +33,7 @@ class GetUI:
 
         # Get Post
         self.get_post.signals.add_row.connect(
-            lambda lg, lp, n: self.table_widget.add_row(link_group=lg, link_post=lp, name=n)
+            lambda lg, ng, lp, c, s: self.table_widget.add_row(link_group=lg, name_group=ng, link_post=lp, content=c, status=s)
         )
         self.get_post.signals.success.connect(self.table_widget.statusTable.setSuccess)
         self.get_post.signals.error.connect(self.ui.status.setError)
@@ -84,24 +84,61 @@ class GetUI:
         QThreadPool.globalInstance().start(self.get_post)
 
     def save_group_table(self):
-        """Save current table content to data_manager.data['GET']['GROUP']"""
-        group_list = []
-        for row in range(1, self.table_widget.table.rowCount()): # except filter row
-            link_group = self.table_widget.table.item(row, 0).text() if self.table_widget.table.item(row, 0) else ""
-            link_post = self.table_widget.table.item(row, 1).text() if self.table_widget.table.item(row, 1) else ""
-            name_group = self.table_widget.table.item(row, 2).text() if self.table_widget.table.item(row, 2) else ""
-            status = self.table_widget.table.item(row, 3).text() if self.table_widget.table.item(row, 3) else ""
+        """Save current table content to data_manager.data['TABLE'] using nested structure"""
+        original_table = self.data_manager.data.get("TABLE", [])
+        new_table_data = [] # List of groups
+        
+        def find_group_in_new(link):
+            for g in new_table_data:
+                if g["link group"] == link: return g
+            return None
 
-            group_data = {
-                "link group": link_group,
-                "link post": link_post,
-                "name group": name_group,
-                "status": status
+        def find_group_in_orig(link):
+            for g in original_table:
+                if g["link group"] == link: return g
+            return None
+
+        def find_post_in_group(group, lp, c):
+            if not group: return None
+            for p in group.get("posts", []):
+                if lp and p.get("link post") == lp: return p
+                if not lp and c and p.get("content") == c: return p
+            return None
+
+        for row in range(1, self.table_widget.table.rowCount()): # skip filter row
+            lg = self.table_widget.table.item(row, 0).text() if self.table_widget.table.item(row, 0) else ""
+            ng = self.table_widget.table.item(row, 1).text() if self.table_widget.table.item(row, 1) else ""
+            lp = self.table_widget.table.item(row, 2).text() if self.table_widget.table.item(row, 2) else ""
+            c = self.table_widget.table.item(row, 3).text() if self.table_widget.table.item(row, 3) else ""
+            st = self.table_widget.table.item(row, 4).text() if self.table_widget.table.item(row, 4) else ""
+
+            group = find_group_in_new(lg)
+            if not group:
+                group = {"link group": lg, "name group": ng, "posts": []}
+                new_table_data.append(group)
+            
+            # Find original data to preserve non-active statuses
+            orig_group = find_group_in_orig(lg)
+            orig_post = find_post_in_group(orig_group, lp, c)
+            
+            post_data = {
+                "link post": lp,
+                "content": c,
+                "status_post": orig_post.get("status_post", "") if orig_post else "",
+                "status_comment": orig_post.get("status_comment", "") if orig_post else ""
             }
-            group_list.append(group_data)
+            
+            # Update only the current mode's status
+            if self.table_widget.current_mode == "COMMENT":
+                post_data["status_comment"] = st
+            else:
+                post_data["status_post"] = st
+            
+            if lp or c or st:
+                group["posts"].append(post_data)
 
-        # Save to data manager
-        self.data_manager.data["GET"]["GROUP"] = group_list
+        # Update and save
+        self.data_manager.data["TABLE"] = new_table_data
         success = self.data_manager.save_data()
         
         if success:

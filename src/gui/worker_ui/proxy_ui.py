@@ -88,10 +88,10 @@ class ProxyUI:
         except SyntaxError as e:
             self.on_check_error(str(e))
             return
-        ip = self.data_manager.data["PROXY"]["ip"]
-        port = self.data_manager.data["PROXY"]["port"]
-        username = self.data_manager.data["PROXY"]["username"]
-        password = self.data_manager.data["PROXY"]["password"]
+        ip = self.data_manager.data["ACCOUNT"]["PROXY"]["ip"]
+        port = self.data_manager.data["ACCOUNT"]["PROXY"]["port"]
+        username = self.data_manager.data["ACCOUNT"]["PROXY"]["username"]
+        password = self.data_manager.data["ACCOUNT"]["PROXY"]["password"]
 
         self.ui.status.setLoading("Đang kiểm tra proxy (Socks5/HTTP)...")
         self.ui.addProxyBtn.setEnabled(False)
@@ -138,10 +138,10 @@ class ProxyUI:
             self.ui.fullProxyLabel.show()
 
     def load_data(self):
-        ip = self.data_manager.data["PROXY"]["ip"]
-        port = self.data_manager.data["PROXY"]["port"]
-        username = self.data_manager.data["PROXY"]["username"]
-        password = self.data_manager.data["PROXY"]["password"]
+        ip = self.data_manager.data["ACCOUNT"]["PROXY"]["ip"]
+        port = self.data_manager.data["ACCOUNT"]["PROXY"]["port"]
+        username = self.data_manager.data["ACCOUNT"]["PROXY"]["username"]
+        password = self.data_manager.data["ACCOUNT"]["PROXY"]["password"]
         
         if (any([ip, port, username, password])):
             self.ui.proxyIpInput.setText(ip)
@@ -167,9 +167,9 @@ class ProxyUI:
                 case _:
                     raise SyntaxError("Sai định dạng Proxy")
 
-        self.data_manager.data["PROXY"]["ip"] = ip
-        self.data_manager.data["PROXY"]["port"] = port
-        self.data_manager.data["PROXY"]["username"] = username
-        self.data_manager.data["PROXY"]["password"] = password
+        self.data_manager.data["ACCOUNT"]["PROXY"]["ip"] = ip
+        self.data_manager.data["ACCOUNT"]["PROXY"]["port"] = port
+        self.data_manager.data["ACCOUNT"]["PROXY"]["username"] = username
+        self.data_manager.data["ACCOUNT"]["PROXY"]["password"] = password
         
         self.ip = ip

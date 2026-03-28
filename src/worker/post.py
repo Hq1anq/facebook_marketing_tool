@@ -10,6 +10,7 @@ class Post(QRunnable):
     class Signals(QObject):
         log = Signal(str)
         table_status = Signal(int, str)
+        error = Signal(str)
         finished = Signal()
         
     def __init__(self, driver_manager: DriverManager):
@@ -44,9 +45,12 @@ class Post(QRunnable):
         self.post()
     
     def post(self):
+        if not self.driver_manager.setup_driver():
+            self.signals.error("Xung đột! Vui lòng đóng tất cả các trình duyệt Chrome")
+            return
         countPost = 1
         for data in self.table_data:
-            link_group = data["link"]
+            link_group = data["link group"]
             name_group = data["name group"]
             if self._stop:
                 self.signals.log.emit("POST: Đã tạm dừng")

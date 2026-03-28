@@ -4,35 +4,28 @@ import os
 class DataManager:
     
     DEFAULT_DATA = {
-        "LOGIN": {
-            "cookie": "",
-            "username": "xxxxxxxxxx@gmail.com", 
-            "password": "**********",
-            "2fa": "ABXDEFGH6572PJUS9I01JKK567GHJOPO",
-            "profile name": ""
+        "ACCOUNT": {
+            "LOGIN": {
+                "cookie": "",
+                "username": "xxxxxxxxxx@gmail.com", 
+                "password": "**********",
+                "2fa": "ABXDEFGH6572PJUS9I01JKK567GHJOPO",
+                "profile name": ""
+            },
+            "PROXY": {
+                "ip": "",
+                "port": "",
+                "username": "",
+                "password": ""
+            }
         },
-        "GET": {
-            "GROUP": [
-                {
-                    "link group": "https://www.facebook.com/groups/345983411894599/",
-                    "link post": "",
-                    "name group": "Cộng Đồng VPS Việt Nam",
-                    "status": ""
-                },
-                {
-                    "link group": "https://www.facebook.com/groups/vpsgiatot/",
-                    "link post": "",
-                    "name group": "VPS Giá Tốt - VPS/RDP Cheap",
-                    "status": ""
-                }
-            ]
-        },
-        "POST": {
-            "image": [
-                "https://i.imgur.com/1mcloud.png",
-                "https://i.imgur.com/1mcloud2.png"
-            ],
-            "content": [
+        "CONFIG": {
+            "POST": {
+                "image": [
+                    "https://i.imgur.com/1mcloud.png",
+                    "https://i.imgur.com/1mcloud2.png"
+                ],
+                "content": [
 '''🔥 𝐇𝐎𝐓 𝐇𝐎𝐓 1mcloud cập nhật! Bổ sung thêm hai dòng CPU mạnh mẽ 🔥
 𝐀𝐌𝐃 𝐄𝐏𝐘𝐂 𝟕𝟓𝟒𝟑𝐏 𝟑𝟐-𝐂𝐨𝐫𝐞 𝐏𝐫𝐨𝐜𝐞𝐬𝐬𝐨𝐫
 𝐀𝐌𝐃 𝐑𝐲𝐳𝐞𝐧 𝟕 𝟓𝟖𝟎𝟎𝐗 𝟖-𝐂𝐨𝐫𝐞 𝐏𝐫𝐨𝐜𝐞𝐬𝐬𝐨𝐫
@@ -71,32 +64,32 @@ Hạ tầng hiện đại, nguồn cung mới, hiệu suất tối ưu.
 📱  𝐓𝐄𝐋𝐄: @vnvps 
 🍀🎉🎊 UY TÍN LÂU NĂM TẠI MMO4ME 🍀🎉🎊 
 #vpslagi #vpschinhhang #vpsgiare #vpshosting #vpswindows #ip #freevps #vpsvn #proxy #sock #server #vps #vpsvietnamgiare #vpsgpu #vpsus #trial #sale #gpu #vpsgpu #1mcloud'''
-            ],
+                ],
                 "delay": [8, 10]
-        },
-        "COMMENT": {
-            "image": [
-                "",
-                ""
-            ],
-            "content": [
-                "UP!",
-                "Up!",
-                "up!",
-                "UP",
-                "Up",
-                "up",
-                "🆙",
-                "🆙🆙"
-            ],
-            "delay": [3, 6]
-        },
-        "SPAM": {
-            "image": [
-                "",
-                ""
-            ],
-            "content": [
+            },
+            "COMMENT": {
+                "image": [
+                    "",
+                    ""
+                ],
+                "content": [
+                    "UP!",
+                    "Up!",
+                    "up!",
+                    "UP",
+                    "Up",
+                    "up",
+                    "🆙",
+                    "🆙🆙"
+                ],
+                "delay": [3, 6]
+            },
+            "SPAM": {
+                "image": [
+                    "",
+                    ""
+                ],
+                "content": [
 '''🎉🎉🎉 1mcloud.vn sẵn hàng vps - proxy chính hãng VN, US, Singapore, Anh, Pháp, Đức, Hà Lan, Úc, Canada…
 • 922 proxy • PIA proxy
 • Uy tín nhiều năm trên MMO4ME''',
@@ -118,50 +111,73 @@ Hạ tầng hiện đại, nguồn cung mới, hiệu suất tối ưu.
 • Phù hợp cho livestream, chạy tool, và MMO
 • Uptime 99%, bảo mật và đáng tin cậy
 • Liên hệ ngay qua Zalo 0969593769 hoặc Telegram @vnvps'''
-            ],
-            "scroll number": 3,
-            "post number": 5,
-            "spam delay": [3, 6],
-            "scan delay": [10, 20],
-            "key filter": [
-                "mua vps",
-                "mua proxy"
-                "cần vps",
-                "cần proxy",
-                "cần tìm",
-                "kiểm vps",
-                "kiểm proxy",
-                "bác nào có",
-                "tư vấn về vps",
-                "tư vấn về proxy",
-                "ai bán vps",
-                "ai bán proxy",
-                "cần tư vấn",
-                "ib mình",
-                "ib em",
-                "inbox mình",
-                "inbox em",
-                "need vps",
-                "need proxy"
-            ]
+                ],
+                "scroll number": 3,
+                "post number": 5,
+                "spam delay": [3, 6],
+                "scan delay": [10, 20],
+                "key filter": [
+                    "mua vps",
+                    "mua proxy",
+                    "cần vps",
+                    "cần proxy",
+                    "cần tìm",
+                    "kiểm vps",
+                    "kiểm proxy",
+                    "bác nào có",
+                    "tư vấn về vps",
+                    "tư vấn về proxy",
+                    "ai bán vps",
+                    "ai bán proxy",
+                    "cần tư vấn",
+                    "ib mình",
+                    "ib em",
+                    "inbox mình",
+                    "inbox em",
+                    "need vps",
+                    "need proxy"
+                ]
+            }
         },
-        "PROXY": {
-            "ip": "",
-            "port": "",
-            "username": "",
-            "password": ""
-        }
+        "TABLE": [
+            {
+                "link group": "https://www.facebook.com/groups/345983411894599/",
+                "name group": "Cộng Đồng VPS Việt Nam",
+                "posts": [
+                    {
+                        "link post": "",
+                        "content": "",
+                        "status_post": "",
+                        "status_comment": ""
+                    }
+                ]
+            },
+            {
+                "link group": "https://www.facebook.com/groups/vpsgiatot/",
+                "name group": "VPS Giá Tốt - VPS/RDP Cheap",
+                "posts": [
+                    {
+                        "link post": "",
+                        "content": "",
+                        "status_post": "",
+                        "status_comment": ""
+                    }
+                ]
+            }
+        ],
     }
     
     def __init__(self, data_folder: str, data_path: str):
         self.folder_path = data_folder
         self.data_path = data_path
+        self.history_path = os.path.join(data_folder, "history.json")
         self._ensure_data_directory()
         
         if not os.path.exists(self.data_path): # Nếu chưa có file data -> Tạo (kèm luôn sheet Login)
             self.save_data()
         
         self.load_data()
+        self.load_history()
     
     def load_data(self) -> None:
         """Load data from JSON file or create with defaults if not exists"""
@@ -182,6 +198,35 @@ Hạ tầng hiện đại, nguồn cung mới, hiệu suất tối ưu.
             return False
         return True
 
+    def load_history(self) -> None:
+        """Load history from JSON file or create empty if not exists"""
+        if os.path.exists(self.history_path):
+            try:
+                with open(self.history_path, 'r', encoding='utf-8') as f:
+                    self.history = set(json.load(f))
+            except json.JSONDecodeError:
+                self.history = set()
+        else: self.history = set()
+
+    def save_history(self) -> bool:
+        """Save history to JSON file"""
+        try:
+            with open(self.history_path, 'w', encoding='utf-8') as f:
+                json.dump(list(self.history), f, indent=4, ensure_ascii=False)
+        except:
+            return False
+        return True
+
+    def add_to_history(self, item_id: str) -> None:
+        """Add an item to the history and save"""
+        if item_id not in self.history:
+            self.history.add(item_id)
+            self.save_history()
+
+    def is_in_history(self, item_id: str) -> bool:
+        """Check if an item is in the history"""
+        return item_id in self.history
+
     def _ensure_data_directory(self) -> None:
         """Create data directory if it doesn't exist"""
         if not os.path.exists(self.folder_path):
@@ -191,5 +236,5 @@ Hạ tầng hiện đại, nguồn cung mới, hiệu suất tối ưu.
         """Clear all stored data"""
         if os.path.exists(self.data_path):
             os.remove(self.data_path)
-        if os.path.exists(self.data_path):
-            os.remove(self.data_path)
+        if os.path.exists(self.history_path):
+            os.remove(self.history_path)

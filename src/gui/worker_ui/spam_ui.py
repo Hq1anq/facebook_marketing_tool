@@ -22,26 +22,26 @@ class SpamUI:
         self.ui.btn_spamImageFromFile.clicked.connect(self.image_viewer.show_images)
     
     def load_data(self):
-        content_string = "\n$\n".join(self.data_manager.data["SPAM"]["content"])
+        content_string = "\n$\n".join(self.data_manager.data["CONFIG"]["SPAM"]["content"])
         self.ui.spamContentInput.setPlainText(content_string)
-        self.ui.spamScrollNumberInput.setText(str(self.data_manager.data["SPAM"]["scroll number"]))
-        self.ui.spamPostNumberInput.setText(str(self.data_manager.data["SPAM"]["post number"]))
+        self.ui.spamScrollNumberInput.setText(str(self.data_manager.data["CONFIG"]["SPAM"]["scroll number"]))
+        self.ui.spamPostNumberInput.setText(str(self.data_manager.data["CONFIG"]["SPAM"]["post number"]))
         self.ui.spamSpamDelayInput.setText(
-            str(self.data_manager.data["SPAM"]["spam delay"]) if len(self.data_manager.data["SPAM"]["spam delay"]) == 0
-            else f'{self.data_manager.data["SPAM"]["spam delay"][0]} - {self.data_manager.data["SPAM"]["spam delay"][1]}'
+            str(self.data_manager.data["CONFIG"]["SPAM"]["spam delay"]) if len(self.data_manager.data["CONFIG"]["SPAM"]["spam delay"]) == 0
+            else f'{self.data_manager.data["CONFIG"]["SPAM"]["spam delay"][0]} - {self.data_manager.data["CONFIG"]["SPAM"]["spam delay"][1]}'
         )
         self.ui.spamScanDelayInput.setText(
-            str(self.data_manager.data["SPAM"]["scan delay"]) if len(self.data_manager.data["SPAM"]["scan delay"]) == 0
-            else f'{self.data_manager.data["SPAM"]["scan delay"][0]} - {self.data_manager.data["SPAM"]["scan delay"][1]}'
+            str(self.data_manager.data["CONFIG"]["SPAM"]["scan delay"]) if len(self.data_manager.data["CONFIG"]["SPAM"]["scan delay"]) == 0
+            else f'{self.data_manager.data["CONFIG"]["SPAM"]["scan delay"][0]} - {self.data_manager.data["CONFIG"]["SPAM"]["scan delay"][1]}'
         )
-        list_key_filter = ", ".join(self.data_manager.data["SPAM"]["key filter"])
+        list_key_filter = ", ".join(self.data_manager.data["CONFIG"]["SPAM"]["key filter"])
         self.ui.spamListFilter.setText(list_key_filter)
         
     def load_image(self, use_dialog=False):
-        self.image_viewer.show_images(self.data_manager.data["SPAM"]["image"], use_dialog=use_dialog)
+        self.image_viewer.show_images(self.data_manager.data["CONFIG"]["SPAM"]["image"], use_dialog=use_dialog)
     
     def save_data(self):
-        spam_data = self.data_manager.data["SPAM"]
+        spam_data = self.data_manager.data["CONFIG"]["SPAM"]
         default_data = self.data_manager.DEFAULT_DATA["SPAM"]
         spam_data["image"] = self.image_viewer.list_image
         spam_data["content"] = list(map(str.strip, self.ui.spamContentInput.toPlainText().split("\n$\n")))
