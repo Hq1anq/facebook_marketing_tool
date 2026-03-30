@@ -454,18 +454,107 @@ class TableWidget(QFrame, Ui_tableWidget):
 
         # Update dict and trigger file save
         data_manager.data["TABLE"] = new_table_data
-        success = data_manager.save_data()
+        data_manager.save_data()
+
+    def sync_groups_data(self, crawled_groups: list, data_manager: DataManager):
+        """Merge crawled groups with existing data:
+        - Update name if group exists but name changed
+        - Add new groups
+        - Remove groups no longer in crawled results
+        - Preserve existing posts for kept groups
+        """
+        old_table = data_manager.data.get("TABLE", [])
+        crawled_map = {g["link group"]: g["name group"] for g in crawled_groups}
         
-        # if success:
-        #     self.statusTable.setText("Đã lưu dữ liệu bảng vào " + data_manager.data_path)
-        # else:
-        #     self.statusTable.setText("Lỗi: không thể lưu dữ liệu")
+        new_table = []
+        
+        # 1. Keep existing groups that are still in crawled results (preserve posts, update name)
+        for old_group in old_table:
+            lg = old_group["link group"]
+            if lg in crawled_map:
+                new_table.append({
+                    "link group": lg,
+                    "name group": crawled_map[lg],  # Update to latest name
+                    "posts": old_group.get("posts", [])
+                })
+        
+        # 2. Add new groups (in crawled but not in old data)
+        existing_links = {g["link group"] for g in new_table}
+        for cg in crawled_groups:
+            if cg["link group"] not in existing_links:
+                new_table.append({
+                    "link group": cg["link group"],
+                    "name group": cg["name group"],
+                    "posts": []
+                })
+        
+        # 3. Save and reload table
+        data_manager.data["TABLE"] = new_table
+        data_manager.save_data()
+        self.load_table_data(new_table)
+
+    def sync_posts_data(self, scraped_data: dict, data_manager: DataManager):
+        """Merge scraped posts with existing data for each group:
+        - Remove posts with blank link_post or content (user-corrupted data)
+        - Remove posts in old data but NOT in scraped data (expired)
+        - Add new posts from scraped data
+        - Preserve statuses for kept posts
+        """
+        table_data = data_manager.data.get("TABLE", [])
+        
+        for link_group, crawled_posts in scraped_data.items():
+            crawled_lp_set = {p["link post"] for p in crawled_posts if p.get("link post")}
+            crawled_content_map = {p["link post"]: p["content"] for p in crawled_posts if p.get("link post")}
             
+            group = next((g for g in table_data if g["link group"] == link_group), None)
+            if not group:
+                continue
+            
+            old_posts = group.get("posts", [])
+            new_posts = []
+            
+            for old_post in old_posts:
+                lp = old_post.get("link post", "")
+                content = old_post.get("content", "")
+                
+                # Remove blank posts (user corruption)
+                if not lp or not content:
+                    continue
+                
+                # Remove expired posts (in old data but not in crawled)
+                if lp not in crawled_lp_set:
+                    continue
+                
+                # Update content to latest from driver
+                if lp in crawled_content_map:
+                    old_post["content"] = crawled_content_map[lp]
+                
+                new_posts.append(old_post)
+            
+            # Add new posts from crawled data
+            existing_lp_set = {p["link post"] for p in new_posts}
+            for cp in crawled_posts:
+                if cp.get("link post") and cp["link post"] not in existing_lp_set:
+                    new_posts.append({
+                        "link post": cp["link post"],
+                        "content": cp["content"],
+                        "status_post": "",
+                        "status_comment": ""
+                    })
+            
+            group["posts"] = new_posts
+        
+        # Save and reload table
+        data_manager.data["TABLE"] = table_data
+        data_manager.save_data()
+        self.load_table_data(table_data)
+
     def finish_action(self, func: str, data_manager: DataManager):
         """Standard sequence triggered upon finishing any table action"""
         self.btn_run.setText(func)
         self.adjust_column_width()
-        if func in ["GET GROUP", "GET POST", "POST", "COMMENT"]:
+        # GET GROUP and GET POST save via sync methods, POST and COMMENT save here
+        if func in ["POST", "COMMENT"]:
             self.save_table_data(data_manager)
 
     def add_empty_row(self):

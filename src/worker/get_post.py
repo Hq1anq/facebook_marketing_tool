@@ -6,7 +6,8 @@ from src.manager import DriverManager
 
 class GetPost(QRunnable):
     class Signals(QObject):
-        add_row = Signal(str, str, str, str, str)
+        add_row = Signal(str, str, str, str, str)  # Live UI feedback
+        sync_posts = Signal(object)  # {link_group: [{"link post": ..., "content": ...}]}
         loading = Signal(str)
         success = Signal(str)
         error = Signal(str)
@@ -45,19 +46,23 @@ class GetPost(QRunnable):
             self.signals.finished.emit()
             return
 
-        # Process groups in batches of max_tabs
+        # Collect all scraped posts per group for sync at end
+        self.scraped_data = {}  # {link_group: [{"link post": ..., "content": ...}]}
+
         for batch_start in range(0, len(self.group_list), self.max_tabs):
             batch = self.group_list[batch_start:batch_start + self.max_tabs]
             self._process_batch(batch)
-                    
+        
+        # Emit sync signal so UI can merge with existing data
+        self.signals.sync_posts.emit(self.scraped_data)
         self.signals.success.emit("Đã lấy thông tin các post")
         self.signals.finished.emit()
 
     def _process_batch(self, batch):
-        """Process a batch of groups concurrently using multiple tabs"""
-        original_tab = self.driver.current_window_handle
+        """Process a batch of groups using multiple tabs (round-robin)"""
+        driver = self.driver
+        original_tab = driver.current_window_handle
         
-        # Prepare tab state for each group in the batch
         tab_states = []
         
         for i, group in enumerate(batch):
@@ -66,21 +71,23 @@ class GetPost(QRunnable):
             
             if not link_group:
                 continue
-            
             if not link_group.endswith("/"):
                 link_group += "/"
             
             # First group reuses the current tab, others open new tabs
             if i == 0:
                 tab_handle = original_tab
-                self.driver.switch_to.window(tab_handle)
+                driver.switch_to.window(tab_handle)
             else:
-                self.driver.execute_script("window.open('about:blank');")
-                tab_handle = self.driver.window_handles[-1]
-                self.driver.switch_to.window(tab_handle)
+                driver.execute_script("window.open('about:blank');")
+                tab_handle = driver.window_handles[-1]
+                driver.switch_to.window(tab_handle)
             
-            # Navigate to group's posted content
-            self.driver.get(link_group + "my_posted_content")
+            driver.get(link_group + "my_posted_content")
+            
+            # Initialize scraped_data entry for this group
+            if link_group not in self.scraped_data:
+                self.scraped_data[link_group] = []
             
             tab_states.append({
                 "handle": tab_handle,
@@ -97,7 +104,7 @@ class GetPost(QRunnable):
         
         # Wait for all tabs to fully load
         for ts in tab_states:
-            self.driver.switch_to.window(ts["handle"])
+            driver.switch_to.window(ts["handle"])
             self.driver_manager.wait_for_url_contains("")
         
         max_scrolls = 20
@@ -109,9 +116,8 @@ class GetPost(QRunnable):
                 if ts["done"]:
                     continue
                 
-                # Switch to this tab
                 try:
-                    self.driver.switch_to.window(ts["handle"])
+                    driver.switch_to.window(ts["handle"])
                 except Exception:
                     ts["done"] = True
                     continue
@@ -119,8 +125,7 @@ class GetPost(QRunnable):
                 self.driver_manager.handle_chat_close()
                 self.signals.loading.emit(f"Đang quét: {ts['name_group']}")
                 
-                # Extract posts currently visible
-                story_containers = self.driver.find_elements(
+                story_containers = driver.find_elements(
                     By.CSS_SELECTOR, 'div[data-ad-rendering-role="story_message"]'
                 )
                 
@@ -167,9 +172,17 @@ class GetPost(QRunnable):
                         
                         ts["seen_post_ids"].add(unique_id)
                         found_new = True
+                        
+                        # Live UI feedback
                         self.signals.add_row.emit(
                             ts["link_group"], ts["name_group"], link_post, content, ""
                         )
+                        
+                        # Collect for sync
+                        self.scraped_data[ts["link_group"]].append({
+                            "link post": link_post,
+                            "content": content
+                        })
                         
                     except Exception:
                         continue
@@ -187,24 +200,23 @@ class GetPost(QRunnable):
                     ts["done"] = True
                     continue
                 
-                # Scroll down for next round
-                self.driver.execute_script("window.scrollBy(0, 1000);")
+                driver.execute_script("window.scrollBy(0, 1000);")
             
             # Brief pause between rounds to let pages load
             time.sleep(2)
         
-        # Close extra tabs (keep original)
+        # Close extra tabs
         for ts in tab_states:
             if ts["handle"] != original_tab:
                 try:
-                    self.driver.switch_to.window(ts["handle"])
-                    self.driver.close()
+                    driver.switch_to.window(ts["handle"])
+                    driver.close()
                 except Exception:
                     pass
         
         # Switch back to original tab
         try:
-            self.driver.switch_to.window(original_tab)
+            driver.switch_to.window(original_tab)
         except Exception:
             pass
     

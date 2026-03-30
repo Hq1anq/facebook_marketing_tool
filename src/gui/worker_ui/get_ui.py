@@ -23,8 +23,9 @@ class GetUI:
     
     def setup_connections(self):
         # Get Group
-        self.get_group.signals.add_row.connect(
-            lambda lg, ng, lp, c, s: self.table_widget.add_row(link_group=lg, name_group=ng, link_post=lp, content=c, status=s)
+        self.get_group.signals.loading.connect(self.table_widget.statusTable.setLoading)
+        self.get_group.signals.sync_groups.connect(
+            lambda groups: self.table_widget.sync_groups_data(groups, self.data_manager)
         )
         self.get_group.signals.success.connect(self.table_widget.statusTable.setSuccess)
         self.get_group.signals.error.connect(self.table_widget.statusTable.setError)
@@ -34,6 +35,9 @@ class GetUI:
         # Get Post
         self.get_post.signals.add_row.connect(
             lambda lg, ng, lp, c, s: self.table_widget.insert_post_for_group(link_group=lg, name_group=ng, link_post=lp, content=c, status=s)
+        )
+        self.get_post.signals.sync_posts.connect(
+            lambda data: self.table_widget.sync_posts_data(data, self.data_manager)
         )
         self.get_post.signals.loading.connect(self.table_widget.statusTable.setLoading)
         self.get_post.signals.success.connect(self.table_widget.statusTable.setSuccess)
@@ -60,7 +64,6 @@ class GetUI:
         filter_keys = [keyword.strip() for keyword in self.table_widget.filterGroupInput.text().split(",") if keyword.strip()]
         self.get_group.setup(self.table_widget.filterGroupCheckBox.isChecked(), filter_keys)
         
-        self.table_widget.table.setRowCount(1) # Clear table
         QThreadPool.globalInstance().start(self.get_group)
 
     def run_getPost(self):

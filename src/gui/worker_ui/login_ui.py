@@ -36,8 +36,6 @@ class LoginUI:
     def on_login_success(self, profile_name):
         self.ui.status.setSuccess("Đăng nhập thành công, profile: " + profile_name)
         self.updateProfileName(profile_name)
-        cookie = self.worker.get_cookie()
-        self.ui.cookieInput.setPlainText(cookie)
     
     def updateProfileName(self, name):
         if (name):
