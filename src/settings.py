@@ -15,6 +15,5 @@ spamContentInput = True
 stopSpam = False
 stopComment = False
 use_fromTo = True
-is_latestPost = True
 postDelay = [10, 20] # Chờ từ 10s đến 20s khi up
 commentDelay = [5, 15]

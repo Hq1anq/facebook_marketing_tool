@@ -284,8 +284,6 @@ class TableWidget(QFrame, Ui_tableWidget):
         match func:
             case "POST":
                 self.btn_run.setText("POST")
-                self.fromToFrame.show()
-                self.latestPost.hide()
                 self.filterGroup.hide()
                 self.fromLabel.setText("Từ group")
                 self.toLabel.setText("đến group")
@@ -295,8 +293,6 @@ class TableWidget(QFrame, Ui_tableWidget):
 
             case "COMMENT":
                 self.btn_run.setText("COMMENT")
-                self.fromToFrame.show()
-                self.latestPost.hide()
                 self.filterGroup.hide()
                 self.fromLabel.setText("Từ post")
                 self.toLabel.setText("đến post")
@@ -307,8 +303,6 @@ class TableWidget(QFrame, Ui_tableWidget):
 
             case "GET GROUP":
                 self.btn_run.setText("GET GROUP")
-                self.fromToFrame.hide()
-                self.latestPost.hide()
                 self.filterGroup.show()
                 self.table.setColumnHidden(2, True) # Hide link post
                 self.table.setColumnHidden(3, True) # Hide content
@@ -317,8 +311,6 @@ class TableWidget(QFrame, Ui_tableWidget):
 
             case "GET POST":
                 self.btn_run.setText("GET POST")
-                self.fromToFrame.show()
-                self.latestPost.show()
                 self.filterGroup.hide()
                 self.fromLabel.setText("Từ group")
                 self.toLabel.setText("đến group")

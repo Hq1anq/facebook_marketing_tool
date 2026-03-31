@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'tableWidgetyuvJsw.ui'
+## Form generated from reading UI file 'tableWidgetAROowO.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.10.2
 ##
@@ -217,33 +217,6 @@ class Ui_tableWidget(object):
 
         self.verticalLayout_2.addWidget(self.contentTop)
 
-        self.latestPost = QFrame(self.contentFrame)
-        self.latestPost.setObjectName(u"latestPost")
-        self.horizontalLayout_2 = QHBoxLayout(self.latestPost)
-        self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
-        self.horizontalSpacer_3 = QSpacerItem(200, 20, QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Minimum)
-
-        self.horizontalLayout_2.addItem(self.horizontalSpacer_3)
-
-        self.latestPostCheckBox = QCheckBox(self.latestPost)
-        self.latestPostCheckBox.setObjectName(u"latestPostCheckBox")
-        self.latestPostCheckBox.setChecked(True)
-
-        self.horizontalLayout_2.addWidget(self.latestPostCheckBox)
-
-        self.postIndex = QLineEdit(self.latestPost)
-        self.postIndex.setObjectName(u"postIndex")
-        self.postIndex.setMinimumSize(QSize(0, 0))
-
-        self.horizontalLayout_2.addWidget(self.postIndex)
-
-        self.horizontalSpacer_4 = QSpacerItem(200, 20, QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Minimum)
-
-        self.horizontalLayout_2.addItem(self.horizontalSpacer_4)
-
-
-        self.verticalLayout_2.addWidget(self.latestPost)
-
         self.filterGroup = QFrame(self.contentFrame)
         self.filterGroup.setObjectName(u"filterGroup")
         self._2 = QHBoxLayout(self.filterGroup)
@@ -268,100 +241,15 @@ class Ui_tableWidget(object):
 
         self.verticalLayout_2.addWidget(self.filterGroup)
 
-        self.fromToFrame = QFrame(self.contentFrame)
-        self.fromToFrame.setObjectName(u"fromToFrame")
-        self.horizontalLayout_5 = QHBoxLayout(self.fromToFrame)
-        self.horizontalLayout_5.setObjectName(u"horizontalLayout_5")
-        self.horizontalLayout_5.setContentsMargins(-1, -1, -1, 0)
-        self.horizontalSpacer = QSpacerItem(150, 20, QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Minimum)
-
-        self.horizontalLayout_5.addItem(self.horizontalSpacer)
-
-        self.listFrame = QFrame(self.fromToFrame)
-        self.listFrame.setObjectName(u"listFrame")
-        sizePolicy3 = QSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Preferred)
-        sizePolicy3.setHorizontalStretch(0)
-        sizePolicy3.setVerticalStretch(0)
-        sizePolicy3.setHeightForWidth(self.listFrame.sizePolicy().hasHeightForWidth())
-        self.listFrame.setSizePolicy(sizePolicy3)
-        self.listFrame.setFrameShape(QFrame.Shape.StyledPanel)
-        self.listFrame.setFrameShadow(QFrame.Shadow.Raised)
-        self.horizontalLayout_4 = QHBoxLayout(self.listFrame)
-        self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
-        self.horizontalLayout_4.setContentsMargins(0, 0, 0, 0)
-        self.listLabel = QLabel(self.listFrame)
-        self.listLabel.setObjectName(u"listLabel")
-
-        self.horizontalLayout_4.addWidget(self.listLabel)
-
-
-        self.horizontalLayout_5.addWidget(self.listFrame)
-
-        self.listBox = QLineEdit(self.fromToFrame)
-        self.listBox.setObjectName(u"listBox")
-
-        self.horizontalLayout_5.addWidget(self.listBox)
-
-        self.useFromToFrame = QFrame(self.fromToFrame)
-        self.useFromToFrame.setObjectName(u"useFromToFrame")
-        sizePolicy3.setHeightForWidth(self.useFromToFrame.sizePolicy().hasHeightForWidth())
-        self.useFromToFrame.setSizePolicy(sizePolicy3)
-        self.useFromToFrame.setFrameShape(QFrame.Shape.StyledPanel)
-        self.useFromToFrame.setFrameShadow(QFrame.Shadow.Raised)
-        self.horizontalLayout_3 = QHBoxLayout(self.useFromToFrame)
-        self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
-        self.horizontalLayout_3.setContentsMargins(0, 0, 0, 0)
-        self.fromLabel = QLabel(self.useFromToFrame)
-        self.fromLabel.setObjectName(u"fromLabel")
-
-        self.horizontalLayout_3.addWidget(self.fromLabel)
-
-        self.fromBox = QLineEdit(self.useFromToFrame)
-        self.fromBox.setObjectName(u"fromBox")
-        self.fromBox.setMaximumSize(QSize(50, 16777215))
-
-        self.horizontalLayout_3.addWidget(self.fromBox)
-
-        self.toLabel = QLabel(self.useFromToFrame)
-        self.toLabel.setObjectName(u"toLabel")
-
-        self.horizontalLayout_3.addWidget(self.toLabel)
-
-        self.toBox = QLineEdit(self.useFromToFrame)
-        self.toBox.setObjectName(u"toBox")
-        self.toBox.setMaximumSize(QSize(50, 16777215))
-
-        self.horizontalLayout_3.addWidget(self.toBox)
-
-
-        self.horizontalLayout_5.addWidget(self.useFromToFrame)
-
-        self.btn_fromTo = QPushButton(self.fromToFrame)
-        self.btn_fromTo.setObjectName(u"btn_fromTo")
-        sizePolicy2.setHeightForWidth(self.btn_fromTo.sizePolicy().hasHeightForWidth())
-        self.btn_fromTo.setSizePolicy(sizePolicy2)
-        icon3 = QIcon()
-        icon3.addFile(u":/icons/icons/change.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.btn_fromTo.setIcon(icon3)
-
-        self.horizontalLayout_5.addWidget(self.btn_fromTo)
-
-        self.horizontalSpacer_2 = QSpacerItem(150, 20, QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Minimum)
-
-        self.horizontalLayout_5.addItem(self.horizontalSpacer_2)
-
-
-        self.verticalLayout_2.addWidget(self.fromToFrame)
-
         self.horizontalLayout_6 = QHBoxLayout()
         self.horizontalLayout_6.setObjectName(u"horizontalLayout_6")
         self.statusTable = HighlightLabel(self.contentFrame)
         self.statusTable.setObjectName(u"statusTable")
-        sizePolicy4 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
-        sizePolicy4.setHorizontalStretch(0)
-        sizePolicy4.setVerticalStretch(0)
-        sizePolicy4.setHeightForWidth(self.statusTable.sizePolicy().hasHeightForWidth())
-        self.statusTable.setSizePolicy(sizePolicy4)
+        sizePolicy3 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+        sizePolicy3.setHorizontalStretch(0)
+        sizePolicy3.setVerticalStretch(0)
+        sizePolicy3.setHeightForWidth(self.statusTable.sizePolicy().hasHeightForWidth())
+        self.statusTable.setSizePolicy(sizePolicy3)
         self.statusTable.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.horizontalLayout_6.addWidget(self.statusTable)
@@ -386,11 +274,11 @@ class Ui_tableWidget(object):
         __qtablewidgetitem3 = QTableWidgetItem()
         self.table.setHorizontalHeaderItem(3, __qtablewidgetitem3)
         self.table.setObjectName(u"table")
-        sizePolicy5 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
-        sizePolicy5.setHorizontalStretch(0)
-        sizePolicy5.setVerticalStretch(0)
-        sizePolicy5.setHeightForWidth(self.table.sizePolicy().hasHeightForWidth())
-        self.table.setSizePolicy(sizePolicy5)
+        sizePolicy4 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        sizePolicy4.setHorizontalStretch(0)
+        sizePolicy4.setVerticalStretch(0)
+        sizePolicy4.setHeightForWidth(self.table.sizePolicy().hasHeightForWidth())
+        self.table.setSizePolicy(sizePolicy4)
         self.table.setStyleSheet(u"QTableCornerButton::section { background-color: rgb(33, 37, 43) }\n"
 "QTableWidget {	\n"
 "	padding: 5px;\n"
@@ -433,15 +321,8 @@ class Ui_tableWidget(object):
         self.btn_delete.setText(QCoreApplication.translate("tableWidget", u"DELETE ROW", None))
         self.tableImport.setText(QCoreApplication.translate("tableWidget", u" IMPORT", None))
         self.tableExport.setText(QCoreApplication.translate("tableWidget", u" EXPORT", None))
-        self.latestPostCheckBox.setText(QCoreApplication.translate("tableWidget", u"L\u1ea5y post m\u1edbi nh\u1ea5t", None))
-        self.postIndex.setPlaceholderText(QCoreApplication.translate("tableWidget", u"\u0110i\u1ec1n s\u1ed1 th\u1ee9 t\u1ef1 post trong group", None))
         self.filterGroupCheckBox.setText(QCoreApplication.translate("tableWidget", u"Filter", None))
         self.filterGroupInput.setPlaceholderText(QCoreApplication.translate("tableWidget", u"vps, proxy, rdp", None))
-        self.listLabel.setText(QCoreApplication.translate("tableWidget", u"List post", None))
-        self.listBox.setPlaceholderText(QCoreApplication.translate("tableWidget", u"ng\u0103n c\u00e1ch nhau b\u1edbi d\u1ea5u ,", None))
-        self.fromLabel.setText(QCoreApplication.translate("tableWidget", u"T\u1eeb post", None))
-        self.toLabel.setText(QCoreApplication.translate("tableWidget", u"\u0111\u1ebfn post", None))
-        self.btn_fromTo.setText("")
         self.countRows.setText(QCoreApplication.translate("tableWidget", u"Total rows:", None))
         ___qtablewidgetitem = self.table.horizontalHeaderItem(0)
         ___qtablewidgetitem.setText(QCoreApplication.translate("tableWidget", u"LINK GROUP", None));
