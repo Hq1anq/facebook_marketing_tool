@@ -2,6 +2,7 @@ from PySide6.QtWidgets import QHeaderView, QTableWidgetItem, QFrame, QGraphicsDr
 from PySide6.QtCore import Qt, QPropertyAnimation, QRect, QModelIndex
 from PySide6.QtGui import QShortcut, QKeySequence, QColor, QPainter, QFont, QFontMetrics
 
+from src.manager import DataManager
 from src.gui.widget.ui_tableWidget import Ui_tableWidget
 from src.settings import TIME_ANIMATION
 
@@ -288,29 +289,112 @@ class TableWidget(QFrame, Ui_tableWidget):
             item.setForeground(color)
         return item
 
+    def get_cell_text(self, row, col):
+        """Safely extract text, accounting for spanned cells"""
+        for r in range(row, -1, -1):
+            span_size = self.table.rowSpan(r, col)
+            if span_size > 1 and r + span_size > row:
+                item = self.table.item(r, col)
+                return item.text().strip() if item else ""
+        item = self.table.item(row, col)
+        return item.text().strip() if item else ""
+
     def get_selected(self):
         selected_rows = set(item.row() for item in self.table.selectedItems())
         if not selected_rows: return []
-        if (self.btn_run.text() in ["POST", "STOP POST!", "GET POST"]):
-            col = 0 # Group
-        else: col = 2 # Post
+        
+        if self.current_mode in ["POST", "GET POST", "GET GROUP"]:
+            col = 1 # NAME GROUP
+        elif self.current_mode == "COMMENT":
+            col = 3 # CONTENT
+        else: col = 1
+        
         self.table.clearSelection()
+        
         selected_items = []
         for row in selected_rows:
-            self.table.item(row, col).setSelected(True)
-                    
+            item = self.table.item(row, col)
+            if item:
+                item.setSelected(True)
+                        
             item_data = {
                 "row": row,
-                "link group": self.table.item(row, 0).text().strip() if self.table.item(row, 0) else "",
-                "name group": self.table.item(row, 1).text().strip() if self.table.item(row, 1) else "",
-                "link post": self.table.item(row, 2).text().strip() if self.table.item(row, 2) else "",
-                "content": self.table.item(row, 3).text().strip() if self.table.item(row, 3) else "",
+                "link group": self.get_cell_text(row, 0),
+                "name group": self.get_cell_text(row, 1),
+                "link post": self.get_cell_text(row, 2),
+                "content": self.get_cell_text(row, 3),
                 "type_status": "status_post" if self.current_mode != "COMMENT" else "status_comment",
-                "status": self.table.item(row, 4).text().strip() if self.table.item(row, 4) else ""
+                "status": self.get_cell_text(row, 4)
             }
             selected_items.append(item_data)
         return selected_items
-    
+
+    def save_table_data(self, data_manager: DataManager):
+        """Save UI data corresponding to the used columns in current action back to data_manager"""
+        original_table = data_manager.data.get("TABLE", [])
+        new_table_data = []
+
+        # Reconstruct group-post mapping top-to-bottom
+        for row in range(1, self.table.rowCount()):
+            lg = self.get_cell_text(row, 0)
+            ng = self.get_cell_text(row, 1)
+            lp = self.get_cell_text(row, 2)
+            c = self.get_cell_text(row, 3)
+            st = self.get_cell_text(row, 4)
+
+            # Find or insert group
+            group = next((g for g in new_table_data if g["link group"] == lg), None)
+            if not group:
+                group = {"link group": lg, "name group": ng, "posts": []}
+                
+                # In GET GROUP mode, preserve existing posts entirely, as this mode doesn't list them.
+                if self.current_mode == "GET GROUP":
+                    orig_g = next((g for g in original_table if g["link group"] == lg), None)
+                    if orig_g:
+                        group["posts"] = orig_g.get("posts", [])
+                        
+                new_table_data.append(group)
+
+            # Skip adding posts if we are in GET GROUP mode, since table UI only represents groups
+            if self.current_mode == "GET GROUP":
+                continue
+
+            # Build post entry intelligently preserving older un-active statuses
+            orig_g = next((g for g in original_table if g["link group"] == lg), None)
+            orig_p = next((p for p in orig_g.get("posts", []) if p.get("link post") == lp), None) if orig_g else None
+
+            post_data = {
+                "link post": lp,
+                "content": c,
+                "status_post": orig_p.get("status_post", "") if orig_p else "",
+                "status_comment": orig_p.get("status_comment", "") if orig_p else ""
+            }
+
+            # Only overwrite the status corresponding to current active tool
+            if self.current_mode == "COMMENT":
+                post_data["status_comment"] = st
+            elif self.current_mode in ["POST", "GET POST"]:
+                post_data["status_post"] = st
+
+            if lp or c or st:
+                group["posts"].append(post_data)
+
+        # Update dict and trigger file save
+        data_manager.data["TABLE"] = new_table_data
+        success = data_manager.save_data()
+        
+        if success:
+            self.statusTable.setText("Đã lưu dữ liệu bảng vào " + data_manager.data_path)
+        else:
+            self.statusTable.setText("Lỗi: không thể lưu dữ liệu")
+            
+    def finish_action(self, func: str, data_manager: DataManager):
+        """Standard sequence triggered upon finishing any table action"""
+        self.btn_run.setText(func)
+        self.adjust_column_width()
+        if func in ["GET GROUP", "GET POST", "POST", "COMMENT"]:
+            self.save_table_data(data_manager)
+
     def add_empty_row(self):
         new_row_idx = self.table.rowCount()
         self.table.insertRow(new_row_idx)

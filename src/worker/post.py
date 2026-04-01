@@ -4,13 +4,16 @@ from selenium.webdriver.support import expected_conditions as EC
 import time, random, pyperclip
 from PySide6.QtCore import QRunnable, Signal, Slot, QObject
 
-from src.manager import DriverManager, DataManager
+from src.manager import DriverManager
 
 class Post(QRunnable):
     class Signals(QObject):
         log = Signal(str)
+        loading = Signal(str)
         table_status = Signal(int, str)
         error = Signal(str)
+        success = Signal(str)
+        unlogin = Signal()
         finished = Signal()
         
     def __init__(self, driver_manager: DriverManager):
@@ -29,25 +32,30 @@ class Post(QRunnable):
 
     @Slot()
     def run(self):
-        self.driver = self.driver_manager.driver
         if not self.table_data:
-            self.signals.log.emit("POST: Chọn ít nhất một group để đăng bài")
+            self.signals.error.emit("POST: Chọn ít nhất một group để đăng bài")
             self.signals.finished.emit()
             self.set_stop(True)
             return
         if not (self.use_content or self.use_image):
-            self.signals.log.emit("POST: Cần tối thiểu một content/image để đăng bài")
+            self.signals.error.emit("POST: Cần tối thiểu một content/image để đăng bài")
             self.signals.finished.emit()
             self.set_stop(True)
             return
+        if not self.driver_manager.setup_driver():
+            self.signals.error.emit("Xung đột! Vui lòng đóng tất cả các trình duyệt Chrome")
+            return
+        
+        self.driver_manager.jump_to_facebook()
+        if not self.driver_manager.check_login():
+            self.signals.unlogin.emit()
+            return
+        self.driver = self.driver_manager.driver
         self.driver.set_window_size(800, 700)
         self.driver.set_window_position(0, 0)
         self.post()
     
     def post(self):
-        if not self.driver_manager.setup_driver():
-            self.signals.error("Xung đột! Vui lòng đóng tất cả các trình duyệt Chrome")
-            return
         countPost = 1
         for data in self.table_data:
             link_group = data["link group"]
@@ -56,18 +64,17 @@ class Post(QRunnable):
                 self.signals.log.emit("POST: Đã tạm dừng")
                 self.signals.finished.emit()
                 return
-            if all(keyword not in name_group for keyword in ["vps", "proxy", "rdp", "máy chủ", "server"]):
+            if all(keyword not in name_group.lower() for keyword in ["vps", "proxy", "rdp", "máy chủ", "server"]):
                 self.signals.table_status.emit(data["row"], "Không phải nhóm VPS/Proxy")
                 continue
             self.driver.get(link_group+"buy_sell_discussion")
             self.driver.execute_script("window.scrollTo(0, 300)")
             if "Bạn tạm thời bị chặn" in self.driver.page_source:
-                self.signals.log.emit("POST : Bạn tạm thời bị chặn!")
+                self.signals.error.emit("POST : Bạn tạm thời bị chặn!")
                 self.signals.finished.emit()
                 self.set_stop(True)
                 return
             try:
-                self.signals.log.emit("POST: Đang đăng bài...")
                 self.driver_manager.handle_chat_close()
                 # Vào "Bạn viết gì đi..."
                 create_post_btn = self.driver_manager.wait_for_clickable_element(By.CSS_SELECTOR, ".xkjl1po > .x1lliihq")
@@ -75,9 +82,8 @@ class Post(QRunnable):
                 if self.use_content: # Paste content
                     content = random.choice(self.list_content)
                     pyperclip.copy(content)
-                    content_area = self.driver_manager.wait_for_clickable_element(By.CSS_SELECTOR, ".\\_1mf")
+                    content_area = self.driver_manager.wait_for_clickable_element(By.CSS_SELECTOR, ".xg7h5cd")
                     self.driver_manager.click_element(content_area)
-                    # content_area.send_keys(Keys.CONTROL, "v")
                     self.driver_manager.actions.key_down(Keys.CONTROL).send_keys('v').key_up(Keys.CONTROL).perform()
 
                 # Thêm ảnh
@@ -88,12 +94,13 @@ class Post(QRunnable):
                     self.driver.find_element(By.XPATH,"//input[@accept='image/*,image/heif,image/heic,video/*,video/mp4,video/x-m4v,video/x-matroska,.mkv']").send_keys(image)
                 time.sleep(1)
                 self.driver.find_element(By.XPATH, f"//div[@aria-label='{self.driver_manager.post}']").click()
+                self.driver_manager.wait_for_url_contains("") # full loaded
                 time_delay = random.randint(self.post_delay[0], self.post_delay[len(self.post_delay)-1])
                 if countPost % 10 == 0 and countPost < len(self.table_data): # Nghỉ mỗi 10 post
                     delay_each_10 = time_delay * random.randint(5, 10)
-                    self.signals.log.emit("POST: Đã đăng " + str(countPost) + " bài, đợi " + str(delay_each_10) + "s rồi đăng tiếp")
+                    self.signals.loading.emit("POST: Đã đăng " + str(countPost) + " bài, đợi " + str(delay_each_10) + "s rồi đăng tiếp")
                     time.sleep(delay_each_10)
-                    self.signals.log.emit("POST: Đang đăng bài...")
+                    self.signals.loading.emit("POST: Đang đăng bài...")
                 else:
                     time.sleep(time_delay) # Chờ post bài
                 if "Để bảo vệ cộng đồng khỏi spam" in self.driver.page_source:
@@ -107,7 +114,7 @@ class Post(QRunnable):
                 self.signals.table_status.emit(data["row"], "Chưa post")
                 self.driver_manager.handle_chat_close()
             countPost += 1
-        self.signals.log.emit("POST : Đã đăng xong!")
+        self.signals.success.emit("POST : Đã đăng xong!")
         self.signals.finished.emit()
         self.set_stop(True)
             

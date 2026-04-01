@@ -147,7 +147,7 @@ class MainWindow(QMainWindow):
     
     def run_in_table(self):
         if "POST" in self.table_widget.btn_run.text():
-            self.run_post()
+            self.post_ui.run_post()
         if "COMMENT" in self.table_widget.btn_run.text():
             self.run_comment()
     
@@ -174,12 +174,8 @@ class MainWindow(QMainWindow):
     
     def save_in_table(self):
         if "GET" in self.table_widget.btn_run.text() or "POST" in self.table_widget.btn_run.text() or "COMMENT" in self.table_widget.btn_run.text():
-            self.get_ui.save_group_table()
+            self.table_widget.save_table_data(self.data_manager)
             
-    def _on_finished_use_table(self, func: str):
-        self.table_widget.btn_run.setText(func)
-        self.table_widget.adjust_column_width()
-        self.save_in_table()
     
     def run_comment(self):
         self.comment_ui.run_comment()

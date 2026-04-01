@@ -159,7 +159,7 @@ class LoginUI:
         self.data_manager.data["ACCOUNT"]["LOGIN"]["password"] = password
         self.data_manager.data["ACCOUNT"]["LOGIN"]["2fa"] = twoFA
         self.data_manager.data["ACCOUNT"]["LOGIN"]["cookie"] = cookie
-        if self.ui.profileName.text() != "":
+        if self.ui.profileName.text() != "LOGIN":
             self.data_manager.data["ACCOUNT"]["LOGIN"]["profile name"] = self.ui.profileName.text()
     
     def copy_cookies(self):

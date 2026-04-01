@@ -30,9 +30,12 @@ class PostUI:
         self.ui.btn_postImageFromFile.clicked.connect(self.image_viewer.show_images)
 
         self.worker.signals.log.connect(lambda msg: self.table_widget.statusTable.setText(msg))
+        self.worker.signals.loading.connect(self.table_widget.statusTable.setLoading)
         self.worker.signals.table_status.connect(lambda row, status: self.table_widget.table.setItem(row, 4, self.table_widget.table_item(status, "center")))
         self.worker.signals.error.connect(self.table_widget.statusTable.setError)
-        self.worker.signals.finished.connect(lambda: self._on_finished_use_table("POST"))
+        self.worker.signals.success.connect(self.table_widget.statusTable.setSuccess)
+        self.worker.signals.unlogin.connect(self.on_unlogin_detected)
+        self.worker.signals.finished.connect(lambda: self.table_widget.finish_action("POST", self.data_manager))
 
     def run_post(self):
         self.before_run()
@@ -41,9 +44,6 @@ class PostUI:
             post_data = self.data_manager.data["CONFIG"]["POST"]
             if not (post_data["image"] or post_data["content"]):
                 self.ui.status.setError("POST: Thiếu thông tin để đăng bài")
-                return
-            if not self.driver_manager.check_login():
-                self.handle_unLogin()
                 return
             
             self.table_widget.btn_run.setText("STOP POST!")
@@ -61,6 +61,10 @@ class PostUI:
             self.table_widget.statusTable.setText("POST: Đã tạm dừng")
             self.table_widget.btn_run.setText("POST")
             self.worker.set_stop(True)
+    
+    def on_unlogin_detected(self):
+        self.table_widget.hide()
+        self.handle_unlogin()
 
     def load_data(self):
         content_string = "\n$\n".join(self.data_manager.data["CONFIG"]["POST"]["content"])
