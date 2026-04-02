@@ -6,7 +6,7 @@ from src.gui.widget.ui_interface import Ui_MainWindow
 from src.utils import apply_int_range_validator
 from src.worker import Comment
 
-from src.manager import DataManager
+from src.manager import DataManager, DriverManager
 
 class CommentUI:
     def __init__(self, before_run, handle_unlogin, table_widget, ui: Ui_MainWindow, data_manager: DataManager, driver_manager: DriverManager):
@@ -30,13 +30,15 @@ class CommentUI:
         self.ui.commentImageCheckBox.stateChanged.connect(self.toggle_image_input)
         self.ui.commentContentCheckBox.stateChanged.connect(self.toggle_content_input)
         self.ui.btn_commentImageFromFile.clicked.connect(self.image_viewer.show_images)
+        self.table_widget.btn_run.clicked.connect(self.run_comment)
         
         self.worker.signals.log.connect(lambda msg: self.table_widget.statusTable.setText(msg))
         self.worker.signals.table_status.connect(lambda row, status: self.table_widget.table.setItem(row, 4, self.table_widget.table_item(status, "center")))
         self.worker.signals.error.connect(self.table_widget.statusTable.setError)
-        self.worker.signals.finished.connect(self.on_finished)
+        self.worker.signals.finished.connect(lambda: self.table_widget.finish_action("COMMENT", self.data_manager))
 
     def run_comment(self):
+        if self.table_widget.btn_run.text() != "COMMENT": return
         self.before_run()
         if self.table_widget.btn_run.text() != "STOP COMMENT!":
             self.save_data()
@@ -44,6 +46,7 @@ class CommentUI:
             if not (comment_data["image"] or comment_data["content"]):
                 self.ui.status.setError("COMMENT: Thiếu thông tin để comment")
                 return
+            self.driver_manager.jump_to_facebook()
             if not self.driver_manager.check_login():
                 self.handle_unlogin()
                 return
@@ -64,10 +67,6 @@ class CommentUI:
             self.table_widget.btn_run.setText("COMMENT")
             self.worker.set_stop(True)
 
-    def on_finished(self):
-        self.table_widget.btn_run.setText("COMMENT")
-        self.table_widget.adjust_column_width()
-    
     def load_data(self):
         content_string = "\n$\n".join(self.data_manager.data["CONFIG"]["COMMENT"]["content"])
         self.ui.commentContentInput.setPlainText(content_string)

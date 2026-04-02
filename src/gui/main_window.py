@@ -86,7 +86,6 @@ class MainWindow(QMainWindow):
         save_shortcut.setContext(Qt.ShortcutContext.WidgetWithChildrenShortcut)
         save_shortcut.activated.connect(self.save)
         
-        self.table_widget.btn_run.clicked.connect(self.run_in_table)
         self.table_widget.tableExport.clicked.connect(self.save_in_table)
         self.ui.btn_spam.clicked.connect(self.run_spam)
 
@@ -145,12 +144,6 @@ class MainWindow(QMainWindow):
             self.ui.btn_spam.setText("CONTINUE")
             self.spam.set_stop(True)  # Tell Spam to pause
     
-    def run_in_table(self):
-        if "POST" in self.table_widget.btn_run.text():
-            self.post_ui.run_post()
-        if "COMMENT" in self.table_widget.btn_run.text():
-            self.run_comment()
-    
     def open_table(self):
         if not self.table_widget.isVisible():
             self.center_table()  # Position it first
@@ -168,14 +161,11 @@ class MainWindow(QMainWindow):
             self.table_widget.setup("GET POST")
             
         self.table_widget.load_table_data(self.data_manager.data["TABLE"])
-        # self.table_widget.table.setSpan(2, 1, 2, 1)  # Start at (0,1), span 2 rows, 1 column
-        # self.table_widget.table.setItem(2, 1, QTableWidgetItem("Merged"))
         self.table_widget.adjust_column_width()
     
     def save_in_table(self):
         if "GET" in self.table_widget.btn_run.text() or "POST" in self.table_widget.btn_run.text() or "COMMENT" in self.table_widget.btn_run.text():
             self.table_widget.save_table_data(self.data_manager)
-            
     
     def run_comment(self):
         self.comment_ui.run_comment()
@@ -218,9 +208,16 @@ class MainWindow(QMainWindow):
         
         try:
             self.data_manager.save_data()
-            self.ui.status.setSuccess(f"Đã lưu dữ liệu {current_function}")
+            if (self.table_widget.isVisible()):
+                self.table_widget.save_table_data(self.data_manager)
+                self.table_widget.statusTable.setSuccess(f"Đã lưu dữ liệu {current_function}")
+            else:
+                self.ui.status.setSuccess(f"Đã lưu dữ liệu {current_function}")
         except:
-            self.ui.status.setError("Không thể lưu dữ liệu vào file đang mở, vui lòng đóng file " + self.data_manager.data_path.split("\\")[-1])
+            if (self.table_widget.isVisible()):
+                self.table_widget.statusTable.setError("Không thể lưu dữ liệu vào file đang mở, vui lòng đóng file " + self.data_manager.data_path.split("\\")[-1])
+            else:
+                self.ui.status.setError("Không thể lưu dữ liệu vào file đang mở, vui lòng đóng file " + self.data_manager.data_path.split("\\")[-1])
     
     def save_all(self):
         """Save all data regardless of current page"""

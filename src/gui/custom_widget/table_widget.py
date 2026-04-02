@@ -220,6 +220,60 @@ class TableWidget(QFrame, Ui_tableWidget):
         self.table.setItem(row_position, 4, status_item)
         
         self.table.setVerticalHeaderItem(row_position, QTableWidgetItem(str(row_position)))
+
+    def insert_post_for_group(self, link_group: str = "", name_group: str = "", link_post: str = "", content: str = "", status: str = ""):
+        start_row = -1
+        span_count = 1
+        
+        for row in range(1, self.table.rowCount()):
+            if self.get_cell_text(row, 0) == link_group:
+                if start_row == -1:
+                    start_row = row
+                    span_count = self.table.rowSpan(row, 0)
+                    if span_count <= 0:
+                        span_count = 1
+                
+                # Deduplication check: if this post link already exists in this group's rows
+                if self.get_cell_text(row, 2) == link_post:
+                    print(f"DEBUG: Post {link_post} already exists in group {link_group}, skipping.")
+                    return
+                
+        if start_row == -1:
+
+            self.add_row(link_group, name_group, link_post, content, status)
+            return
+
+        # Check if the row is just an empty group row
+        if span_count == 1:
+            item_post = self.table.item(start_row, 2)
+            if not item_post or not item_post.text().strip():
+                self.table.setItem(start_row, 2, self.table_item(link_post))
+                self.table.setItem(start_row, 3, self.table_item(content))
+                self.table.setItem(start_row, 4, self.table_item(status, "center", QColor(40, 44, 52)))
+                return
+
+        # Insert new row beneath the group's span
+        insert_row = start_row + span_count
+        self.table.insertRow(insert_row)
+        
+        # We add the group info but "hide" it by setting color to background
+        # This prevents the UI from showing duplicate text behind the span
+        # but allows get_cell_text to find it if span logic is tricky
+        self.table.setItem(insert_row, 0, self.table_item(link_group, "left", QColor(40, 44, 52)))
+        self.table.setItem(insert_row, 1, self.table_item(name_group, "left", QColor(40, 44, 52)))
+        self.table.setItem(insert_row, 2, self.table_item(link_post))
+        self.table.setItem(insert_row, 3, self.table_item(content))
+        self.table.setItem(insert_row, 4, self.table_item(status, "center", QColor(40, 44, 52)))
+
+        
+        new_span_count = span_count + 1
+        self.table.setSpan(start_row, 0, new_span_count, 1)
+        self.table.setSpan(start_row, 1, new_span_count, 1)
+        
+        # Refresh vertical headers across the rest of the table
+        for r in range(start_row, self.table.rowCount()):
+            self.table.setVerticalHeaderItem(r, QTableWidgetItem(str(r)))
+
     
     def setup(self, func: str):
         self.current_mode = func
@@ -291,42 +345,69 @@ class TableWidget(QFrame, Ui_tableWidget):
 
     def get_cell_text(self, row, col):
         """Safely extract text, accounting for spanned cells"""
-        for r in range(row, -1, -1):
-            span_size = self.table.rowSpan(r, col)
-            if span_size > 1 and r + span_size > row:
-                item = self.table.item(r, col)
-                return item.text().strip() if item else ""
+        # 1. First, try to get the item directly at this cell
         item = self.table.item(row, col)
-        return item.text().strip() if item else ""
+        if item and item.text().strip():
+            return item.text().strip()
+
+        # 2. If no direct text, check if this is part of a merge from a row above
+        for r in range(row - 1, -1, -1):
+            span = self.table.rowSpan(r, col)
+            if span > 1 and (r + span > row):
+                merge_root_item = self.table.item(r, col)
+                return merge_root_item.text().strip() if merge_root_item else ""
+        
+        return ""
 
     def get_selected(self):
-        selected_rows = set(item.row() for item in self.table.selectedItems())
-        if not selected_rows: return []
+        # Correctly gather all selected row indexes
+        selected_indexes = self.table.selectedIndexes()
+        if not selected_indexes: return []
         
+        selected_rows = sorted(set(idx.row() for idx in selected_indexes if idx.row() > 0))
+        
+        selected_items = []
+        seen_group_links = set() # For deduplication in group modes
+
         if self.current_mode in ["POST", "GET POST", "GET GROUP"]:
             col = 1 # NAME GROUP
         elif self.current_mode == "COMMENT":
             col = 3 # CONTENT
         else: col = 1
-        
         self.table.clearSelection()
-        
-        selected_items = []
         for row in selected_rows:
             item = self.table.item(row, col)
             if item:
                 item.setSelected(True)
+            # We must get the cell text carefully for each column
+            lg = self.get_cell_text(row, 0)
+            ng = self.get_cell_text(row, 1)
+            lp = self.get_cell_text(row, 2)
+            c = self.get_cell_text(row, 3)
+            st = self.get_cell_text(row, 4)
+            
+            # If we are in a group-level operation mode (POST, GET POST, etc.)
+            # we should avoid duplicate group links if the user selected multiple posts in one group
+            if self.current_mode in ["POST", "GET POST", "GET GROUP"]:
+                if lg in seen_group_links:
+                    continue
+                seen_group_links.add(lg)
                         
             item_data = {
                 "row": row,
-                "link group": self.get_cell_text(row, 0),
-                "name group": self.get_cell_text(row, 1),
-                "link post": self.get_cell_text(row, 2),
-                "content": self.get_cell_text(row, 3),
+                "link group": lg,
+                "name group": ng,
+                "link post": lp,
+                "content": c,
                 "type_status": "status_post" if self.current_mode != "COMMENT" else "status_comment",
-                "status": self.get_cell_text(row, 4)
+                "status": st
             }
             selected_items.append(item_data)
+        
+        print(f"DEBUG: Processed {len(selected_items)} selected items for {self.current_mode}")
+        for i, item in enumerate(selected_items):
+            print(f"  Item {i+1}: Group '{item['name group']}' | Row {item['row']}")
+            
         return selected_items
 
     def save_table_data(self, data_manager: DataManager):
@@ -346,47 +427,53 @@ class TableWidget(QFrame, Ui_tableWidget):
             group = next((g for g in new_table_data if g["link group"] == lg), None)
             if not group:
                 group = {"link group": lg, "name group": ng, "posts": []}
-                
-                # In GET GROUP mode, preserve existing posts entirely, as this mode doesn't list them.
-                if self.current_mode == "GET GROUP":
-                    orig_g = next((g for g in original_table if g["link group"] == lg), None)
-                    if orig_g:
-                        group["posts"] = orig_g.get("posts", [])
-                        
                 new_table_data.append(group)
+                
+                # If we're in GET GROUP or if this is the only row for this group (no post info yet)
+                # we might want to preserve its historical posts from original_table.
+                orig_g = next((g for g in original_table if g["link group"] == lg), None)
+                if orig_g:
+                    if self.current_mode == "GET GROUP":
+                        group["posts"] = orig_g.get("posts", [])
+                    elif not lp and not c:
+                        # If this row in UI has no post data, but the original group had posts, 
+                        # it means it's an empty group row in UI that should keep its data.
+                        group["posts"] = orig_g.get("posts", [])
 
-            # Skip adding posts if we are in GET GROUP mode, since table UI only represents groups
+            # skip remaining logic for GET GROUP as it doesn't handle individual posts
             if self.current_mode == "GET GROUP":
                 continue
 
-            # Build post entry intelligently preserving older un-active statuses
-            orig_g = next((g for g in original_table if g["link group"] == lg), None)
-            orig_p = next((p for p in orig_g.get("posts", []) if p.get("link post") == lp), None) if orig_g else None
+            # Build post entry intelligently
+            if lp or c:
+                orig_g = next((g for g in original_table if g["link group"] == lg), None)
+                orig_p = next((p for p in orig_g.get("posts", []) if p.get("link post") == lp), None) if orig_g else None
 
-            post_data = {
-                "link post": lp,
-                "content": c,
-                "status_post": orig_p.get("status_post", "") if orig_p else "",
-                "status_comment": orig_p.get("status_comment", "") if orig_p else ""
-            }
+                post_data = {
+                    "link post": lp,
+                    "content": c,
+                    "status_post": orig_p.get("status_post", "") if orig_p else "",
+                    "status_comment": orig_p.get("status_comment", "") if orig_p else ""
+                }
 
-            # Only overwrite the status corresponding to current active tool
-            if self.current_mode == "COMMENT":
-                post_data["status_comment"] = st
-            elif self.current_mode in ["POST", "GET POST"]:
-                post_data["status_post"] = st
+                if self.current_mode == "COMMENT":
+                    post_data["status_comment"] = st
+                elif self.current_mode in ["POST", "GET POST"]:
+                    post_data["status_post"] = st
 
-            if lp or c or st:
-                group["posts"].append(post_data)
+                # Only add if not already in this group's posts (prevents duplicate entries during save loop)
+                if not any(p["link post"] == lp for p in group["posts"]):
+                    group["posts"].append(post_data)
+
 
         # Update dict and trigger file save
         data_manager.data["TABLE"] = new_table_data
         success = data_manager.save_data()
         
-        if success:
-            self.statusTable.setText("Đã lưu dữ liệu bảng vào " + data_manager.data_path)
-        else:
-            self.statusTable.setText("Lỗi: không thể lưu dữ liệu")
+        # if success:
+        #     self.statusTable.setText("Đã lưu dữ liệu bảng vào " + data_manager.data_path)
+        # else:
+        #     self.statusTable.setText("Lỗi: không thể lưu dữ liệu")
             
     def finish_action(self, func: str, data_manager: DataManager):
         """Standard sequence triggered upon finishing any table action"""

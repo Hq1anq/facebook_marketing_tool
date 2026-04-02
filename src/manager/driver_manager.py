@@ -1,4 +1,5 @@
-from seleniumwire import webdriver
+from seleniumwire import webdriver as webdriver_wire
+from selenium import webdriver as webdriver_default
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
@@ -52,9 +53,9 @@ class DriverManager(QObject):
         options.add_argument("--window-size=1130,800")
         try:
             if self.proxy_config:
-                self.driver = webdriver.Chrome(service=service, options=options, seleniumwire_options=self.proxy_config)
+                self.driver = webdriver_wire.Chrome(service=service, options=options, seleniumwire_options=self.proxy_config)
             else:
-                self.driver = webdriver.Chrome(service=service, options=options)
+                self.driver = webdriver_default.Chrome(service=service, options=options)
             self.actions = ActionChains(self.driver)
             self.is_browser_open = True
             self.start_monitoring()
@@ -163,10 +164,10 @@ class DriverManager(QObject):
     def check_login(self) -> bool:
         return self.friend_str in self.driver.page_source
     
-    def jump_to_facebook(self) -> bool:
+    def jump_to_facebook(self) -> None:
         self.driver.get("https://www.facebook.com")
+        self.wait_for_url_contains("") # full loaded
         self.adjust_language()
-        return self.check_login()
 
     def close(self):
         self.is_browser_open = False

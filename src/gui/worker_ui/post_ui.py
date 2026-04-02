@@ -28,6 +28,7 @@ class PostUI:
         self.ui.postImageCheckBox.stateChanged.connect(self.toggle_image_input)
         self.ui.postContentCheckBox.stateChanged.connect(self.toggle_content_input)
         self.ui.btn_postImageFromFile.clicked.connect(self.image_viewer.show_images)
+        self.table_widget.btn_run.clicked.connect(self.run_post)
 
         self.worker.signals.log.connect(lambda msg: self.table_widget.statusTable.setText(msg))
         self.worker.signals.loading.connect(self.table_widget.statusTable.setLoading)
@@ -38,6 +39,7 @@ class PostUI:
         self.worker.signals.finished.connect(lambda: self.table_widget.finish_action("POST", self.data_manager))
 
     def run_post(self):
+        if self.table_widget.btn_run.text() != "POST": return
         self.before_run()
         if self.table_widget.btn_run.text() != "STOP POST!":
             self.save_data()
