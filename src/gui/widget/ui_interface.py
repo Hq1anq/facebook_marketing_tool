@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'interfaceTuVpkV.ui'
+## Form generated from reading UI file 'interfacesojNaS.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.10.2
 ##
@@ -88,7 +88,6 @@ class Ui_MainWindow(object):
 "QTableWidget::item{ border-color: rgb(44, 49, 60) }\n"
 "QTable"
                         "Widget::item:selected{ background-color: rgb(189, 147, 249) }\n"
-"QHeaderView { qproperty-defaultAlignment: AlignCenter }\n"
 "QHeaderView::section{\n"
 "	background-color: rgb(33, 37, 43);\n"
 "	border: 1px solid rgb(44, 49, 60);\n"
@@ -477,7 +476,7 @@ class Ui_MainWindow(object):
         self.commentImageViewer.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.commentImageViewerWidget = QWidget()
         self.commentImageViewerWidget.setObjectName(u"commentImageViewerWidget")
-        self.commentImageViewerWidget.setGeometry(QRect(0, 0, 100, 30))
+        self.commentImageViewerWidget.setGeometry(QRect(0, 0, 438, 330))
         self.commentImageViewer.setWidget(self.commentImageViewerWidget)
 
         self.gridLayout_10.addWidget(self.commentImageViewer, 2, 0, 1, 1)
@@ -561,7 +560,7 @@ class Ui_MainWindow(object):
         self.spamImageViewer.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.spamImageViewerWidget = QWidget()
         self.spamImageViewerWidget.setObjectName(u"spamImageViewerWidget")
-        self.spamImageViewerWidget.setGeometry(QRect(0, 0, 100, 30))
+        self.spamImageViewerWidget.setGeometry(QRect(0, 0, 438, 262))
         self.spamImageViewer.setWidget(self.spamImageViewerWidget)
 
         self.gridLayout_11.addWidget(self.spamImageViewer, 2, 0, 1, 1)
@@ -923,7 +922,7 @@ class Ui_MainWindow(object):
 
         self._22.addWidget(self.methodCookieLabel)
 
-        self.cookieInput = HighlightPlainTextEdit(self.useCookie)
+        self.cookieInput = QPlainTextEdit(self.useCookie)
         self.cookieInput.setObjectName(u"cookieInput")
 
         self._22.addWidget(self.cookieInput)
@@ -958,23 +957,123 @@ class Ui_MainWindow(object):
         self.getPage = QWidget()
         self.getPage.setObjectName(u"getPage")
         self.getPage.setMaximumSize(QSize(16777215, 200))
+        self.getPage.setStyleSheet(u"QFrame {\n"
+"	border: 5px solid rgb(52, 59, 72);\n"
+"	border-radius: 15px;\n"
+"}\n"
+"\n"
+"QLabel {\n"
+"	border: none;\n"
+"	qproperty-alignment: \"AlignLeft | AlignVCenter\";\n"
+"}")
         self.horizontalLayout_3 = QHBoxLayout(self.getPage)
+        self.horizontalLayout_3.setSpacing(20)
         self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
-        self.btn_getGroup = QPushButton(self.getPage)
+        self.horizontalLayout_3.setContentsMargins(20, -1, 20, -1)
+        self.getGroupFrame = QFrame(self.getPage)
+        self.getGroupFrame.setObjectName(u"getGroupFrame")
+        self.getGroupFrame.setFrameShape(QFrame.Shape.StyledPanel)
+        self.getGroupFrame.setFrameShadow(QFrame.Shadow.Raised)
+        self.verticalLayout_2 = QVBoxLayout(self.getGroupFrame)
+        self.verticalLayout_2.setObjectName(u"verticalLayout_2")
+        self.btn_getGroup = QPushButton(self.getGroupFrame)
         self.btn_getGroup.setObjectName(u"btn_getGroup")
         sizePolicy.setHeightForWidth(self.btn_getGroup.sizePolicy().hasHeightForWidth())
         self.btn_getGroup.setSizePolicy(sizePolicy)
         self.btn_getGroup.setStyleSheet(u"")
 
-        self.horizontalLayout_3.addWidget(self.btn_getGroup)
+        self.verticalLayout_2.addWidget(self.btn_getGroup)
 
-        self.btn_getPost = QPushButton(self.getPage)
+        self.horizontalLayout_6 = QHBoxLayout()
+        self.horizontalLayout_6.setObjectName(u"horizontalLayout_6")
+        self.filterGroupCheckBox = QCheckBox(self.getGroupFrame)
+        self.filterGroupCheckBox.setObjectName(u"filterGroupCheckBox")
+        sizePolicy.setHeightForWidth(self.filterGroupCheckBox.sizePolicy().hasHeightForWidth())
+        self.filterGroupCheckBox.setSizePolicy(sizePolicy)
+        self.filterGroupCheckBox.setChecked(True)
+
+        self.horizontalLayout_6.addWidget(self.filterGroupCheckBox)
+
+        self.filterGroupInput = QLineEdit(self.getGroupFrame)
+        self.filterGroupInput.setObjectName(u"filterGroupInput")
+
+        self.horizontalLayout_6.addWidget(self.filterGroupInput)
+
+
+        self.verticalLayout_2.addLayout(self.horizontalLayout_6)
+
+        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.verticalLayout_2.addItem(self.verticalSpacer)
+
+
+        self.horizontalLayout_3.addWidget(self.getGroupFrame)
+
+        self.getPostFrame = QFrame(self.getPage)
+        self.getPostFrame.setObjectName(u"getPostFrame")
+        self.getPostFrame.setFrameShape(QFrame.Shape.StyledPanel)
+        self.getPostFrame.setFrameShadow(QFrame.Shadow.Raised)
+        self.verticalLayout = QVBoxLayout(self.getPostFrame)
+        self.verticalLayout.setObjectName(u"verticalLayout")
+        self.btn_getPost = QPushButton(self.getPostFrame)
         self.btn_getPost.setObjectName(u"btn_getPost")
         sizePolicy.setHeightForWidth(self.btn_getPost.sizePolicy().hasHeightForWidth())
         self.btn_getPost.setSizePolicy(sizePolicy)
         self.btn_getPost.setStyleSheet(u"")
 
-        self.horizontalLayout_3.addWidget(self.btn_getPost)
+        self.verticalLayout.addWidget(self.btn_getPost)
+
+        self.horizontalLayout_5 = QHBoxLayout()
+        self.horizontalLayout_5.setObjectName(u"horizontalLayout_5")
+        self.label = QLabel(self.getPostFrame)
+        self.label.setObjectName(u"label")
+
+        self.horizontalLayout_5.addWidget(self.label)
+
+        self.maxTab = QLineEdit(self.getPostFrame)
+        self.maxTab.setObjectName(u"maxTab")
+        sizePolicy4 = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
+        sizePolicy4.setHorizontalStretch(0)
+        sizePolicy4.setVerticalStretch(0)
+        sizePolicy4.setHeightForWidth(self.maxTab.sizePolicy().hasHeightForWidth())
+        self.maxTab.setSizePolicy(sizePolicy4)
+        self.maxTab.setMaximumSize(QSize(60, 16777215))
+
+        self.horizontalLayout_5.addWidget(self.maxTab)
+
+        self.label_3 = QLabel(self.getPostFrame)
+        self.label_3.setObjectName(u"label_3")
+
+        self.horizontalLayout_5.addWidget(self.label_3)
+
+
+        self.verticalLayout.addLayout(self.horizontalLayout_5)
+
+        self.horizontalLayout_7 = QHBoxLayout()
+        self.horizontalLayout_7.setObjectName(u"horizontalLayout_7")
+        self.label_2 = QLabel(self.getPostFrame)
+        self.label_2.setObjectName(u"label_2")
+
+        self.horizontalLayout_7.addWidget(self.label_2)
+
+        self.getPostDelay = QLineEdit(self.getPostFrame)
+        self.getPostDelay.setObjectName(u"getPostDelay")
+        sizePolicy4.setHeightForWidth(self.getPostDelay.sizePolicy().hasHeightForWidth())
+        self.getPostDelay.setSizePolicy(sizePolicy4)
+        self.getPostDelay.setMaximumSize(QSize(60, 16777215))
+
+        self.horizontalLayout_7.addWidget(self.getPostDelay)
+
+        self.label_4 = QLabel(self.getPostFrame)
+        self.label_4.setObjectName(u"label_4")
+
+        self.horizontalLayout_7.addWidget(self.label_4)
+
+
+        self.verticalLayout.addLayout(self.horizontalLayout_7)
+
+
+        self.horizontalLayout_3.addWidget(self.getPostFrame)
 
         self.pageStacked.addWidget(self.getPage)
 
@@ -1027,11 +1126,11 @@ class Ui_MainWindow(object):
 
         self.title = QLabel(self.contentTop)
         self.title.setObjectName(u"title")
-        sizePolicy4 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)
-        sizePolicy4.setHorizontalStretch(0)
-        sizePolicy4.setVerticalStretch(0)
-        sizePolicy4.setHeightForWidth(self.title.sizePolicy().hasHeightForWidth())
-        self.title.setSizePolicy(sizePolicy4)
+        sizePolicy5 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)
+        sizePolicy5.setHorizontalStretch(0)
+        sizePolicy5.setVerticalStretch(0)
+        sizePolicy5.setHeightForWidth(self.title.sizePolicy().hasHeightForWidth())
+        self.title.setSizePolicy(sizePolicy5)
 
         self._15.addWidget(self.title)
 
@@ -1144,7 +1243,7 @@ class Ui_MainWindow(object):
         self.fullProxyLabel.setText(QCoreApplication.translate("MainWindow", u"IP:PORT:USER:PASS", None))
         self.proxyDetailCheckbox.setText(QCoreApplication.translate("MainWindow", u"Detail", None))
         self.checkProxyBtn.setText(QCoreApplication.translate("MainWindow", u"  Check Proxy", None))
-        self.addProxyBtn.setText(QCoreApplication.translate("MainWindow", u"  Thêm Proxy", None))
+        self.addProxyBtn.setText(QCoreApplication.translate("MainWindow", u"  Th\u00eam Proxy", None))
         self.methodLabel.setText(QCoreApplication.translate("MainWindow", u"Login method", None))
         self.btn_login.setText(QCoreApplication.translate("MainWindow", u"LOGIN", None))
         self.methodComboBox.setItemText(0, QCoreApplication.translate("MainWindow", u"Username|Password|2fa", None))
@@ -1162,7 +1261,17 @@ class Ui_MainWindow(object):
         self.methodCookieLabel.setText(QCoreApplication.translate("MainWindow", u"Cookie", None))
         self.cookieInput.setPlaceholderText(QCoreApplication.translate("MainWindow", u"c_user=...;fr=...;sb=...;xs=...;datr=...", None))
         self.btn_getGroup.setText(QCoreApplication.translate("MainWindow", u"GET GROUP", None))
+        self.filterGroupCheckBox.setText(QCoreApplication.translate("MainWindow", u"Filter", None))
+        self.filterGroupInput.setPlaceholderText(QCoreApplication.translate("MainWindow", u"vps, proxy, rdp", None))
         self.btn_getPost.setText(QCoreApplication.translate("MainWindow", u"GET POST", None))
+        self.label.setText(QCoreApplication.translate("MainWindow", u"Qu\u00e9t c\u00f9ng l\u00fac", None))
+        self.maxTab.setText(QCoreApplication.translate("MainWindow", u"3", None))
+        self.maxTab.setPlaceholderText(QCoreApplication.translate("MainWindow", u"3", None))
+        self.label_3.setText(QCoreApplication.translate("MainWindow", u"groups", None))
+        self.label_2.setText(QCoreApplication.translate("MainWindow", u"M\u1ed7i l\u1ea7n delay", None))
+        self.getPostDelay.setText(QCoreApplication.translate("MainWindow", u"2", None))
+        self.getPostDelay.setPlaceholderText(QCoreApplication.translate("MainWindow", u"2", None))
+        self.label_4.setText(QCoreApplication.translate("MainWindow", u"gi\u00e2y", None))
         self.credits.setText(QCoreApplication.translate("MainWindow", u"contact: @Giang_vps", None))
         self.title.setText(QCoreApplication.translate("MainWindow", u"Tool Facebook", None))
     # retranslateUi

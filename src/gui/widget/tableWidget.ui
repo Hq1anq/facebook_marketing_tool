@@ -301,41 +301,6 @@ QPushButton:pressed { background-color: rgb(23, 26, 30); border: 4px solid rgb(2
        </widget>
       </item>
       <item>
-       <widget class="QFrame" name="filterGroup">
-        <layout class="QHBoxLayout" name="_2">
-         <property name="topMargin">
-          <number>0</number>
-         </property>
-         <property name="bottomMargin">
-          <number>0</number>
-         </property>
-         <item>
-          <widget class="QCheckBox" name="filterGroupCheckBox">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="text">
-            <string>Filter</string>
-           </property>
-           <property name="checked">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLineEdit" name="filterGroupInput">
-           <property name="placeholderText">
-            <string>vps, proxy, rdp</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </widget>
-      </item>
-      <item>
        <layout class="QHBoxLayout" name="horizontalLayout_6">
         <item>
          <widget class="QLabel" name="statusTable">
@@ -378,7 +343,6 @@ QTableWidget::item:selected{
 	background-color: rgb(189, 147, 249);
 	color: rgb(40, 44, 52);
 }
-QHeaderView { qproperty-defaultAlignment: AlignCenter }
 QHeaderView::section{
 	background-color: rgb(33, 37, 43);
 	border: 1px solid rgb(44, 49, 60);

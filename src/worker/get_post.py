@@ -1,4 +1,4 @@
-import time
+import time, random
 from selenium.webdriver.common.by import By
 from PySide6.QtCore import QRunnable, Signal, Slot, QObject
 
@@ -18,7 +18,6 @@ class GetPost(QRunnable):
         super().__init__()
         self.driver_manager = driver_manager
         self.signals = self.Signals()
-        self.max_tabs = 3  # Number of concurrent tabs
 
     @Slot()
     def run(self):
@@ -47,21 +46,44 @@ class GetPost(QRunnable):
             return
 
         # Collect all scraped posts per group for sync at end
-        self.scraped_data = {}  # {link_group: [{"link post": ..., "content": ...}]}
+        self.scraped_data = {}  # {link_group: [{link post: ..., content: ...}]}
 
-        for batch_start in range(0, len(self.group_list), self.max_tabs):
-            batch = self.group_list[batch_start:batch_start + self.max_tabs]
-            self._process_batch(batch)
+        driver = self.driver
+        original_tab = driver.current_window_handle
+
+        # Pre-open tabs once: tab_handles[0] = original_tab
+        tab_handles = [original_tab]
+        for _ in range(self.max_tab - 1):
+            driver.execute_script("window.open('about:blank');")
+            tab_handles.append(driver.window_handles[-1])
+
+        # Process groups in batches, reusing the pre-opened tabs
+        for batch_start in range(0, len(self.group_list), self.max_tab):
+            batch = self.group_list[batch_start:batch_start + self.max_tab]
+            self._process_batch(batch, tab_handles)
+
+        # Close extra tabs at the very end, keep only original tab
+        for handle in tab_handles[1:]:
+            try:
+                driver.switch_to.window(handle)
+                driver.close()
+            except Exception:
+                pass
+
+        # Switch back to original tab
+        try:
+            driver.switch_to.window(original_tab)
+        except Exception:
+            pass
         
         # Emit sync signal so UI can merge with existing data
         self.signals.sync_posts.emit(self.scraped_data)
         self.signals.success.emit("Đã lấy thông tin các post")
         self.signals.finished.emit()
 
-    def _process_batch(self, batch):
-        """Process a batch of groups using multiple tabs (round-robin)"""
+    def _process_batch(self, batch, tab_handles):
+        """Process a batch of groups by navigating existing tabs to new URLs"""
         driver = self.driver
-        original_tab = driver.current_window_handle
         
         tab_states = []
         
@@ -74,15 +96,9 @@ class GetPost(QRunnable):
             if not link_group.endswith("/"):
                 link_group += "/"
             
-            # First group reuses the current tab, others open new tabs
-            if i == 0:
-                tab_handle = original_tab
-                driver.switch_to.window(tab_handle)
-            else:
-                driver.execute_script("window.open('about:blank');")
-                tab_handle = driver.window_handles[-1]
-                driver.switch_to.window(tab_handle)
-            
+            # Reuse pre-opened tab — just navigate to the new URL
+            tab_handle = tab_handles[i]
+            driver.switch_to.window(tab_handle)
             driver.get(link_group + "my_posted_content")
             
             # Initialize scraped_data entry for this group
@@ -203,22 +219,11 @@ class GetPost(QRunnable):
                 driver.execute_script("window.scrollBy(0, 1000);")
             
             # Brief pause between rounds to let pages load
-            time.sleep(2)
-        
-        # Close extra tabs
-        for ts in tab_states:
-            if ts["handle"] != original_tab:
-                try:
-                    driver.switch_to.window(ts["handle"])
-                    driver.close()
-                except Exception:
-                    pass
-        
-        # Switch back to original tab
-        try:
-            driver.switch_to.window(original_tab)
-        except Exception:
-            pass
+            if len(self.delays) > 0:
+                time_delay = random.randint(self.delays[0], self.delays[len(self.delays)-1])
+                time.sleep(time_delay)
     
-    def setup(self, group_list: list):
+    def setup(self, group_list: list, max_tab: int, delay: str):
         self.group_list = group_list
+        self.max_tab = max_tab
+        self.delays = [int(x) for x in delay.split('-') if x.strip().isdigit()]

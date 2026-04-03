@@ -1,9 +1,10 @@
-from PySide6.QtCore import QThreadPool
+from PySide6.QtCore import QThreadPool, Qt
 
 from src.manager import DataManager, DriverManager
 from src.gui.widget.ui_interface import Ui_MainWindow
 from src.gui.custom_widget.table_widget import TableWidget
 from src.worker import GetGroup, GetPost
+from src.utils import apply_int_range_validator
 
 class GetUI:
     def __init__(self, before_run, handle_unlogin, table_widget: TableWidget, ui: Ui_MainWindow, data_manager: DataManager, driver_manager: DriverManager):
@@ -19,6 +20,7 @@ class GetUI:
         self.get_post = GetPost(self.driver_manager)
         self.get_post.setAutoDelete(False)
 
+        apply_int_range_validator(self.ui.getPostDelay)
         self.setup_connections()
     
     def setup_connections(self):
@@ -45,11 +47,18 @@ class GetUI:
         self.get_post.signals.unlogin.connect(self.on_unlogin_detected)
         self.get_post.signals.finished.connect(lambda: self.table_widget.finish_action("GET POST", self.data_manager))
 
+        self.ui.filterGroupCheckBox.stateChanged.connect(self.toggle_filter_group)
         self.table_widget.btn_run.clicked.connect(self.open_table)
 
     def on_unlogin_detected(self):
         self.table_widget.hide()
         self.handle_unlogin()
+    
+    def toggle_filter_group(self, state):
+        if Qt.CheckState(state) == Qt.CheckState.Checked:
+            self.ui.filterGroupInput.setMaximumHeight(100)
+        else:
+            self.ui.filterGroupInput.setMaximumHeight(0)
 
     def open_table(self):
         if self.table_widget.btn_run.text() == "GET GROUP":
@@ -61,8 +70,8 @@ class GetUI:
         self.before_run()
         self.table_widget.statusTable.setLoading("Đang lấy link group...")
         
-        filter_keys = [keyword.strip() for keyword in self.table_widget.filterGroupInput.text().split(",") if keyword.strip()]
-        self.get_group.setup(self.table_widget.filterGroupCheckBox.isChecked(), filter_keys)
+        filter_keys = [keyword.strip() for keyword in self.ui.filterGroupInput.text().split(",") if keyword.strip()]
+        self.get_group.setup(self.ui.filterGroupCheckBox.isChecked(), filter_keys)
         
         QThreadPool.globalInstance().start(self.get_group)
 
@@ -75,6 +84,6 @@ class GetUI:
             self.table_widget.statusTable.setError("Vui lòng chọn ít nhất một group trong bảng")
             return
 
-        self.get_post.setup(selected_groups)
+        self.get_post.setup(selected_groups, int(self.ui.maxTab.text()), self.ui.getPostDelay.text())
 
         QThreadPool.globalInstance().start(self.get_post)

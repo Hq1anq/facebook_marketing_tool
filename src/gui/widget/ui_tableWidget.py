@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'tableWidgetAROowO.ui'
+## Form generated from reading UI file 'tableWidgetQNxwVh.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.10.2
 ##
@@ -217,39 +217,15 @@ class Ui_tableWidget(object):
 
         self.verticalLayout_2.addWidget(self.contentTop)
 
-        self.filterGroup = QFrame(self.contentFrame)
-        self.filterGroup.setObjectName(u"filterGroup")
-        self._2 = QHBoxLayout(self.filterGroup)
-        self._2.setObjectName(u"_2")
-        self._2.setContentsMargins(-1, 0, -1, 0)
-        self.filterGroupCheckBox = QCheckBox(self.filterGroup)
-        self.filterGroupCheckBox.setObjectName(u"filterGroupCheckBox")
-        sizePolicy2 = QSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
-        sizePolicy2.setHorizontalStretch(0)
-        sizePolicy2.setVerticalStretch(0)
-        sizePolicy2.setHeightForWidth(self.filterGroupCheckBox.sizePolicy().hasHeightForWidth())
-        self.filterGroupCheckBox.setSizePolicy(sizePolicy2)
-        self.filterGroupCheckBox.setChecked(True)
-
-        self._2.addWidget(self.filterGroupCheckBox)
-
-        self.filterGroupInput = QLineEdit(self.filterGroup)
-        self.filterGroupInput.setObjectName(u"filterGroupInput")
-
-        self._2.addWidget(self.filterGroupInput)
-
-
-        self.verticalLayout_2.addWidget(self.filterGroup)
-
         self.horizontalLayout_6 = QHBoxLayout()
         self.horizontalLayout_6.setObjectName(u"horizontalLayout_6")
         self.statusTable = HighlightLabel(self.contentFrame)
         self.statusTable.setObjectName(u"statusTable")
-        sizePolicy3 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
-        sizePolicy3.setHorizontalStretch(0)
-        sizePolicy3.setVerticalStretch(0)
-        sizePolicy3.setHeightForWidth(self.statusTable.sizePolicy().hasHeightForWidth())
-        self.statusTable.setSizePolicy(sizePolicy3)
+        sizePolicy2 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+        sizePolicy2.setHorizontalStretch(0)
+        sizePolicy2.setVerticalStretch(0)
+        sizePolicy2.setHeightForWidth(self.statusTable.sizePolicy().hasHeightForWidth())
+        self.statusTable.setSizePolicy(sizePolicy2)
         self.statusTable.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.horizontalLayout_6.addWidget(self.statusTable)
@@ -274,11 +250,11 @@ class Ui_tableWidget(object):
         __qtablewidgetitem3 = QTableWidgetItem()
         self.table.setHorizontalHeaderItem(3, __qtablewidgetitem3)
         self.table.setObjectName(u"table")
-        sizePolicy4 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
-        sizePolicy4.setHorizontalStretch(0)
-        sizePolicy4.setVerticalStretch(0)
-        sizePolicy4.setHeightForWidth(self.table.sizePolicy().hasHeightForWidth())
-        self.table.setSizePolicy(sizePolicy4)
+        sizePolicy3 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        sizePolicy3.setHorizontalStretch(0)
+        sizePolicy3.setVerticalStretch(0)
+        sizePolicy3.setHeightForWidth(self.table.sizePolicy().hasHeightForWidth())
+        self.table.setSizePolicy(sizePolicy3)
         self.table.setStyleSheet(u"QTableCornerButton::section { background-color: rgb(33, 37, 43) }\n"
 "QTableWidget {	\n"
 "	padding: 5px;\n"
@@ -289,7 +265,6 @@ class Ui_tableWidget(object):
 "	background-color: rgb(189, 147, 249);\n"
 "	color: rgb(40, 44, 52);\n"
 "}\n"
-"QHeaderView { qproperty-defaultAlignment: AlignCenter }\n"
 "QHeaderView::section{\n"
 "	background-color: rgb(33, 37, 43);\n"
 "	border: 1px solid rgb(44, 49, 60);\n"
@@ -321,8 +296,6 @@ class Ui_tableWidget(object):
         self.btn_delete.setText(QCoreApplication.translate("tableWidget", u"DELETE ROW", None))
         self.tableImport.setText(QCoreApplication.translate("tableWidget", u" IMPORT", None))
         self.tableExport.setText(QCoreApplication.translate("tableWidget", u" EXPORT", None))
-        self.filterGroupCheckBox.setText(QCoreApplication.translate("tableWidget", u"Filter", None))
-        self.filterGroupInput.setPlaceholderText(QCoreApplication.translate("tableWidget", u"vps, proxy, rdp", None))
         self.countRows.setText(QCoreApplication.translate("tableWidget", u"Total rows:", None))
         ___qtablewidgetitem = self.table.horizontalHeaderItem(0)
         ___qtablewidgetitem.setText(QCoreApplication.translate("tableWidget", u"LINK GROUP", None));

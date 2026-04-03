@@ -31,16 +31,15 @@ class TableWidget(QFrame, Ui_tableWidget):
             """QTableCornerButton::section { background-color: rgb(33, 37, 43) }
             QTableWidget {
                 padding: 5px;
-                gridline-color: rgb(44, 49, 58);
-                border-bottom: 1px solid rgb(44, 49, 60); }
+                gridline-color: #4e5664;
+                border-bottom: 1px solid #4e5664; }
             QTableWidget::item:selected{
                 background-color: rgb(189, 147, 249);
                 color: rgb(40, 44, 52);
             }
-            QHeaderView { qproperty-defaultAlignment: AlignCenter }
             QHeaderView::section {
                 background-color: rgb(33, 37, 43);
-                border: 1px solid rgb(44, 49, 60);
+                border: 1px solid #4e5664;
                 font-size: 15px }
             QLineEdit {
                 background-color: rgb(50, 54, 62); /* slightly lighter/darker variant for edit mode */
@@ -287,20 +286,17 @@ class TableWidget(QFrame, Ui_tableWidget):
         match func:
             case "POST":
                 self.btn_run.setText("POST")
-                self.filterGroup.hide()
                 self.table.setColumnHidden(0, True) # Hide link group
                 # table shows: NAME GROUP | LINK POST | CONTENT | STATUS
 
             case "COMMENT":
                 self.btn_run.setText("COMMENT")
-                self.filterGroup.hide()
                 self.table.setColumnHidden(0, True) # Hide link group
                 self.table.setColumnHidden(2, True) # Hide link post
                 # table shows: NAME GROUP | LINK POST | CONTENT | STATUS
 
             case "GET GROUP":
                 self.btn_run.setText("GET GROUP")
-                self.filterGroup.show()
                 self.table.setColumnHidden(2, True) # Hide link post
                 self.table.setColumnHidden(3, True) # Hide content
                 self.table.setColumnHidden(4, True) # Hide status
@@ -308,7 +304,6 @@ class TableWidget(QFrame, Ui_tableWidget):
 
             case "GET POST":
                 self.btn_run.setText("GET POST")
-                self.filterGroup.hide()
                 self.table.setColumnHidden(0, True) # Hide link group
                 self.table.setColumnHidden(4, True) # Hide status
                 # table shows: NAME GROUP | LINK POST | CONTENT

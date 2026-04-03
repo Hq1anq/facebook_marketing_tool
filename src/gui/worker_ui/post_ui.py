@@ -55,7 +55,7 @@ class PostUI:
                 self.ui.postImageCheckBox.isChecked(),
                 post_data["image"],
                 post_data["content"],
-                self.data_manager.data["CONFIG"]["POST"]["delay"] or self.data_manager.DEFAULT_DATA["POST"]["delay"]
+                self.data_manager.data["CONFIG"]["POST"]["delay"]
             )
             self.worker.set_stop(False)  # Tell Spam to keep running
             QThreadPool.globalInstance().start(self.worker)
