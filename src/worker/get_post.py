@@ -17,6 +17,7 @@ class GetPost(QRunnable):
         super().__init__()
         self.driver_manager = driver_manager
         self.signals = self.Signals()
+        self.max_tabs = 3  # Number of concurrent tabs
 
     @Slot()
     def run(self):
@@ -39,100 +40,173 @@ class GetPost(QRunnable):
     def get_post(self):
         self.driver_manager.handle_chat_close()
         
-        for group in self.group_list:
+        if not self.group_list:
+            self.signals.success.emit("Không có group nào để quét")
+            self.signals.finished.emit()
+            return
+
+        # Process groups in batches of max_tabs
+        for batch_start in range(0, len(self.group_list), self.max_tabs):
+            batch = self.group_list[batch_start:batch_start + self.max_tabs]
+            self._process_batch(batch)
+                    
+        self.signals.success.emit("Đã lấy thông tin các post")
+        self.signals.finished.emit()
+
+    def _process_batch(self, batch):
+        """Process a batch of groups concurrently using multiple tabs"""
+        original_tab = self.driver.current_window_handle
+        
+        # Prepare tab state for each group in the batch
+        tab_states = []
+        
+        for i, group in enumerate(batch):
             link_group = group.get("link group", "")
             name_group = group.get("name group", "")
             
             if not link_group:
                 continue
-                
-            self.signals.loading.emit(f"Đang quét posts: {name_group}")
             
             if not link_group.endswith("/"):
                 link_group += "/"
             
-            self.driver.get(link_group + "my_posted_content")
-            self.driver_manager.wait_for_url_contains("")  # Wait for full load
-            time.sleep(2)  # Extra wait for dynamic content
+            # First group reuses the current tab, others open new tabs
+            if i == 0:
+                tab_handle = original_tab
+                self.driver.switch_to.window(tab_handle)
+            else:
+                self.driver.execute_script("window.open('about:blank');")
+                tab_handle = self.driver.window_handles[-1]
+                self.driver.switch_to.window(tab_handle)
             
-            seen_post_ids = set()
-            scroll_count = 0
-            max_scrolls = 20  # Giới hạn số lần cuộn
-            no_new_post_limit = 3
-            no_new_post_count = 0
-
-            while scroll_count < max_scrolls:
-                self.driver_manager.handle_chat_close()
+            # Navigate to group's posted content
+            self.driver.get(link_group + "my_posted_content")
+            
+            tab_states.append({
+                "handle": tab_handle,
+                "link_group": link_group,
+                "name_group": name_group,
+                "seen_post_ids": set(),
+                "scroll_count": 0,
+                "no_new_post_count": 0,
+                "done": False,
+            })
+        
+        if not tab_states:
+            return
+        
+        # Wait for all tabs to fully load
+        for ts in tab_states:
+            self.driver.switch_to.window(ts["handle"])
+            self.driver_manager.wait_for_url_contains("")
+        
+        max_scrolls = 20
+        no_new_post_limit = 3
+        
+        # Round-robin: cycle through tabs until all are done
+        while any(not ts["done"] for ts in tab_states):
+            for ts in tab_states:
+                if ts["done"]:
+                    continue
                 
-                # Quét các post đang hiển thị trên màn hình
+                # Switch to this tab
+                try:
+                    self.driver.switch_to.window(ts["handle"])
+                except Exception:
+                    ts["done"] = True
+                    continue
+                
+                self.driver_manager.handle_chat_close()
+                self.signals.loading.emit(f"Đang quét: {ts['name_group']}")
+                
+                # Extract posts currently visible
                 story_containers = self.driver.find_elements(
                     By.CSS_SELECTOR, 'div[data-ad-rendering-role="story_message"]'
                 )
                 
-                found_new_in_this_scroll = False
+                found_new = False
                 
                 for story_div in story_containers:
                     try:
-                        # 1. OPTIMIZE: Find the post wrapper and ID first before doing anything else
-                        post_wrapper = story_div.find_element(By.XPATH, "./ancestor::div[contains(@class, 'x1yztbdb')]")
+                        post_wrapper = story_div.find_element(
+                            By.XPATH, "./ancestor::div[contains(@class, 'x1yztbdb')]"
+                        )
                         
                         link_post = ""
                         post_id = ""
                         
-                        # Use multi_permalinks to get exact ID
+                        # Extract post ID from multi_permalinks
                         all_links = post_wrapper.find_elements(By.TAG_NAME, "a")
                         for a in all_links:
                             href = a.get_attribute("href")
                             if href and "multi_permalinks=" in href:
                                 post_id = href.split("multi_permalinks=")[1].split("&")[0]
-                                link_post = f"{link_group}posts/{post_id}"
+                                link_post = f"{ts['link_group']}posts/{post_id}"
                                 break
                         
-                        # Fallback pattern for ID extraction
+                        # Fallback
                         if not link_post:
                             try:
-                                # Try to find a direct post/permalink link
                                 link_element = post_wrapper.find_element(
                                     By.XPATH, ".//a[contains(@href, '/groups/') and contains(@href, '/posts/')]"
                                 )
                                 raw_href = link_element.get_attribute("href")
                                 link_post = raw_href.split("?__cft__")[0]
                                 post_id = link_post.rstrip("/").split("/")[-1]
-                            except: pass
-
-                        # 2. IMMEDIATE CHECK: If we already have this post, don't extract content/labels
+                            except:
+                                pass
+                        
+                        # Dedup check
                         unique_id = post_id if post_id else link_post
-                        if not unique_id or unique_id in seen_post_ids:
+                        if not unique_id or unique_id in ts["seen_post_ids"]:
                             continue
-
-                        # 3. EXTRACT REMAINDER: Only now perform text extraction (heavy operation)
+                        
+                        # Extract content only for new posts
                         raw_content = story_div.text.strip()
                         content = (raw_content[:20] + "...") if len(raw_content) > 20 else raw_content
                         
-                        # Add to session and Emit
-                        seen_post_ids.add(unique_id)
-                        found_new_in_this_scroll = True
-                        self.signals.add_row.emit(link_group, name_group, link_post, content, "")
-                            
+                        ts["seen_post_ids"].add(unique_id)
+                        found_new = True
+                        self.signals.add_row.emit(
+                            ts["link_group"], ts["name_group"], link_post, content, ""
+                        )
+                        
                     except Exception:
                         continue
-
-                if found_new_in_this_scroll:
-                    no_new_post_count = 0
-                else:
-                    no_new_post_count += 1
                 
-                # Nếu 3 lần cuộn liên tiếp không thấy post mới thì dừng
-                if no_new_post_count >= no_new_post_limit:
-                    break
-
-                # Cuộn xuống một đoạn để load post tiếp theo
+                # Update scroll tracking
+                if found_new:
+                    ts["no_new_post_count"] = 0
+                else:
+                    ts["no_new_post_count"] += 1
+                
+                ts["scroll_count"] += 1
+                
+                # Check stop conditions
+                if ts["no_new_post_count"] >= no_new_post_limit or ts["scroll_count"] >= max_scrolls:
+                    ts["done"] = True
+                    continue
+                
+                # Scroll down for next round
                 self.driver.execute_script("window.scrollBy(0, 1000);")
-                time.sleep(2)
-                scroll_count += 1
-                    
-        self.signals.success.emit("Đã lấy thông tin các post")
-        self.signals.finished.emit()
+            
+            # Brief pause between rounds to let pages load
+            time.sleep(2)
+        
+        # Close extra tabs (keep original)
+        for ts in tab_states:
+            if ts["handle"] != original_tab:
+                try:
+                    self.driver.switch_to.window(ts["handle"])
+                    self.driver.close()
+                except Exception:
+                    pass
+        
+        # Switch back to original tab
+        try:
+            self.driver.switch_to.window(original_tab)
+        except Exception:
+            pass
     
     def setup(self, group_list: list):
         self.group_list = group_list

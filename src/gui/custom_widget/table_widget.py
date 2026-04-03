@@ -69,22 +69,25 @@ class TableWidget(QFrame, Ui_tableWidget):
         self.current_mode = "POST" # Default
         
     def adjust_column_width(self):
-        # Temporarily hide filter row
+        # Temporarily hide filter row so resizeToContents ignores filter widgets
         self.table.setRowHidden(0, True)
         header = self.table.horizontalHeader()
-
-        # Columns that stretch: 0, 2, 3 (LINKS, CONTENT)
-        # Columns to ResizeToContents: 1, 4 (NAME GROUP, STATUS)
+        
+        STATUS_COL = 4
+        MIN_COL_WIDTH = 60
+        
         for i in range(self.table.columnCount()):
-            if not self.table.isColumnHidden(i):
-                if i in [1, 4]:
-                    header.setSectionResizeMode(i, QHeaderView.ResizeMode.Interactive)
-                    self.table.resizeColumnToContents(i)
-                    self.table.setColumnWidth(i, self.table.columnWidth(i) + 10)  # Add extra width
-                else:
-                    header.setSectionResizeMode(i, QHeaderView.ResizeMode.Stretch)
-            else:
+            if self.table.isColumnHidden(i):
+                # Hidden columns: fixed at 0
                 header.setSectionResizeMode(i, QHeaderView.ResizeMode.Fixed)
+                self.table.setColumnWidth(i, 0)
+            elif i == STATUS_COL:
+                # Status column: fit content exactly
+                header.setSectionResizeMode(i, QHeaderView.ResizeMode.ResizeToContents)
+            else:
+                # All other visible columns: equal stretch
+                header.setSectionResizeMode(i, QHeaderView.ResizeMode.Stretch)
+                header.setMinimumSectionSize(MIN_COL_WIDTH)
         
         # Show filter row again
         self.table.setRowHidden(0, False)
@@ -285,18 +288,12 @@ class TableWidget(QFrame, Ui_tableWidget):
             case "POST":
                 self.btn_run.setText("POST")
                 self.filterGroup.hide()
-                self.fromLabel.setText("Từ group")
-                self.toLabel.setText("đến group")
-                self.listLabel.setText("List group")
                 self.table.setColumnHidden(0, True) # Hide link group
                 # table shows: NAME GROUP | LINK POST | CONTENT | STATUS
 
             case "COMMENT":
                 self.btn_run.setText("COMMENT")
                 self.filterGroup.hide()
-                self.fromLabel.setText("Từ post")
-                self.toLabel.setText("đến post")
-                self.listLabel.setText("ListPost")
                 self.table.setColumnHidden(0, True) # Hide link group
                 self.table.setColumnHidden(2, True) # Hide link post
                 # table shows: NAME GROUP | LINK POST | CONTENT | STATUS
@@ -312,9 +309,6 @@ class TableWidget(QFrame, Ui_tableWidget):
             case "GET POST":
                 self.btn_run.setText("GET POST")
                 self.filterGroup.hide()
-                self.fromLabel.setText("Từ group")
-                self.toLabel.setText("đến group")
-                self.listLabel.setText("List group")
                 self.table.setColumnHidden(0, True) # Hide link group
                 self.table.setColumnHidden(4, True) # Hide status
                 # table shows: NAME GROUP | LINK POST | CONTENT

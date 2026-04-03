@@ -11,6 +11,8 @@ class CustomGrip(QWidget):
         self.setParent(parent)
         self.wi = Widgets()
 
+        STYLE_SHEET = "background: transparent"
+
         # SHOW TOP GRIP
         if position == Qt.TopEdge:
             self.wi.top(self)
@@ -33,9 +35,9 @@ class CustomGrip(QWidget):
 
             # ENABLE COLOR
             if disable_color:
-                self.wi.top_left.setStyleSheet("background: transparent")
-                self.wi.top_right.setStyleSheet("background: transparent")
-                self.wi.top.setStyleSheet("background: transparent")
+                self.wi.top_left.setStyleSheet(STYLE_SHEET)
+                self.wi.top_right.setStyleSheet(STYLE_SHEET)
+                self.wi.top.setStyleSheet(STYLE_SHEET)
 
         # SHOW BOTTOM GRIP
         elif position == Qt.BottomEdge:
@@ -57,9 +59,9 @@ class CustomGrip(QWidget):
 
             # ENABLE COLOR
             if disable_color:
-                self.wi.bottom_left.setStyleSheet("background: transparent")
-                self.wi.bottom_right.setStyleSheet("background: transparent")
-                self.wi.bottom.setStyleSheet("background: transparent")
+                self.wi.bottom_left.setStyleSheet(STYLE_SHEET)
+                self.wi.bottom_right.setStyleSheet(STYLE_SHEET)
+                self.wi.bottom.setStyleSheet(STYLE_SHEET)
 
         # SHOW LEFT GRIP
         elif position == Qt.LeftEdge:
@@ -79,7 +81,7 @@ class CustomGrip(QWidget):
 
             # ENABLE COLOR
             if disable_color:
-                self.wi.leftgrip.setStyleSheet("background: transparent")
+                self.wi.leftgrip.setStyleSheet(STYLE_SHEET)
 
         # RESIZE RIGHT
         elif position == Qt.RightEdge:
@@ -96,7 +98,7 @@ class CustomGrip(QWidget):
 
             # ENABLE COLOR
             if disable_color:
-                self.wi.rightgrip.setStyleSheet("background: transparent")
+                self.wi.rightgrip.setStyleSheet(STYLE_SHEET)
 
 
     def mouseReleaseEvent(self, event):
